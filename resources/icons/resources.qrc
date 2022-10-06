@@ -1,0 +1,12 @@
+<RCC>
+  <qresource prefix="/icons">
+    <file>hide.png</file>
+    <file>show.png</file>
+    <file>Arrowhead-nottop-256.png</file>
+    <file>Arrowhead-Top-256.png</file>
+    <file>bar-chart(1).png</file>
+    <file>chunkkk.png</file>
+    <file>Open-256.png</file>
+    <file>spline-chart(2).png</file>
+  </qresource>
+</RCC>
