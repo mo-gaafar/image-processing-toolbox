@@ -1,6 +1,6 @@
-# Image Component Mixer
+# Medical Image Viewer
 
-Demonstrates the mixing of different images and their various components
+Browse and open DICOM, JPG, BMP files and view their metadata
 
 ## Features
 
