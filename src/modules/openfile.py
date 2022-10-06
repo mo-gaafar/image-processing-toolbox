@@ -8,7 +8,7 @@ from PIL import Image as PILImage
 
 # from modules.utility import print_debug
 
-from modules.mixer import *
+from modules.viewer import *
 
 
 def browse_window(self, image_idx=1):

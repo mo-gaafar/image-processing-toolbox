@@ -1,4 +1,3 @@
-# https://namingconvention.org/python/ use the pythonic naming convention here (friendly reminder)
 
 from PyQt5 import QtGui, QtWidgets, uic, QtCore
 from PyQt5.QtWidgets import QTabWidget
@@ -6,8 +5,12 @@ from modules import resources, interface
 import numpy as np
 from modules.utility import print_debug, print_log
 import sys
-from modules.mixer import ImageConfiguration, ImageMixer, Image, ImageFFT
+from modules.viewer import ImageConfiguration, ImageMixer, Image, ImageFFT
 
+
+#TODO: plan out the structure of the application
+#TODO: plan out the user interface
+#TODO: implement the user interface
 
 class MainWindow(QtWidgets.QMainWindow):
     ''' This is the PyQt5 GUI Main Window'''
@@ -26,22 +29,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
         interface.init_connectors(self)
 
-        self.image1_configured: ImageConfiguration = None
-        self.image2_configured: ImageConfiguration = None
-        self.mixer: ImageMixer = None
+        self.image = Image(np.zeros((1, 1, 1)))
 
-        # dictionary containing all image display labels in ui
-        self.display_reference_dict = {
-            'image1': self.image1_widget,
-            'image1_component': self.image1_component_widget,
-            'image2': self.image2_widget,
-            'image2_component': self.image2_component_widget,
-            'output1': self.output1_widget,
-            'output2': self.output2_widget,
-        }
 
-        # initialize global image mixer object
-        # self.image_mixer = ImageMixer()
 
         print_debug("Connectors Initialized")
 

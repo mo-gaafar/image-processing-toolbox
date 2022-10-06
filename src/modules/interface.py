@@ -13,23 +13,10 @@ from PyQt5 import QtGui
 def update_display(self, display_keys=[]):
     '''Updates multiple images in the ui'''
     for display in display_keys:
-        if display == 'image1':
+        if display == 'image1':  
             display_pixmap(
                 self, display, self.image1_configured.get_original_image())
-        if display == 'image1_component':
-            display_pixmap(
-                self, display,  self.image1_configured.get_ft_plot())
-        if display == 'image2':
-            display_pixmap(
-                self, display, self.image2_configured.get_original_image())
-        if display == 'image2_component':
-            display_pixmap(
-                self, display, self.image2_configured.get_ft_plot())
-        if display == 'output1':
-            display_pixmap(self, display, self.mixer.get_mixed_image_data())
-        if display == 'output2':
-            display_pixmap(self, display, self.mixer.get_mixed_image_data())
-
+    #TODO update metadata here
 
 def display_pixmap(self, display_key: str = 'image1', image_data: np.array = []):
     '''
@@ -113,27 +100,6 @@ def init_connectors(self):
         lambda: mixer.update_mixer(self)
     )
 
-    # inside class function then refresh display (from class info)
-    self.mixer_component1_comboBox.currentIndexChanged.connect(
-        lambda: mixer.update_mixer(self)
-    )
-    self.mixer_component2_comboBox.currentIndexChanged.connect(
-        lambda: mixer.update_mixer(self)
-    )
-
-    self.mixed_component1_comboBox.currentIndexChanged.connect(
-        lambda: mixer.update_mixer(self)
-    )
-    self.mixed_component2_comboBox.currentIndexChanged.connect(
-        lambda: mixer.update_mixer(self)
-    )
-
-    self.mixer_component1_horizontalSlider.sliderReleased.connect(
-        lambda: mixer.update_mixer(self)
-    )
-    self.mixer_component2_horizontalSlider.sliderReleased.connect(
-        lambda: mixer.update_mixer(self)
-    )
 
 
 def about_us(self):
