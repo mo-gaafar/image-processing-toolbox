@@ -7,16 +7,13 @@ from PIL import Image as PILImage
 from PyQt5 import QtGui
 import os
 from modules.utility import print_debug
-from modules import browse
+from modules import openfile
 
 
 
 def refresh_display(self):
     ''' Updates the user interface with the current image and data'''
-    #TODO update output image here
     display_pixmap(self, image_data=self.image1.get_pixels())
-
-    #TODO update metadata here
     display_list(self)
 
 def display_pixmap(self, image_data):
@@ -35,6 +32,7 @@ def display_pixmap(self, image_data):
 def display_list(self):
     '''Displays the metadata in qlabel'''
     f_metadata = self.image1.get_formatted_metadata()
+    print("metadata: ", f_metadata)
     self.metadata_widget.setText(f_metadata)
 
 
@@ -49,13 +47,14 @@ def init_connectors(self):
 
     # self.WindowTabs = self.findChild(QTabWidget, "WindowTabs")
 
-    ''' Browse buttons'''
+    ''' browse buttons'''
     # the index argument maps each function to its respective slot
     self.insert_image1_pushButton.clicked.connect(
-        lambda: browse.browse_window(self, 1))
+        lambda: openfile.browse_window(self, 1))
 
     print_debug("Connectors Initialized")
 
 def about_us(self):
     QMessageBox.about(
-        self, ' About ', 'This is a Medical Image Viewer \nCreated by junior students from the faculty of Engineering, Cairo Uniersity, Systems and Biomedical Engineering department \n \n Created By: Mohamed Nasser ')
+        self, ' About ', 'This is a Medical Image Viewer \nCreated by Senior students from the faculty of Engineering, Cairo Uniersity, Systems and Biomedical Engineering department \n \n Created By: Mohamed Nasser ')
+

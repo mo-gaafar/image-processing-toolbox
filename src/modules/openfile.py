@@ -1,6 +1,3 @@
-import imp
-
-
 from PyQt5.QtWidgets import QFileDialog
 import matplotlib.pyplot as plt
 import numpy as np
@@ -12,7 +9,7 @@ from modules.importers import *
 
 def browse_window(self, image_idx=1):
     self.filename = QFileDialog.getOpenFileName(
-        None, 'open the image file', './', filter="Raw Data(*.bmp *.jpg *.dicom)")
+        None, 'open the image file', './', filter="Raw Data(*.bmp *.jpg *.dcm)")
     path = self.filename[0]
     print_debug("Selected path: " + path)
 
@@ -20,7 +17,7 @@ def browse_window(self, image_idx=1):
         # raise Warning("No file selected")
         return
 
-    # select an image importer based on the file extension
+    # select an image importer class based on the file extension
     importer = read_importer(path)
 
     # import the image into an image object
@@ -36,7 +33,7 @@ def read_importer(path) -> ImageImporter:
     importers = {
         'bmp': BMPImporter(),
         'jpg': JPGImporter(),
-        'dicom': DICOMImporter()
+        'dcm': DICOMImporter()
     }
     if extension in importers:
         return importers[extension]

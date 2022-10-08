@@ -1,11 +1,12 @@
 
-from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtWidgets import QFileDialog, QMessageBox
 import matplotlib.pyplot as plt
 import numpy as np
 from modules import interface
 from PIL import Image as PILImage
 from abc import ABC, abstractmethod
 import pydicom
+import os
 
 # from modules.utility import print_debug
 
@@ -50,41 +51,55 @@ class JPGImporter(ImageImporter):
         image_object = Image(data=image_data, metadata=metadata, path=path)
         return image_object
     def read_metadata(self, path)-> dict:
-        return {}
+        #width and height data
+        metadata = {}
+        metadata['Width'] = PILImage.open(path).size[0]
+        metadata['Height'] = PILImage.open(path).size[1]
+        #image total size
+        metadata['Size'] = str(os.path.getsize(path)*8) + ' bits' 
+        #bit depth data
+        metadata['Bit Depth'] = str(PILImage.open(path).bits) + ' bits'
+        #color mode data
+        metadata['Color Mode'] = PILImage.open(path).mode
+
+
+
+        return metadata
         
 
 class DICOMImporter(ImageImporter):
     def import_image(self, path) -> Image:
         # read the image
-        ds = pydicom.dcmread(path)
+        ds = pydicom.dcmread(path, force=True)
         # convert to numpy array
+        ds.file_meta.TransferSyntaxUID = pydicom.uid.ImplicitVRLittleEndian  # or whatever is the correct transfer syntax for the file
         data = ds.pixel_array
         # parse dicom metadata into dictionary
-        metadata = self.read_metadata
-
+        metadata = self.read_metadata(ds,path)
         # initialize image object
-        image_object = Image(data, metadata)
+        image_object = Image(data=data, metadata=metadata, path=path)
         # return image object
-        return image_object
+        return copy(image_object)
     
-    def read_metadata(self, ds) -> dict:
-        metadata = {}
+    def read_metadata(self, ds,path) -> dict:
+        metadata = {} 
         #image width and height
         metadata['Width'] = ds.Columns
         metadata['Height'] = ds.Rows
 
         #image total size in bits
-        metadata['Size'] = ds.BitsAllocated + " bits"
+        metadata['Size'] = str((os.stat(path).st_size)*8) + " bits"
 
-        metadata['Color Depth'] = ds.BitsStored + " bits"
-        metadata['Image Color'] = ds.PhotometricInterpretation
+        metadata['Color Depth'] = str(ds.BitsStored) + " bits"
+        metadata['Image Color'] = ds.get('PhotometricInterpretation', 'N/A')
 
         #dicom header data
-        metadata['Modality'] = ds.Modality
-        metadata['Patient Name'] = ds.PatientName
-        metadata['Patient ID'] = ds.PatientID
-        metadata['Body Part Examined'] = ds.BodyPartExamined
-
+        metadata['Modality'] = ds.get('Modality', 'N/A')
+        metadata['Patient Name'] = ds.get('PatientName', 'N/A')
+        metadata['Patient ID'] = ds.get('PatientID, N/A')
+        metadata['Body Part Examined'] = ds.get('BodyPartExamined, N/A')
+            
+            
         return metadata
 
 # def open_file(self, path):
