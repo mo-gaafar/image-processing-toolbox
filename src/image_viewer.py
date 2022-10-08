@@ -5,7 +5,6 @@ from modules import resources, interface
 import numpy as np
 from modules.utility import print_debug, print_log
 import sys
-from modules.viewer import ImageConfiguration, ImageMixer, Image, ImageFFT
 
 
 #TODO: plan out the structure of the application
@@ -23,18 +22,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # set the title and icon
         self.setWindowIcon(QtGui.QIcon('./resources/icons/icon.png'))
-        self.setWindowTitle("Image Mixer")
+        self.setWindowTitle("Medical Image Viewer")
 
-        # initialize arrays and variables
+        # initialize global variables
 
+        self.image1 = None
+
+        # initialize ui connectors
         interface.init_connectors(self)
-
-        self.image = Image(np.zeros((1, 1, 1)))
-
-
-
-        print_debug("Connectors Initialized")
-
 
 def main():
 

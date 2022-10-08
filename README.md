@@ -39,4 +39,3 @@ Just download the release from gh releases and run the executable.
     ```bash
     python image_viewer.py 
     ```
-

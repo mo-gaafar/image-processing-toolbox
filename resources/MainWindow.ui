@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>817</width>
-    <height>484</height>
+    <width>820</width>
+    <height>557</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -224,7 +224,11 @@ QGroupBox::title  {
               <item row="2" column="0">
                <layout class="QHBoxLayout" name="horizontalLayout_6">
                 <item>
-                 <layout class="QVBoxLayout" name="verticalLayout_7"/>
+                 <widget class="QLabel" name="metadata_widget">
+                  <property name="text">
+                   <string>TextLabel</string>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -258,7 +262,7 @@ QGroupBox::title  {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>817</width>
+     <width>820</width>
      <height>21</height>
     </rect>
    </property>
