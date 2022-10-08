@@ -35,6 +35,7 @@ class Image:
     #     pass
     # def update_parameters(self):
     def get_pixels(self):
+        print_debug(self.data)
         return self.data
 
     def get_formatted_metadata(self):

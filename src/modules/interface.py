@@ -19,11 +19,14 @@ def refresh_display(self):
 def display_pixmap(self, image_data):
     '''Displays the image data in the image display area'''
     # then convert it to image format
-    data = PILImage.fromarray(image_data.astype(np.uint8))
+    im = PILImage.fromarray(image_data)
     # save the image file as png
-    data.save('temp.png')
+    im.save('temp.png')
+    # im = im.convert("RGBA") 
+    # data = im.tobytes()
+    # qim = QtGui.QImage(data, im.size[0], im.size[1], QtGui.QImage.Format_RGBA888)
     # display saved image in Qpixmap
-    self.image1_widget.setPixmap(QtGui.QPixmap("temp.png"))
+    self.image1_widget.setPixmap(QtGui.QPixmap('temp.png'))
     self.image1_widget.show()
     # delete the temporary image file
     os.remove('temp.png')
@@ -32,7 +35,7 @@ def display_pixmap(self, image_data):
 def display_list(self):
     '''Displays the metadata in qlabel'''
     f_metadata = self.image1.get_formatted_metadata()
-    print("metadata: ", f_metadata)
+    print_debug("metadata: " + str( f_metadata))
     self.metadata_widget.setText(f_metadata)
 
 

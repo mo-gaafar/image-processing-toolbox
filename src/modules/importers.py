@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from modules import interface
 from PIL import Image as PILImage
+
 from abc import ABC, abstractmethod
 import pydicom
 import os
@@ -25,18 +26,35 @@ class ImageImporter(ABC):
 
 class BMPImporter(ImageImporter):
     def import_image(self, path) -> Image:
+
         # read the image
         image = PILImage.open(path)
         # convert to numpy array
         image_data = np.array(image)
         # parse metadata into dictionary
-        metadata = self.read_metadata(path)
+        metadata = self.read_metadata(image, path)
         # initialize image object
         image_object = Image(data=image_data, metadata=metadata, path=path)
         return image_object
 
-    def read_metadata(self, path)-> dict:
-        return {}
+    def read_metadata(self, pil_image, path)-> dict:
+        #width and height data
+        metadata = {}
+        metadata['Width'] = pil_image.size[0]
+        metadata['Height'] = pil_image.size[1]
+        #image total size
+        metadata['Size'] = str(os.path.getsize(path)*8) + ' bits' 
+        #bit depth data
+        metadata['Bit Depth'] = str(self.get_bit_depth(np.array(pil_image))) + ' bits'
+        #color mode data
+        metadata['Color Mode'] = pil_image.mode
+
+        return metadata
+
+    def get_bit_depth(self, image_data):
+        return image_data.dtype.itemsize * 8
+        
+
         
 class JPGImporter(ImageImporter):
     def import_image(self, path) -> Image:
@@ -62,8 +80,6 @@ class JPGImporter(ImageImporter):
         #color mode data
         metadata['Color Mode'] = PILImage.open(path).mode
 
-
-
         return metadata
         
 
@@ -74,6 +90,7 @@ class DICOMImporter(ImageImporter):
         # convert to numpy array
         ds.file_meta.TransferSyntaxUID = pydicom.uid.ImplicitVRLittleEndian  # or whatever is the correct transfer syntax for the file
         data = ds.pixel_array
+        
         # parse dicom metadata into dictionary
         metadata = self.read_metadata(ds,path)
         # initialize image object
@@ -110,20 +127,4 @@ class DICOMImporter(ImageImporter):
 #     return data
 
 
-# def remove_transparency(im, bg_colour=(255, 255, 255)):
 
-#     # Only process if image has transparency (http://stackoverflow.com/a/1963146)
-#     if im.mode in ('RGBA', 'LA') or (im.mode == 'P' and 'transparency' in im.info):
-
-#         # Need to convert to RGBA if LA format due to a bug in PIL (http://stackoverflow.com/a/1963146)
-#         alpha = im.convert('RGBA').split()[-1]
-
-#         # Create a new background image of our matt color.
-#         # Must be RGBA because paste requires both images have the same format
-#         # (http://stackoverflow.com/a/8720632  and  http://stackoverflow.com/a/9459208)
-#         bg = PILImage.new("RGBA", im.size, bg_colour + (255,))
-#         bg.paste(im, mask=alpha)
-#         return bg
-
-#     else:
-#         return im
