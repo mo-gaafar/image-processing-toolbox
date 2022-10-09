@@ -1,20 +1,15 @@
 
+import os
+import numpy as np
+import pydicom
+from PIL import Image as PILImage
 from PyQt5.QtWidgets import QFileDialog, QMessageBox
 import matplotlib.pyplot as plt
-import numpy as np
-from modules import interface
-from PIL import Image as PILImage
-
 from abc import ABC, abstractmethod
-import pydicom
-import os
-
-# from modules.utility import print_debug
-
+from modules import interface
 from modules.image import *
 
-#abstract class for image importers using ABC
-
+#abstract class for image importers using ABC module
 class ImageImporter(ABC):
     '''purpose: converts imported path to a 
     numpy array and then parses metadata 

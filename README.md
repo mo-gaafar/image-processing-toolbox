@@ -14,9 +14,9 @@ Browse and open DICOM, JPG, BMP files and view their metadata
 
 ![Preview](preview.gif)
 
-## How to use
+## How to install
 
-Just download the release from gh releases and run the executable.
+Just download the release from gh releases, unzip then run the executable.
 
 ## How to run dev environment
 
@@ -39,3 +39,7 @@ Just download the release from gh releases and run the executable.
     ```bash
     python image_viewer.py 
     ```
+## Architecture Block Diagram
+
+![Architecture Block Diagram](resources/block_diagram.png)
+

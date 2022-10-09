@@ -1,15 +1,17 @@
 
+import sys
+import numpy as np
 from PyQt5 import QtGui, QtWidgets, uic, QtCore
 from PyQt5.QtWidgets import QTabWidget
 from modules import resources, interface
-import numpy as np
 from modules.utility import print_debug, print_log
-import sys
 
+import ctypes
+myappid = 'mycompany.myproduct.subproduct.version' # arbitrary string
+# tells windows to use the string as the app id
+# so that taskbar grouping works correctly
+ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
-#TODO: plan out the structure of the application
-#TODO: plan out the user interface
-#TODO: implement the user interface
 
 class MainWindow(QtWidgets.QMainWindow):
     ''' This is the PyQt5 GUI Main Window'''
@@ -36,6 +38,7 @@ def main():
     app = QtWidgets.QApplication(sys.argv)
     main = MainWindow()
     main.show()
+
     sys.exit(app.exec_())
 
 

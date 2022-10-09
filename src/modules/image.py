@@ -1,23 +1,16 @@
 # define class and related functions
 from copy import copy, deepcopy
 from dataclasses import dataclass, field
-from msilib.schema import Component
-from typing import ClassVar
 import numpy as np
-from modules.utility import *
-from modules import interface
 import PyQt5.QtCore
 from PyQt5.QtWidgets import QMessageBox
+from modules import interface
+from modules.utility import *
 
 
 
 
-#TODO: add a function to update the image in the viewer
-#TODO: add exception handling e.g. empty image
-#TODO: add exception handling e.g. wrong image type + logging
 
-#TODO: plan how to handle different images in the architecture
-#TODO: supported types of images (bmp, jpg, dicom)
 
 # frozen = True means that the class cannot be modified
 # kw_only = True means that the class cannot be instantiated with positional arguments
