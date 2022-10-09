@@ -1,10 +1,13 @@
 
 import sys
 import numpy as np
+import pydicom.encoders.gdcm
+import pydicom.encoders.pylibjpeg
 from PyQt5 import QtGui, QtWidgets, uic, QtCore
 from PyQt5.QtWidgets import QTabWidget
 from modules import resources, interface
 from modules.utility import print_debug, print_log
+
 
 import ctypes
 myappid = 'mycompany.myproduct.subproduct.version' # arbitrary string
