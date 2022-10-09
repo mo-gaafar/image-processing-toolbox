@@ -2,7 +2,7 @@
 import logging
 
 # utility globals
-DEBUG_MODE = True
+DEBUG_MODE = False
 LOGGING_MODE = True
 
 

@@ -28,15 +28,12 @@ class Image:
     path: str = ''
     metadata: dict = field(default_factory=dict)
 
-    #     # TODO: calculate basic parameters (width, height, etc)
-    # def __post_init__(self):
-    #     self.update_parameters()
-
-    #     pass
-    # def update_parameters(self):
     def get_pixels(self):
         print_debug(self.data)
         return self.data
+    
+    def get_metadata(self):
+        return self.metadata
 
     def get_formatted_metadata(self):
         f_metadata = ''

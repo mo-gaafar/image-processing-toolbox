@@ -1,7 +1,7 @@
 
 from turtle import onrelease
 from typing import Type
-from PyQt5.QtWidgets import QTabWidget, QAction, QPushButton, QSlider, QComboBox, QLCDNumber, QMessageBox
+from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem, QAction, QPushButton, QMessageBox
 from PyQt5.QtGui import *
 import numpy as np
 from PIL import Image as PILImage
@@ -18,7 +18,7 @@ def refresh_display(self):
         display_pixmap(self, image=self.image1)
     except TypeError:
         # error message pyqt
-        QMessageBox.about(self,'Error', 'Error Loading Image: Unsupported Image Format')
+        QMessageBox.critical(self,'Error', 'Error Loading Image: Unsupported Image Format')
 
     display_list(self)
 
@@ -45,8 +45,16 @@ def display_pixmap(self, image):
 #TODO: make it display in a QTableWidget
 def display_list(self):
     '''Displays the metadata in QTableWidget'''
-    f_metadata = self.image1.get_formatted_metadata()
-    self.metadata_widget.setText(f_metadata)
+    f_metadata = self.image1.get_metadata()
+    # f_metadata = self.image1.get_formatted_metadata()
+    self.metadata_tablewidget.clear()
+    self.metadata_tablewidget.setRowCount(len(f_metadata))
+    self.metadata_tablewidget.setColumnCount(2)
+    self.metadata_tablewidget.setHorizontalHeaderLabels(['Property', 'Value'])
+    for i, (key, value) in enumerate(f_metadata.items()):
+        self.metadata_tablewidget.setItem(i, 0, QTableWidgetItem(str(key)))
+        self.metadata_tablewidget.setItem(i, 1, QTableWidgetItem(str(value)))
+    # self.metadata_widget.setText(f_metadata)
 
 
 def init_connectors(self):
