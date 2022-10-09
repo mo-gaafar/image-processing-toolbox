@@ -26,7 +26,9 @@ class ImageImporter(ABC):
 
 class BMPImporter(ImageImporter):
     def import_image(self, path) -> Image:
-
+        '''converts imported bitmap path to a 
+        numpy array and then parses metadata
+        then returns an image object'''
         # read the image
         image = PILImage.open(path)
         # convert to numpy array
@@ -35,7 +37,7 @@ class BMPImporter(ImageImporter):
         metadata = self.read_metadata(image, path)
         # initialize image object
         image_object = Image(data=image_data, metadata=metadata, path=path)
-        return image_object
+        return copy(image_object)
 
     def read_metadata(self, pil_image, path)-> dict:
         #width and height data
@@ -47,7 +49,7 @@ class BMPImporter(ImageImporter):
         #bit depth data
         metadata['Bit Depth'] = str(self.get_bit_depth(np.array(pil_image))) + ' bits'
         #color mode data
-        metadata['Color Mode'] = pil_image.mode
+        metadata['Image Color'] = pil_image.mode
 
         return metadata
 
@@ -58,6 +60,9 @@ class BMPImporter(ImageImporter):
         
 class JPGImporter(ImageImporter):
     def import_image(self, path) -> Image:
+        '''converts imported jpg path to a 
+        numpy array and then parses metadata
+        then returns an image object'''
 
         # read the image
         image = PILImage.open(path)
@@ -67,7 +72,8 @@ class JPGImporter(ImageImporter):
         metadata = self.read_metadata(path)
         # initialize image object
         image_object = Image(data=image_data, metadata=metadata, path=path)
-        return image_object
+        return copy(image_object)
+
     def read_metadata(self, path)-> dict:
         #width and height data
         metadata = {}
@@ -78,23 +84,30 @@ class JPGImporter(ImageImporter):
         #bit depth data
         metadata['Bit Depth'] = str(PILImage.open(path).bits) + ' bits'
         #color mode data
-        metadata['Color Mode'] = PILImage.open(path).mode
+        metadata['Image Color'] = PILImage.open(path).mode
 
         return metadata
         
 
 class DICOMImporter(ImageImporter):
     def import_image(self, path) -> Image:
+        '''converts imported dicom path to a 
+        numpy array and then parses metadata
+        then returns an image object'''
         # read the image
         ds = pydicom.dcmread(path, force=True)
         # convert to numpy array
         ds.file_meta.TransferSyntaxUID = pydicom.uid.ImplicitVRLittleEndian  # or whatever is the correct transfer syntax for the file
-        data = ds.pixel_array
-        
+        image_data = ds.pixel_array
+
+        #map each element to be between 0 and 255
+        #TODO: add support for more formats
+        image_data = np.interp(image_data, (image_data.min(), image_data.max()), (0, 255))
+
         # parse dicom metadata into dictionary
         metadata = self.read_metadata(ds,path)
         # initialize image object
-        image_object = Image(data=data, metadata=metadata, path=path)
+        image_object = Image(data=image_data, metadata=metadata, path=path)
         # return image object
         return copy(image_object)
     
@@ -104,17 +117,16 @@ class DICOMImporter(ImageImporter):
         metadata['Width'] = ds.Columns
         metadata['Height'] = ds.Rows
 
-        #image total size in bits
+        #image size info
         metadata['Size'] = str((os.stat(path).st_size)*8) + " bits"
-
         metadata['Color Depth'] = str(ds.BitsStored) + " bits"
-        metadata['Image Color'] = ds.get('PhotometricInterpretation', 'N/A')
 
         #dicom header data
+        metadata['Image Color'] = ds.get('PhotometricInterpretation', 'N/A')
         metadata['Modality'] = ds.get('Modality', 'N/A')
         metadata['Patient Name'] = ds.get('PatientName', 'N/A')
         metadata['Patient ID'] = ds.get('PatientID, N/A')
-        metadata['Body Part Examined'] = ds.get('BodyPartExamined, N/A')
+        metadata['Body Part Examined'] = ds.get('StudyDescription, N/A')
             
             
         return metadata

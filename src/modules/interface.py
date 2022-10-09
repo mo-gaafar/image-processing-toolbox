@@ -1,5 +1,6 @@
 
 from turtle import onrelease
+from typing import Type
 from PyQt5.QtWidgets import QTabWidget, QAction, QPushButton, QSlider, QComboBox, QLCDNumber, QMessageBox
 from PyQt5.QtGui import *
 import numpy as np
@@ -13,29 +14,38 @@ from modules import openfile
 
 def refresh_display(self):
     ''' Updates the user interface with the current image and data'''
-    display_pixmap(self, image_data=self.image1.get_pixels())
+    try:
+        display_pixmap(self, image=self.image1)
+    except TypeError:
+        # error message pyqt
+        QMessageBox.about(self,'Error', 'Error Loading Image: Unsupported Image Format')
+
     display_list(self)
 
-def display_pixmap(self, image_data):
+
+def display_pixmap(self, image):
     '''Displays the image data in the image display area'''
     # then convert it to image format
+    image_data = image.get_pixels()
+    
     im = PILImage.fromarray(image_data)
-    # save the image file as png
-    im.save('temp.png')
-    # im = im.convert("RGBA") 
-    # data = im.tobytes()
-    # qim = QtGui.QImage(data, im.size[0], im.size[1], QtGui.QImage.Format_RGBA888)
-    # display saved image in Qpixmap
-    self.image1_widget.setPixmap(QtGui.QPixmap('temp.png'))
-    self.image1_widget.show()
-    # delete the temporary image file
-    os.remove('temp.png')
 
-#TODO: make it display it in a qlistwidget
+    # convert the image to binary in RGB format
+
+    if im.mode != 'RGB':
+        im = im.convert('RGB')
+
+    data = im.tobytes()
+    qim = QtGui.QImage(data, im.size[0], im.size[1], QtGui.QImage.Format_RGB888)
+
+    # display saved image in Qpixmap
+    self.image1_widget.setPixmap(QtGui.QPixmap.fromImage(qim))
+    self.image1_widget.show()
+
+#TODO: make it display in a QTableWidget
 def display_list(self):
-    '''Displays the metadata in qlabel'''
+    '''Displays the metadata in QTableWidget'''
     f_metadata = self.image1.get_formatted_metadata()
-    print_debug("metadata: " + str( f_metadata))
     self.metadata_widget.setText(f_metadata)
 
 
