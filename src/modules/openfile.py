@@ -1,5 +1,4 @@
 from PyQt5.QtWidgets import QFileDialog
-import matplotlib.pyplot as plt
 import numpy as np
 from modules import interface
 from modules.image import *
