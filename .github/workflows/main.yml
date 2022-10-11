@@ -37,6 +37,7 @@ jobs:
   release:
     name: Create Release
     runs-on: ubuntu-latest
+    depends-on: build
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
