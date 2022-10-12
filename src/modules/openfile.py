@@ -19,9 +19,13 @@ def browse_window(self, image_idx=1):
     # select an image importer class based on the file extension
     importer = read_importer(path)
 
+    try:
     # import the image into an image object
-    self.image1 = importer.import_image(path)
-
+        self.image1 = importer.import_image(path)
+    except AttributeError:
+        QMessageBox.critical(
+            self, 'Error', 'Failed to import image: make sure that the correct file format is used', QMessageBox.Ok)
+        return
     # update the image and textbox in the viewer
     interface.refresh_display(self)
 

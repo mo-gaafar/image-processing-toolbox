@@ -37,52 +37,46 @@ class BMPImporter(ImageImporter):
     def read_metadata(self, pil_image, path)-> dict:
         #width and height data
         metadata = {}
+        
+        exifdata = pil_image.getexif()
+
         metadata['Width'] = pil_image.size[0]
         metadata['Height'] = pil_image.size[1]
         #image total size
         metadata['Size'] = str(os.path.getsize(path)*8) + ' bits' 
-        #bit depth data
-        metadata['Bit Depth'] = str(self.get_bit_depth(np.array(pil_image))) + ' bits'
+        #bit depth data (lossless)
+        metadata['Bit Depth'] = str((os.path.getsize(path)*8)//(metadata['Width']* metadata['Height'])) + ' bits'
         #color mode data
         metadata['Image Color'] = pil_image.mode
-
         return metadata
-
-    def get_bit_depth(self, image_data):
-        return image_data.dtype.itemsize * 8
-        
-
         
 class JPGImporter(ImageImporter):
     def import_image(self, path) -> Image:
         '''converts imported jpg path to a 
         numpy array and then parses metadata
         then returns an image object'''
-
         # read the image
-        image = PILImage.open(path)
+        pil_image = PILImage.open(path)
         # convert to numpy array
-        image_data = np.array(image)
+        image_data = np.array(pil_image)
         # parse metadata into dictionary
-        metadata = self.read_metadata(path)
+        metadata = self.read_metadata(path, pil_image)
         # initialize image object
         image_object = Image(data=image_data, metadata=metadata, path=path)
         return copy(image_object)
 
-    def read_metadata(self, path)-> dict:
+    def read_metadata(self, path, pil_image)-> dict:
         #width and height data
         metadata = {}
-        metadata['Width'] = PILImage.open(path).size[0]
-        metadata['Height'] = PILImage.open(path).size[1]
+        metadata['Width'] = pil_image.size[0]
+        metadata['Height'] = pil_image.size[1]
         #image total size
         metadata['Size'] = str(os.path.getsize(path)*8) + ' bits' 
-        #bit depth data
-        metadata['Bit Depth'] = str(PILImage.open(path).bits) + ' bits'
+        #bit depth data by counting no of channels and multiplying by color depth
+        metadata['Bit Depth'] = str(len(pil_image.getbands())* pil_image.bits) + ' bits'
         #color mode data
-        metadata['Image Color'] = PILImage.open(path).mode
-
+        metadata['Image Color'] = pil_image.mode
         return metadata
-        
 
 class DICOMImporter(ImageImporter):
     def import_image(self, path) -> Image:
@@ -121,17 +115,7 @@ class DICOMImporter(ImageImporter):
         metadata['Modality'] = ds.get('Modality', 'N/A')
         metadata['Patient Name'] = ds.get('PatientName', 'N/A')
         metadata['Patient ID'] = ds.get('PatientID, N/A')
-        metadata['Body Part Examined'] = ds.get('StudyDescription, N/A')
-            
-            
+        metadata['Body Part Examined'] = ds.get('StudyDescription, N/A')      
         return metadata
-
-# def open_file(self, path):
-
-#     im = PILImage.open(path)
-#     im = remove_transparency(im)
-#     data = np.array(im)
-#     return data
-
 
 

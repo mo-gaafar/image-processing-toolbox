@@ -16,7 +16,7 @@ def refresh_display(self):
     except TypeError:
         # error message pyqt
         QMessageBox.critical(self,'Error', 'Error Loading Image: Unsupported Image Format')
-
+    
     display_metatable(self)
 
 

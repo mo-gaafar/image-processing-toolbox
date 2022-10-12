@@ -1,8 +1,6 @@
 
 import sys
 import numpy as np
-import pydicom.encoders.gdcm
-import pydicom.encoders.pylibjpeg
 from PyQt5 import QtGui, QtWidgets, uic, QtCore
 from PyQt5.QtWidgets import QTabWidget
 from modules import resources, interface
@@ -30,7 +28,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setWindowTitle("Medical Image Viewer")
 
         # initialize global variables
-
         self.image1 = None
 
         # initialize ui connectors

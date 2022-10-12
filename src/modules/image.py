@@ -8,10 +8,6 @@ from modules import interface
 from modules.utility import *
 
 
-
-
-
-
 # frozen = True means that the class cannot be modified
 # kw_only = True means that the class cannot be instantiated with positional arguments
 @dataclass(frozen = True)
