@@ -25,20 +25,31 @@ Just download the release from gh releases, unzip then run the executable.
 
     ```bash
     cd <this repo>/src
-    python -m venv ./ 
+    python -m venv ./
     ```
 
-3. Install dependencies from requirements.txt
+3. Activate the virtual environment
+
+    ```bash
+    Scripts\Activate.ps1 # for powershell
+    ```
+
+    ```bash
+    Scripts\Activate.bat # for cmd
+    ```
+
+4. Install dependencies from requirements.txt
 
     ```bash
     pip install -r requirements.txt
     ```
 
-4. Run the app
+5. Run the app
 
     ```bash
     python image_viewer.py 
     ```
+
 ## Architecture Block Diagram
 
 ![Architecture Block Diagram](resources/block_diagram.png)

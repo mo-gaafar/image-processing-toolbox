@@ -4,7 +4,8 @@ import numpy as np
 import pydicom
 from PIL import Image as PILImage
 from PyQt5.QtWidgets import QFileDialog, QMessageBox
-import matplotlib.pyplot as plt
+import pydicom.encoders.pylibjpeg
+import pydicom.encoders.gdcm
 from abc import ABC, abstractmethod
 from modules import interface
 from modules.image import *
