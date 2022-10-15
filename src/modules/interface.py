@@ -6,7 +6,15 @@ from PyQt5.QtGui import *
 from PyQt5 import QtGui
 from modules.utility import print_debug
 from modules import openfile
+from modules import interpolators
 
+
+def update_resize_tab(self, caller=None):
+    ''' Synchrnoizes slider values and spinbox values'''
+    if caller == 'slider':
+        self.resize_spinbox.setValue(self.resize_slider.value())
+    elif caller == 'spinbox':
+        self.resize_slider.setValue(self.resize_spinbox.value())
 
 
 def refresh_display(self):
@@ -15,8 +23,9 @@ def refresh_display(self):
         display_pixmap(self, image=self.image1)
     except TypeError:
         # error message pyqt
-        QMessageBox.critical(self,'Error', 'Error Loading Image: Unsupported Image Format')
-    
+        QMessageBox.critical(
+            self, 'Error', 'Error Loading Image: Unsupported Image Format')
+
     display_metatable(self)
 
 
@@ -24,7 +33,7 @@ def display_pixmap(self, image):
     '''Displays the image data in the image display area'''
     # then convert it to image format
     image_data = image.get_pixels()
-    
+
     im = PILImage.fromarray(image_data)
 
     # convert the image to binary in RGB format
@@ -33,11 +42,13 @@ def display_pixmap(self, image):
         im = im.convert('RGB')
 
     data = im.tobytes()
-    qim = QtGui.QImage(data, im.size[0], im.size[1], QtGui.QImage.Format_RGB888)
+    qim = QtGui.QImage(
+        data, im.size[0], im.size[1], QtGui.QImage.Format_RGB888)
 
     # display saved image in Qpixmap
     self.image1_widget.setPixmap(QtGui.QPixmap.fromImage(qim))
     self.image1_widget.show()
+
 
 def display_metatable(self):
     '''Displays the metadata in QTableWidget'''
@@ -67,9 +78,21 @@ def init_connectors(self):
     self.insert_image1_pushButton.clicked.connect(
         lambda: openfile.browse_window(self, 1))
 
+    ''' resize tab'''
+    self.resize_slider.sliderReleased.connect(
+        lambda: update_resize_tab(self, 'slider'))
+    self.resize_spinbox.valueChanged.connect(
+        lambda: update_resize_tab(self, 'spinbox'))
+
+    # triggers the resizing
+    self.resize_apply.clicked.connect(lambda: interpolators.resize_image(self))
+    # TODO: where to store ui input vars?
+
+    # self.resize_apply.clicked.connect(lambda: interpolators.resize_image(self))
+
     print_debug("Connectors Initialized")
+
 
 def about_us(self):
     QMessageBox.about(
         self, ' About ', 'This is a Medical Image Viewer \nCreated by Senior students from the faculty of Engineering, Cairo Uniersity, Systems and Biomedical Engineering department \n \n Created By: Mohamed Nasser ')
-

@@ -291,10 +291,13 @@ rgb(163, 162, 165);
                    <number>39</number>
                   </attribute>
                   <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
-                   <bool>false</bool>
+                   <bool>true</bool>
                   </attribute>
                   <attribute name="horizontalHeaderStretchLastSection">
                    <bool>true</bool>
+                  </attribute>
+                  <attribute name="verticalHeaderVisible">
+                   <bool>false</bool>
                   </attribute>
                   <attribute name="verticalHeaderShowSortIndicator" stdset="0">
                    <bool>false</bool>
