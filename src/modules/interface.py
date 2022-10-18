@@ -17,6 +17,14 @@ def update_resize_tab(self, caller=None):
         self.resize_slider.setValue(self.resize_spinbox.value())
 
 
+def get_user_input(self):
+    '''Gets the user input from the GUI and returns it as a dictionary'''
+    user_input = {}
+    user_input['resize factor'] = self.resize_spinbox.value()
+    user_input['interpolation method'] = self.interpolation_method.currentText()
+    return user_input
+
+
 def refresh_display(self):
     ''' Updates the user interface with the current image and data'''
     try:
@@ -78,7 +86,7 @@ def init_connectors(self):
     self.insert_image1_pushButton.clicked.connect(
         lambda: openfile.browse_window(self, 1))
 
-    ''' resize tab'''
+    ''' Interpolation (resize) tab'''
     self.resize_slider.sliderReleased.connect(
         lambda: update_resize_tab(self, 'slider'))
     self.resize_spinbox.valueChanged.connect(
@@ -86,13 +94,12 @@ def init_connectors(self):
 
     # triggers the resizing
     self.resize_apply.clicked.connect(lambda: interpolators.resize_image(self))
-    # TODO: where to store ui input vars?
-
-    # self.resize_apply.clicked.connect(lambda: interpolators.resize_image(self))
+    # undo resizing
+    self.resize_reset.clicked.connect(lambda: interpolators.reset_image(self))
 
     print_debug("Connectors Initialized")
 
 
 def about_us(self):
     QMessageBox.about(
-        self, ' About ', 'This is a Medical Image Viewer \nCreated by Senior students from the faculty of Engineering, Cairo Uniersity, Systems and Biomedical Engineering department \n \n Created By: Mohamed Nasser ')
+        self, ' About ', 'This is a Medical Image Toolbox \nCreated by Senior students from the faculty of Engineering, Cairo Uniersity, Systems and Biomedical Engineering department \n \n Created By: Mohamed Nasser ')
