@@ -12,9 +12,17 @@ from modules import interpolators
 def update_resize_tab(self, caller=None):
     ''' Synchrnoizes slider values and spinbox values'''
     if caller == 'slider':
-        self.resize_spinbox.setValue(self.resize_slider.value())
+        self.resize_spinbox.setValue(self.resize_slider.value()/10)
     elif caller == 'spinbox':
-        self.resize_slider.setValue(self.resize_spinbox.value())
+        self.resize_slider.setValue(self.resize_spinbox.value()*10)
+
+
+def get_user_input(self):
+    '''Gets the user input from the GUI and returns it as a dictionary'''
+    user_input = {}
+    user_input['resize factor'] = self.resize_spinbox.value()
+    user_input['interpolation method'] = self.interpolate_combobox.currentText()
+    return user_input
 
 
 def refresh_display(self):
@@ -78,7 +86,7 @@ def init_connectors(self):
     self.insert_image1_pushButton.clicked.connect(
         lambda: openfile.browse_window(self, 1))
 
-    ''' resize tab'''
+    ''' Interpolation (resize) tab'''
     self.resize_slider.sliderReleased.connect(
         lambda: update_resize_tab(self, 'slider'))
     self.resize_spinbox.valueChanged.connect(
@@ -86,13 +94,12 @@ def init_connectors(self):
 
     # triggers the resizing
     self.resize_apply.clicked.connect(lambda: interpolators.resize_image(self))
-    # TODO: where to store ui input vars?
-
-    # self.resize_apply.clicked.connect(lambda: interpolators.resize_image(self))
+    # undo resizing
+    self.resize_reset.clicked.connect(lambda: interpolators.reset_image(self))
 
     print_debug("Connectors Initialized")
 
 
 def about_us(self):
     QMessageBox.about(
-        self, ' About ', 'This is a Medical Image Viewer \nCreated by Senior students from the faculty of Engineering, Cairo Uniersity, Systems and Biomedical Engineering department \n \n Created By: Mohamed Nasser ')
+        self, ' About ', 'This is a Medical Image Toolbox \nCreated by Senior students from the faculty of Engineering, Cairo Uniersity, Systems and Biomedical Engineering department \n \n Created By: Mohamed Nasser ')

@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import QTabWidget
 from modules import resources, interface
 from modules.utility import print_debug, print_log
 
-
+#if macos 
 import ctypes
 myappid = 'mycompany.myproduct.subproduct.version' # arbitrary string
 # tells windows to use the string as the app id
@@ -25,7 +25,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # set the title and icon
         self.setWindowIcon(QtGui.QIcon('./resources/icons/icon.png'))
-        self.setWindowTitle("Medical Image Viewer")
+        self.setWindowTitle("Medical Image Toolbox")
 
         # initialize global variables
         self.image1 = None

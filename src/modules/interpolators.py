@@ -2,26 +2,50 @@ import numpy as np
 from modules.image import *
 from modules import interface
 
+# connected to the apply button in resize tab
+
+
+def reset_image(self):
+    '''Resets the image to its original size'''
+    try:
+        # undo previous operations
+        self.image1.clear_operations()
+    except AttributeError:
+        QMessageBox.critical(
+            self, 'Error', 'Error Running Operation: No Image Loaded')
+        return
+    # refresh the display
+    interface.refresh_display(self)
+
 
 def resize_image(self):
     '''Resizes the image to the specified dimensions'''
-    # # get the new dimensions
-    # width = self.resize_width_spinBox.value()
-    # height = self.resize_height_spinBox.value()
 
     # get user input parameters data
-    # TODO: create a getter function that returns a params dict from the UI
-    factor = self.resize_spinbox.value()
+    factor = interface.get_user_input(self)['resize factor']
 
-    # get the selected interpolator
-    interpolator = read_interpolator(self.interpolate_combobox.currentText())
+    # get the selected interpolator class
+    interpolator = read_interpolator(
+        interface.get_user_input(self)['interpolation method'])
+
     if interpolator == None:
         return
-    # configure the resize operation
-    resize_operation = interpolator.__post_init__(self.image1, width, height)
+
+    # configure the resize operation object
+    resize_operation = interpolator.configure(factor)
+
+    try:
+        # undo previous operations
+        self.image1.clear_operations()
+
+    except AttributeError:
+        QMessageBox.critical(
+            self, 'Error', 'Error Running Operation: No Image Loaded')
+        return
     # add the operation to the image
-    self.image1.append_operation(resize_operation)
-    # run the processing 
+    self.image1.add_operation(MonochoromeConversion())
+    self.image1.add_operation(resize_operation)
+    # run the processing
     self.image1.run_processing()
     # refresh the display
     interface.refresh_display(self)
@@ -30,7 +54,7 @@ def resize_image(self):
 def read_interpolator(interpolator_name) -> ImageOperation:
     # array of supported interpolators
     interpolators = {
-        'Nearest Neighbor': NearestNeighborInterpolator(),
+        'Nearest-Neighbor': NearestNeighborInterpolator(),
         'Bilinear': BilinearInterpolator(),
         'None': None
     }
@@ -41,22 +65,84 @@ def read_interpolator(interpolator_name) -> ImageOperation:
 
 
 class BilinearInterpolator(ImageOperation):
-    def __init__(self, image):
-        super().__init__(image)
+    def configure(self, factor):
+        self.factor = factor
+        return self
 
-    def interpolate(self, x, y):
-        pass
+    def linear_interp(self, p1, p2, px):
+        return p1 * (1-px) + p2 * px
+
+    def interpolate(self, image_data):
+        '''Bilinear interpolation'''
+
+        # get the image dimensions
+        height, width = image_data.shape
+
+        # get the resize factor
+        factor = self.factor
+
+        # calculate the new dimensions
+        new_height = int(height * factor)
+        new_width = int(width * factor)
+
+        # create a new image with the new dimensions
+        new_image = np.zeros((new_height, new_width))
+
+        # get p1, p2, p3 and p4 from original image and then perform bilinear interpolation for each new pixel
+        for i in range(new_height-2):
+            for j in range(new_width-2):
+                x = i/factor
+                y = j/factor
+
+                x1 = int(np.floor(x))
+                x2 = int(np.ceil(x))
+                y1 = int(np.floor(y))
+                y2 = int(np.ceil(y))
+
+                # p1 -- p' ---- p2
+                # |     |       |
+                # |     |       |
+                # |     |       |
+                # p3 --p''---- p4
+
+                p1 = image_data[x1, y1]
+                p2 = image_data[x1, y2]
+                p3 = image_data[x2, y1]
+                p4 = image_data[x2, y2]
+
+                # calculate the new pixel value
+                new_image[i, j] = self.linear_interp(
+                    self.linear_interp(p1, p2, x-x1), self.linear_interp(p3, p4, x-x1), y-y1)
+        return new_image
 
     def execute(self):
         self.image.data = self.interpolate(self.image.data)
+        return self.image
 
 
 class NearestNeighborInterpolator(ImageOperation):
-    def __init__(self, image):
-        super().__init__(image)
 
-    def interpolate(self, x, y):
-        pass
+    def interpolate(self, image_data):
+        # get the image dimensions
+        height, width = image_data.shape
+        # create a new image with the new dimensions
+        new_image = np.zeros(
+            (int(np.floor(self.factor * height)), int(np.floor(self.factor * width))))
+        # loop through the new image and interpolate the values
+        for i in range(0, new_image.shape[0]):
+            for j in range(0, new_image.shape[1]):
+                # get the new image coordinates
+                x = i / self.factor
+                y = j / self.factor
+                # get the coordinates of the nearest neighbors
+                x1 = int(np.floor(x))
+                y1 = int(np.floor(y))
+                # get the pixel values of the nearest neighbors
+                q11 = image_data[x1, y1]
+                # interpolate the pixel value
+                new_image[i, j] = q11
+        return new_image
 
     def execute(self):
         self.image.data = self.interpolate(self.image.data)
+        return self.image
