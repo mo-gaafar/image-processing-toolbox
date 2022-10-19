@@ -33,6 +33,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # initialize ui connectors
         interface.init_connectors(self)
 
+
 def main():
 
     app = QtWidgets.QApplication(sys.argv)
