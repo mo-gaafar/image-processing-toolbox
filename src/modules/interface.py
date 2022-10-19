@@ -12,16 +12,16 @@ from modules import interpolators
 def update_resize_tab(self, caller=None):
     ''' Synchrnoizes slider values and spinbox values'''
     if caller == 'slider':
-        self.resize_spinbox.setValue(self.resize_slider.value())
+        self.resize_spinbox.setValue(self.resize_slider.value()/10)
     elif caller == 'spinbox':
-        self.resize_slider.setValue(self.resize_spinbox.value())
+        self.resize_slider.setValue(self.resize_spinbox.value()*10)
 
 
 def get_user_input(self):
     '''Gets the user input from the GUI and returns it as a dictionary'''
     user_input = {}
     user_input['resize factor'] = self.resize_spinbox.value()
-    user_input['interpolation method'] = self.interpolation_method.currentText()
+    user_input['interpolation method'] = self.interpolate_combobox.currentText()
     return user_input
 
 

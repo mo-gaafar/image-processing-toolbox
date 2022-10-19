@@ -87,7 +87,7 @@ QGroupBox::title  {
                  <pixmap>placeholder.png</pixmap>
                 </property>
                 <property name="scaledContents">
-                 <bool>true</bool>
+                 <bool>false</bool>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
@@ -168,7 +168,7 @@ QGroupBox::title  {
                <enum>QTabWidget::Triangular</enum>
               </property>
               <property name="currentIndex">
-               <number>1</number>
+               <number>0</number>
               </property>
               <property name="elideMode">
                <enum>Qt::ElideNone</enum>
@@ -276,7 +276,7 @@ rgb(163, 162, 165);
                    <bool>true</bool>
                   </property>
                   <attribute name="horizontalHeaderVisible">
-                   <bool>false</bool>
+                   <bool>true</bool>
                   </attribute>
                   <attribute name="horizontalHeaderCascadingSectionResizes">
                    <bool>true</bool>
@@ -297,7 +297,7 @@ rgb(163, 162, 165);
                    <bool>true</bool>
                   </attribute>
                   <attribute name="verticalHeaderVisible">
-                   <bool>false</bool>
+                   <bool>true</bool>
                   </attribute>
                   <attribute name="verticalHeaderShowSortIndicator" stdset="0">
                    <bool>false</bool>
@@ -414,7 +414,16 @@ rgb(163, 162, 165);
                    <item>
                     <widget class="QSlider" name="resize_slider">
                      <property name="minimum">
-                      <number>-99</number>
+                      <number>1</number>
+                     </property>
+                     <property name="maximum">
+                      <number>20</number>
+                     </property>
+                     <property name="sliderPosition">
+                      <number>10</number>
+                     </property>
+                     <property name="tracking">
+                      <bool>true</bool>
                      </property>
                      <property name="orientation">
                       <enum>Qt::Horizontal</enum>
@@ -423,14 +432,23 @@ rgb(163, 162, 165);
                       <enum>QSlider::TicksBelow</enum>
                      </property>
                      <property name="tickInterval">
-                      <number>10</number>
+                      <number>1</number>
                      </property>
                     </widget>
                    </item>
                    <item>
                     <widget class="QDoubleSpinBox" name="resize_spinbox">
                      <property name="minimum">
-                      <double>-99.989999999999995</double>
+                      <double>0.010000000000000</double>
+                     </property>
+                     <property name="maximum">
+                      <double>10.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.100000000000000</double>
+                     </property>
+                     <property name="value">
+                      <double>1.000000000000000</double>
                      </property>
                     </widget>
                    </item>
