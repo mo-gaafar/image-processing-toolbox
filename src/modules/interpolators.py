@@ -34,10 +34,11 @@ def resize_image(self):
         # configure the resize operation object
         resize_operation = interpolator.configure(factor)
 
-        interface.update_img_resize_dimensions(self,"original", self.image1.get_pixels())
 
         # undo previous operations
         self.image1.clear_operations()
+
+        interface.update_img_resize_dimensions(self,"original", self.image1.get_pixels())
 
         # add the operation to the image
         self.image1.add_operation(MonochoromeConversion())
@@ -47,13 +48,14 @@ def resize_image(self):
         # run the processing
         self.image1.run_processing()
         interface.print_statusbar(self, 'Done')
+
         interface.update_img_resize_dimensions(self,"resized", self.image1.get_pixels())
         # refresh the display
         interface.refresh_display(self)
 
     except AttributeError:
         QMessageBox.critical(
-            self, 'Error', 'Error Running Operation: No Image Loaded')
+            self, 'Error', 'Error Running Operation')
         return
 
 

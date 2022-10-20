@@ -18,13 +18,11 @@ def update_resize_tab(self, caller=None):
 
 def update_img_resize_dimensions(self, selector, data_arr):
     if selector == 'original':
-        dimensions_string = str(data_arr.shape[0]) +"X"+ str(data_arr.shape[1])+ " px"
+        dimensions_string = str(data_arr.shape[0]) +" x "+ str(data_arr.shape[1])+ " px"
         self.resize_original_dim_textbox.setText(dimensions_string)
     elif selector == 'resized':
-        dimensions_string = str(data_arr.shape[0]) +"X"+ str(data_arr.shape[1])+ " px"
-        self.resize_resized_dim_textbox.setText(dimensions_string)
-
-        
+        dimensions_string = str(data_arr.shape[0]) +" x "+ str(data_arr.shape[1])+ " px"
+        self.resize_modified_dim_textbox.setText(dimensions_string)
 
 
 def get_user_input(self):
@@ -59,11 +57,11 @@ def display_pixmap(self, image):
     print_debug("Displaying Image")
     print_debug(image_data.shape)
 
-    # show image using matplotlib
-    import matplotlib.pyplot as plt
-    plt.figure()
-    plt.imshow(image_data, cmap='gray')
-    plt.show()
+    # # show image using matplotlib
+    # import matplotlib.pyplot as plt
+    # plt.figure()
+    # plt.imshow(image_data, cmap='gray')
+    # plt.show()
 
     qim = None
 

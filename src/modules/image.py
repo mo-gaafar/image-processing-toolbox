@@ -83,6 +83,7 @@ class Image:
             # self.operations_dict = self.image_backup.operations_dict
 
     def get_pixels(self):
+        print_debug("Getting image pixels")
         print_debug(self.data)
         return self.data
 
