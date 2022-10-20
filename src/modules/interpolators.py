@@ -15,48 +15,52 @@ def reset_image(self):
             self, 'Error', 'Error Running Operation: No Image Loaded')
         return
     # refresh the display
-    interface.refresh_display(self)
+    interface.update_browse(self)
 
 
 def resize_image(self):
     '''Resizes the image to the specified dimensions'''
-    try:
-        # get user input parameters data
-        factor = interface.get_user_input(self)['resize factor']
+    # try:
+    # get user input parameters data
+    factor = interface.get_user_input(self)['resize factor']
 
-        # get the selected interpolator class
-        interpolator = read_interpolator(
-            interface.get_user_input(self)['interpolation method'])
+    # get the selected interpolator class
+    interpolator = read_interpolator(
+        interface.get_user_input(self)['interpolation method'])
 
-        if interpolator == None:
-            return
-
-        # configure the resize operation object
-        resize_operation = interpolator.configure(factor)
-
-
-        # undo previous operations
-        self.image1.clear_operations()
-
-        interface.update_img_resize_dimensions(self,"original", self.image1.get_pixels())
-
-        # add the operation to the image
-        self.image1.add_operation(MonochoromeConversion())
-        self.image1.add_operation(resize_operation)
-
-        interface.print_statusbar(self, 'Processing Image..')
-        # run the processing
-        self.image1.run_processing()
-        interface.print_statusbar(self, 'Done')
-
-        interface.update_img_resize_dimensions(self,"resized", self.image1.get_pixels())
-        # refresh the display
-        interface.refresh_display(self)
-
-    except AttributeError:
-        QMessageBox.critical(
-            self, 'Error', 'Error Running Operation')
+    if interpolator == None:
         return
+
+    # configure the resize operation object
+    resize_operation = interpolator.configure(factor)
+
+    # undo previous operations
+    self.image1.clear_operations()
+
+    interface.update_img_resize_dimensions(
+        self, "original", self.image1.get_pixels())
+
+    # add the operation to the image
+    self.image1.add_operation(MonochoromeConversion())
+    self.image1.add_operation(resize_operation)
+
+    interface.print_statusbar(self, 'Processing Image..')
+    # run the processing
+    self.image1.run_processing()
+    interface.print_statusbar(self, 'Done')
+
+    interface.update_img_resize_dimensions(
+        self, "resized", self.image1.get_pixels())
+    # refresh the display
+    # interface.refresh_display(self)
+    selected_window = int(self.interpolate_output_combobox.currentIndex())
+    interface.display_pixmap(
+        self, image=self.image1, window_index=selected_window)
+
+    # except AttributeError:
+    #     QMessageBox.critical(
+    #         self, 'Error', 'Error Running Operation')
+    #     return
 
 
 def read_interpolator(interpolator_name) -> ImageOperation:
@@ -115,7 +119,10 @@ class BilinearInterpolator(ImageOperation):
 
                 # check if p1,p2,p3,p4 are out of bounds
                 if x1 < 0 or x2 >= height or y1 < 0 or y2 >= width:
-                    continue
+                    if x2 >= height:
+                        x2 = x1
+                    if y2 >= width:
+                        y2 = y1
 
                 p1 = image_data[y1, x1]
                 p2 = image_data[y1, x2]

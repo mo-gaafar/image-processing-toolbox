@@ -5,8 +5,7 @@ from modules.image import *
 from modules.importers import *
 
 
-
-def browse_window(self, image_idx=1):
+def open_new(self, image_idx=1):
     self.filename = QFileDialog.getOpenFileName(
         None, 'open the image file', './', filter="Raw Data(*.bmp *.jpg *.dcm *.jpeg)")
     path = self.filename[0]
@@ -20,19 +19,21 @@ def browse_window(self, image_idx=1):
     importer = read_importer(path)
 
     try:
-    # import the image into an image object
+        # import the image into an image object
         self.image1 = importer.import_image(path)
-    except :
+    except:
         QMessageBox.critical(
             self, 'Error', 'Failed to import image: make sure that the correct file format is used', QMessageBox.Ok)
         return
     # update the image and textbox in the viewer
-    interface.refresh_display(self)
+    interface.display_pixmap(self, image=self.image1, window_index=0)
+    interface.display_metatable(self, self.image1.get_metadata())
+
 
 def read_importer(path) -> ImageImporter:
-    #parse file extension
+    # parse file extension
     extension = path.split('.')[-1]
-    #array of supported extensions
+    # array of supported extensions
     importers = {
         'bmp': BMPImporter(),
         'jpeg': JPGImporter(),

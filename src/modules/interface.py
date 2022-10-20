@@ -16,12 +16,15 @@ def update_resize_tab(self, caller=None):
     elif caller == 'spinbox':
         self.resize_slider.setValue(int(self.resize_spinbox.value()*10))
 
+
 def update_img_resize_dimensions(self, selector, data_arr):
     if selector == 'original':
-        dimensions_string = str(data_arr.shape[0]) +" x "+ str(data_arr.shape[1])+ " px"
+        dimensions_string = str(
+            data_arr.shape[0]) + " x " + str(data_arr.shape[1]) + " px"
         self.resize_original_dim_textbox.setText(dimensions_string)
     elif selector == 'resized':
-        dimensions_string = str(data_arr.shape[0]) +" x "+ str(data_arr.shape[1])+ " px"
+        dimensions_string = str(
+            data_arr.shape[0]) + " x " + str(data_arr.shape[1]) + " px"
         self.resize_modified_dim_textbox.setText(dimensions_string)
 
 
@@ -33,23 +36,23 @@ def get_user_input(self):
     return user_input
 
 
-def refresh_display(self):
-    ''' Updates the user interface with the current image and data'''
-    try:
-        display_pixmap(self, image=self.image1)
-    except TypeError:
-        # error message pyqt
-        QMessageBox.critical(
-            self, 'Error', 'Error Loading Image: Unsupported Image Format')
+# def update_browse(self):
+#     ''' Updates the user interface with the current image and data'''
+#     try:
+#         display_pixmap(self, image=self.image1)
+#     except TypeError:
+#         # error message pyqt
+#         QMessageBox.critical(
+#             self, 'Error', 'Error Displaying Image: Unsupported Image Format')
 
-    display_metatable(self)
+#     display_metatable(self)
 
 
 def print_statusbar(self, message):
     self.statusbar.showMessage(message)
 
 
-def display_pixmap(self, image):
+def display_pixmap(self, image, window_index=0):
     '''Displays the image data in the image display area'''
     # then convert it to image format
     image_data = image.get_pixels()
@@ -96,13 +99,36 @@ def display_pixmap(self, image):
     # convert the image to binary in RGB format
 
     # display saved image in Qpixmap
-    self.image1_widget.setPixmap(QtGui.QPixmap.fromImage(qim))
-    self.image1_widget.show()
+    if window_index == 0:
+        self.image1_pixmap = QPixmap.fromImage(qim)
+        self.image1_widget.setPixmap(self.image1_pixmap)
+        self.image1_widget.show()
+    elif window_index == 1:
+        self.image2_pixmap = QPixmap.fromImage(qim)
+        self.image2_widget.setPixmap(self.image2_pixmap)
+        self.image2_widget.show()
+    else:
+        raise ValueError("Invalid window index")
 
 
-def display_metatable(self):
+def toggle_image_window(self, window_index):
+    if window_index == 0:
+        if self.image1_widget.isHidden():
+            self.image1_widget.show()
+        else:
+            self.image1_widget.hide()
+    elif window_index == 1:
+        if self.image2_widget.isHidden():
+            self.image2_widget.show()
+        else:
+            self.image2_widget.hide()
+    else:
+        raise ValueError("Invalid window index")
+
+
+def display_metatable(self, f_metadata=None):
     '''Displays the metadata in QTableWidget'''
-    f_metadata = self.image1.get_metadata()
+    # f_metadata = self.image1.get_metadata()
     self.metadata_tablewidget.clear()
     self.metadata_tablewidget.setRowCount(len(f_metadata))
     self.metadata_tablewidget.setColumnCount(2)
@@ -118,7 +144,7 @@ def init_connectors(self):
     ''' Menu Bar'''
 
     # File Menu
-    self.actionOpen.triggered.connect(lambda: openfile.open_file(self))
+    self.actionOpen.triggered.connect(lambda: openfile.open_new(self, 1))
     self.actionSave_As.triggered.connect(lambda: openfile.save_file(self))
     self.actionSave.triggered.connect(lambda: openfile.save_file(self))
 
@@ -135,10 +161,10 @@ def init_connectors(self):
 
     # self.WindowTabs = self.findChild(QTabWidget, "WindowTabs")
 
-    ''' browse buttons'''
-    # the index argument maps each function to its respective slot
-    self.insert_image1_pushButton.clicked.connect(
-        lambda: openfile.browse_window(self, 1))
+    # ''' browse buttons'''
+    # # the index argument maps each function to its respective slot
+    # self.insert_image1_pushButton.clicked.connect(
+    #     lambda: openfile.open_new(self, 1))
 
     ''' Interpolation (resize) tab'''
     self.resize_slider.sliderReleased.connect(
