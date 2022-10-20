@@ -20,35 +20,38 @@ def reset_image(self):
 
 def resize_image(self):
     '''Resizes the image to the specified dimensions'''
-
-    # get user input parameters data
-    factor = interface.get_user_input(self)['resize factor']
-
-    # get the selected interpolator class
-    interpolator = read_interpolator(
-        interface.get_user_input(self)['interpolation method'])
-
-    if interpolator == None:
-        return
-
-    # configure the resize operation object
-    resize_operation = interpolator.configure(factor)
-
     try:
+        # get user input parameters data
+        factor = interface.get_user_input(self)['resize factor']
+
+        # get the selected interpolator class
+        interpolator = read_interpolator(
+            interface.get_user_input(self)['interpolation method'])
+
+        if interpolator == None:
+            return
+
+        # configure the resize operation object
+        resize_operation = interpolator.configure(factor)
+
         # undo previous operations
         self.image1.clear_operations()
+
+        # add the operation to the image
+        self.image1.add_operation(MonochoromeConversion())
+        self.image1.add_operation(resize_operation)
+
+        interface.print_statusbar(self, 'Processing Image..')
+        # run the processing
+        self.image1.run_processing()
+        interface.print_statusbar(self, 'Done')
+        # refresh the display
+        interface.refresh_display(self)
 
     except AttributeError:
         QMessageBox.critical(
             self, 'Error', 'Error Running Operation: No Image Loaded')
         return
-    # add the operation to the image
-    self.image1.add_operation(MonochoromeConversion())
-    self.image1.add_operation(resize_operation)
-    # run the processing
-    self.image1.run_processing()
-    # refresh the display
-    interface.refresh_display(self)
 
 
 def read_interpolator(interpolator_name) -> ImageOperation:
@@ -70,7 +73,7 @@ class BilinearInterpolator(ImageOperation):
         return self
 
     def linear_interp(self, p1, p2, px):
-        return p1 * (1-px) + p2 * px
+        return p1*(1-px) + p2 * px
 
     def interpolate(self, image_data):
         '''Bilinear interpolation'''
@@ -89,10 +92,10 @@ class BilinearInterpolator(ImageOperation):
         new_image = np.zeros((new_height, new_width))
 
         # get p1, p2, p3 and p4 from original image and then perform bilinear interpolation for each new pixel
-        for i in range(new_height-2):
-            for j in range(new_width-2):
-                x = i/factor
-                y = j/factor
+        for i in range(new_height):
+            for j in range(new_width):
+                y = i/factor
+                x = j/factor
 
                 x1 = int(np.floor(x))
                 x2 = int(np.ceil(x))
@@ -105,10 +108,14 @@ class BilinearInterpolator(ImageOperation):
                 # |     |       |
                 # p3 --p''---- p4
 
-                p1 = image_data[x1, y1]
-                p2 = image_data[x1, y2]
-                p3 = image_data[x2, y1]
-                p4 = image_data[x2, y2]
+                # check if p1,p2,p3,p4 are out of bounds
+                if x1 < 0 or x2 >= height or y1 < 0 or y2 >= width:
+                    continue
+
+                p1 = image_data[y1, x1]
+                p2 = image_data[y1, x2]
+                p3 = image_data[y2, x1]
+                p4 = image_data[y2, x2]
 
                 # calculate the new pixel value
                 new_image[i, j] = self.linear_interp(

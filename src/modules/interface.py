@@ -37,21 +37,55 @@ def refresh_display(self):
     display_metatable(self)
 
 
+def print_statusbar(self, message):
+    self.statusbar.showMessage(message)
+
+
 def display_pixmap(self, image):
     '''Displays the image data in the image display area'''
     # then convert it to image format
     image_data = image.get_pixels()
 
-    im = PILImage.fromarray(image_data)
+    print_debug("Displaying Image")
+    print_debug(image_data.shape)
+
+    # show image using matplotlib
+    import matplotlib.pyplot as plt
+    plt.figure()
+    plt.imshow(image_data, cmap='gray')
+    plt.show()
+
+    qim = None
+
+    if len(image_data.shape) == 2:
+        im = PILImage.fromarray(image_data)
+        if im.mode != 'L':
+            im = im.convert('L')
+
+        qim = im.toqimage()
+
+        # # get the shape of the array
+        # nframes, height, width = np.shape(self.image_data)
+
+        # # calculate the total number of bytes in the frame
+        # totalBytes = self.image_data[0].nbytes
+
+        # # divide by the number of rows
+        # bytesPerLine = int(totalBytes/height)
+
+        # # create a QImage object
+        # qim = QtGui.QImage(self.image_data[0], width, height,
+        #                    bytesPerLine, QImage.Format_Grayscale8)
+
+    elif len(image_data.shape) == 3:
+        im = PILImage.fromarray(image_data)
+        if im.mode != 'RGB':
+            im = im.convert('RGB')
+        data = im.tobytes()
+        qim = QtGui.QImage(
+            data, im.size[0], im.size[1], QtGui.QImage.Format_RGB888)
 
     # convert the image to binary in RGB format
-
-    if im.mode != 'RGB':
-        im = im.convert('RGB')
-
-    data = im.tobytes()
-    qim = QtGui.QImage(
-        data, im.size[0], im.size[1], QtGui.QImage.Format_RGB888)
 
     # display saved image in Qpixmap
     self.image1_widget.setPixmap(QtGui.QPixmap.fromImage(qim))
@@ -73,7 +107,19 @@ def display_metatable(self):
 def init_connectors(self):
     '''Initializes all event connectors and triggers'''
 
-    # ''' Menu Bar'''
+    ''' Menu Bar'''
+
+    # File Menu
+    self.actionOpen.triggered.connect(lambda: openfile.open_file(self))
+    self.actionSave_As.triggered.connect(lambda: openfile.save_file(self))
+    self.actionSave.triggered.connect(lambda: openfile.save_file(self))
+
+    # View Menu
+    self.actionMetadata.triggered.connect(lambda: self.toggle_metadata_tab())
+    self.actionResizer.triggered.connect(lambda: self.toggle_resize_tab())
+
+    # Help Menu
+    self.actionAbout.triggered.connect(lambda: about_us(self))
 
     # self.actionAbout_Us = self.findChild(QAction, "actionAbout_Us")
     # self.actionAbout_Us.triggered.connect(

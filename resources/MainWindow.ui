@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>906</width>
-    <height>534</height>
+    <width>862</width>
+    <height>485</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,6 +19,19 @@ background-color: rgb(13, 17, 23);</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QLabel" name="label">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;Image Processing Toolbox&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
+    </item>
     <item row="1" column="0">
      <widget class="QGroupBox" name="groupBox">
       <property name="styleSheet">
@@ -42,20 +55,15 @@ QGroupBox::title  {
        <item row="0" column="0">
         <layout class="QHBoxLayout" name="horizontalLayout_8">
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_5">
-           <property name="spacing">
-            <number>10</number>
+          <widget class="QGroupBox" name="groupBox_2">
+           <property name="minimumSize">
+            <size>
+             <width>400</width>
+             <height>0</height>
+            </size>
            </property>
-           <item>
-            <widget class="QGroupBox" name="groupBox_2">
-             <property name="minimumSize">
-              <size>
-               <width>400</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">QGroupBox {
+           <property name="styleSheet">
+            <string notr="true">QGroupBox {
 background-color: rgb(1, 4, 9);
 border: 1.2px solid #ffffff;
 border-style: outset;
@@ -67,37 +75,15 @@ QGroupBox::title  {
     padding: -5px 0px 0px 0px;
     color: rgb(255, 255, 255);
 }</string>
-             </property>
-             <property name="title">
-              <string>Image</string>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_4">
-              <item row="1" column="0" colspan="2">
-               <widget class="QLabel" name="image1_widget">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">background-color: rgb(0, 0, 0);</string>
-                </property>
-                <property name="pixmap">
-                 <pixmap>placeholder.png</pixmap>
-                </property>
-                <property name="scaledContents">
-                 <bool>false</bool>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0" colspan="2">
-               <widget class="QPushButton" name="insert_image1_pushButton">
-                <property name="styleSheet">
-                 <string notr="true">QPushButton {
+           </property>
+           <property name="title">
+            <string>Image</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_4">
+            <item row="1" column="0">
+             <widget class="QPushButton" name="insert_image1_pushButton">
+              <property name="styleSheet">
+               <string notr="true">QPushButton {
     border-radius: 5px;
     border-style: outset;
     background: rgb(12, 17, 24);
@@ -112,19 +98,65 @@ QPushButton:pressed {
     border-style: inset;
     background:rgb(20, 20, 20)
     }</string>
-                </property>
-                <property name="text">
-                 <string>Insert Image</string>
-                </property>
-                <property name="icon">
-                 <iconset resource="icons/resources.qrc">
-                  <normaloff>:/icons/Open-256.png</normaloff>:/icons/Open-256.png</iconset>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
+              </property>
+              <property name="text">
+               <string>Insert Image</string>
+              </property>
+              <property name="icon">
+               <iconset resource="icons/resources.qrc">
+                <normaloff>:/icons/Open-256.png</normaloff>:/icons/Open-256.png</iconset>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QScrollArea" name="scrollArea">
+              <property name="widgetResizable">
+               <bool>true</bool>
+              </property>
+              <widget class="QWidget" name="scrollAreaWidgetContents_3">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>0</y>
+                 <width>378</width>
+                 <height>325</height>
+                </rect>
+               </property>
+               <layout class="QHBoxLayout" name="horizontalLayout_3">
+                <item>
+                 <widget class="QLabel" name="image1_widget">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">background-color: rgb(0, 0, 0);</string>
+                  </property>
+                  <property name="pixmap">
+                   <pixmap>placeholder.png</pixmap>
+                  </property>
+                  <property name="scaledContents">
+                   <bool>false</bool>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_5">
+           <property name="spacing">
+            <number>10</number>
+           </property>
           </layout>
          </item>
          <item>
@@ -153,7 +185,7 @@ QGroupBox::title  {
             <string>Tools</string>
            </property>
            <layout class="QGridLayout" name="gridLayout_3">
-            <item row="0" column="0">
+            <item row="0" column="1">
              <widget class="QTabWidget" name="tabWidget">
               <property name="enabled">
                <bool>true</bool>
@@ -168,7 +200,7 @@ QGroupBox::title  {
                <enum>QTabWidget::Triangular</enum>
               </property>
               <property name="currentIndex">
-               <number>0</number>
+               <number>1</number>
               </property>
               <property name="elideMode">
                <enum>Qt::ElideNone</enum>
@@ -276,7 +308,7 @@ rgb(163, 162, 165);
                    <bool>true</bool>
                   </property>
                   <attribute name="horizontalHeaderVisible">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </attribute>
                   <attribute name="horizontalHeaderCascadingSectionResizes">
                    <bool>true</bool>
@@ -297,7 +329,7 @@ rgb(163, 162, 165);
                    <bool>true</bool>
                   </attribute>
                   <attribute name="verticalHeaderVisible">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </attribute>
                   <attribute name="verticalHeaderShowSortIndicator" stdset="0">
                    <bool>false</bool>
@@ -392,7 +424,7 @@ rgb(163, 162, 165);
                 <item>
                  <widget class="QLabel" name="label_5">
                   <property name="text">
-                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Resizing Factor (%)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Resizing Factor (times)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                   </property>
                  </widget>
                 </item>
@@ -453,6 +485,34 @@ rgb(163, 162, 165);
                     </widget>
                    </item>
                   </layout>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_6">
+                  <property name="text">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Original Dimensions&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_8">
+                  <property name="text">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;.... x .... px&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_7">
+                  <property name="text">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;After Resizing&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_9">
+                  <property name="text">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;.... x .... px&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
                  </widget>
                 </item>
                 <item>
@@ -575,19 +635,6 @@ QPushButton:pressed {
       </layout>
      </widget>
     </item>
-    <item row="0" column="0">
-     <widget class="QLabel" name="label">
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>30</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Image Processing Toolbox&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-     </widget>
-    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -595,7 +642,7 @@ QPushButton:pressed {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>906</width>
+     <width>862</width>
      <height>21</height>
     </rect>
    </property>
@@ -614,15 +661,15 @@ QPushButton:pressed {
     <addaction name="actionMetadata"/>
     <addaction name="actionResizer"/>
    </widget>
-   <widget class="QMenu" name="menuAbout">
+   <widget class="QMenu" name="menuHelp">
     <property name="title">
-     <string>About</string>
+     <string>Help</string>
     </property>
-    <addaction name="actionAbout_Us"/>
+    <addaction name="actionAbout"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
-   <addaction name="menuAbout"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOpen">
@@ -661,7 +708,7 @@ QPushButton:pressed {
     <string>Resizer</string>
    </property>
   </action>
-  <action name="actionAbout_Us">
+  <action name="actionAbout">
    <property name="enabled">
     <bool>false</bool>
    </property>

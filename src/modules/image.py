@@ -79,7 +79,8 @@ class Image:
     def undo(self):
         if self.image_backup is not None:
             self.data = self.image_backup.data
-            self.operations_dict = self.image_backup.operations_dict
+
+            # self.operations_dict = self.image_backup.operations_dict
 
     def get_pixels(self):
         print_debug(self.data)
