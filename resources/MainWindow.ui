@@ -495,7 +495,7 @@ rgb(163, 162, 165);
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLabel" name="label_8">
+                 <widget class="QLabel" name="resize_original_dim_textbox">
                   <property name="text">
                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;.... x .... px&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                   </property>
@@ -509,7 +509,7 @@ rgb(163, 162, 165);
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLabel" name="label_9">
+                 <widget class="QLabel" name="resize_modified_dim_textbox">
                   <property name="text">
                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;.... x .... px&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                   </property>

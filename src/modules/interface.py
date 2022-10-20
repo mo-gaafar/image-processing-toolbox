@@ -14,7 +14,17 @@ def update_resize_tab(self, caller=None):
     if caller == 'slider':
         self.resize_spinbox.setValue(self.resize_slider.value()/10)
     elif caller == 'spinbox':
-        self.resize_slider.setValue(self.resize_spinbox.value()*10)
+        self.resize_slider.setValue(int(self.resize_spinbox.value()*10))
+
+def update_img_resize_dimensions(self, selector, data_arr):
+    if selector == 'original':
+        dimensions_string = str(data_arr.shape[0]) +"X"+ str(data_arr.shape[1])+ " px"
+        self.resize_original_dim_textbox.setText(dimensions_string)
+    elif selector == 'resized':
+        dimensions_string = str(data_arr.shape[0]) +"X"+ str(data_arr.shape[1])+ " px"
+        self.resize_resized_dim_textbox.setText(dimensions_string)
+
+        
 
 
 def get_user_input(self):
