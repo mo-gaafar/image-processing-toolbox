@@ -60,12 +60,6 @@ def display_pixmap(self, image, window_index=0):
     print_debug("Displaying Image")
     print_debug(image_data.shape)
 
-    # # show image using matplotlib
-    # import matplotlib.pyplot as plt
-    # plt.figure()
-    # plt.imshow(image_data, cmap='gray')
-    # plt.show()
-
     qim = None
 
     if len(image_data.shape) == 2:
@@ -75,23 +69,21 @@ def display_pixmap(self, image, window_index=0):
 
         qim = im.toqimage()
 
-        # # get the shape of the array
-        # nframes, height, width = np.shape(self.image_data)
-
-        # # calculate the total number of bytes in the frame
-        # totalBytes = self.image_data[0].nbytes
-
-        # # divide by the number of rows
-        # bytesPerLine = int(totalBytes/height)
-
-        # # create a QImage object
-        # qim = QtGui.QImage(self.image_data[0], width, height,
-        #                    bytesPerLine, QImage.Format_Grayscale8)
-
     elif len(image_data.shape) == 3:
-        im = PILImage.fromarray(image_data)
-        if im.mode != 'RGB':
-            im = im.convert('RGB')
+        try:
+            im = PILImage.fromarray(image_data)
+            if im.mode != 'RGB':
+                im = im.convert('RGB')
+        except TypeError:
+            image_data = image_data.astype(np.uint8)
+            image_data = np.mean(image_data, axis=2)
+            im = PILImage.fromarray(image_data, 'L')
+        except:
+            # error message pyqt
+            QMessageBox.critical(
+                self, 'Error', 'Error Displaying Image: Unsupported Image Format')
+            return
+
         data = im.tobytes()
         qim = QtGui.QImage(
             data, im.size[0], im.size[1], QtGui.QImage.Format_RGB888)
@@ -102,10 +94,12 @@ def display_pixmap(self, image, window_index=0):
     if window_index == 0:
         self.image1_pixmap = QPixmap.fromImage(qim)
         self.image1_widget.setPixmap(self.image1_pixmap)
+        self.image1_widget.adjustSize()
         self.image1_widget.show()
     elif window_index == 1:
         self.image2_pixmap = QPixmap.fromImage(qim)
         self.image2_widget.setPixmap(self.image2_pixmap)
+        self.image2_widget.adjustSize()
         self.image2_widget.show()
     else:
         raise ValueError("Invalid window index")
@@ -113,15 +107,19 @@ def display_pixmap(self, image, window_index=0):
 
 def toggle_image_window(self, window_index):
     if window_index == 0:
-        if self.image1_widget.isHidden():
-            self.image1_widget.show()
+        if self.image1_groupbox.isHidden():
+            self.image1_groupbox.show()
+            self.actionImage1.setChecked(True)
         else:
-            self.image1_widget.hide()
+            self.image1_groupbox.hide()
+            self.actionImage1.setChecked(False)
     elif window_index == 1:
-        if self.image2_widget.isHidden():
-            self.image2_widget.show()
+        if self.image2_groupbox.isHidden():
+            self.image2_groupbox.show()
+            self.actionImage2.setChecked(True)
         else:
-            self.image2_widget.hide()
+            self.image2_groupbox.hide()
+            self.actionImage2.setChecked(False)
     else:
         raise ValueError("Invalid window index")
 
@@ -149,8 +147,10 @@ def init_connectors(self):
     self.actionSave.triggered.connect(lambda: openfile.save_file(self))
 
     # View Menu
-    self.actionMetadata.triggered.connect(lambda: self.toggle_metadata_tab())
-    self.actionResizer.triggered.connect(lambda: self.toggle_resize_tab())
+    # self.actionMetadata.triggered.connect(lambda: self.toggle_metadata_tab())
+    # self.actionResizer.triggered.connect(lambda: self.toggle_resize_tab())
+    self.actionImage1.triggered.connect(lambda: toggle_image_window(self, 0))
+    self.actionImage2.triggered.connect(lambda: toggle_image_window(self, 1))
 
     # Help Menu
     self.actionAbout.triggered.connect(lambda: about_us(self))

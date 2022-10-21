@@ -1,6 +1,8 @@
 import numpy as np
+import threading
 from modules.image import *
 from modules import interface
+
 
 # connected to the apply button in resize tab
 
@@ -10,12 +12,18 @@ def reset_image(self):
     try:
         # undo previous operations
         self.image1.clear_operations()
-    except AttributeError:
+        selected_window = int(self.interpolate_output_combobox.currentIndex())
+        interface.display_pixmap(
+            self, image=self.image1, window_index=selected_window)
+        interface.update_img_resize_dimensions(
+            self, 'resized', self.image1.get_pixels())
+        interface.print_statusbar(self, 'Image Reset')
+
+    except:
         QMessageBox.critical(
             self, 'Error', 'Error Running Operation: No Image Loaded')
         return
     # refresh the display
-    interface.update_browse(self)
 
 
 def resize_image(self):
@@ -47,17 +55,22 @@ def resize_image(self):
     interface.print_statusbar(self, 'Processing Image..')
     # run the processing
     self.image1.run_processing()
-    interface.print_statusbar(self, 'Done')
+
+    # print procesing time in status bar
+    str_done = "Done processing in " + \
+        str(self.image1.get_processing_time()) + "ms"
+
+    interface.print_statusbar(self, str_done)
 
     interface.update_img_resize_dimensions(
         self, "resized", self.image1.get_pixels())
+
     # refresh the display
-    # interface.refresh_display(self)
     selected_window = int(self.interpolate_output_combobox.currentIndex())
     interface.display_pixmap(
         self, image=self.image1, window_index=selected_window)
 
-    # except AttributeError:
+    # except:
     #     QMessageBox.critical(
     #         self, 'Error', 'Error Running Operation')
     #     return

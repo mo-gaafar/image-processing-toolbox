@@ -6,9 +6,9 @@ from PyQt5.QtWidgets import QTabWidget
 from modules import resources, interface
 from modules.utility import print_debug, print_log
 
-#if macos 
+# if macos
 import ctypes
-myappid = 'mycompany.myproduct.subproduct.version' # arbitrary string
+myappid = 'mycompany.myproduct.subproduct.version'  # arbitrary string
 # tells windows to use the string as the app id
 # so that taskbar grouping works correctly
 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)

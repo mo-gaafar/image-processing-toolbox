@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 import numpy as np
 import PyQt5.QtCore
 from PyQt5.QtWidgets import QMessageBox
+import time
 from abc import ABC, abstractmethod
 from modules import interface
 from modules import image
@@ -54,6 +55,7 @@ class Image:
     metadata: dict = field(default_factory=dict)
     operations_dict = {}
     image_backup = None
+    last_processing_time_ms = 0
 
     # def append_operation(self, operation):
     #     self.operations_dict[operation.__class__.__name__] = operation
@@ -66,6 +68,8 @@ class Image:
         self.operations_dict[operation.__class__.__name__] = operation
 
     def run_processing(self):
+        tic = time.perf_counter()
+
         # processing pipeline
         self.image_backup = deepcopy(self)
         self.image_out = None
@@ -75,6 +79,8 @@ class Image:
             self.data = self.image_out.data
             self.metadata = self.image_out.metadata
             print_log('Processing image with ' + operation.__class__.__name__)
+        toc = time.perf_counter()
+        self.last_processing_time_ms = int((toc - tic) * 1000)
 
     def undo(self):
         if self.image_backup is not None:
@@ -96,6 +102,9 @@ class Image:
             f_metadata += key + ': ' + str(value) + '\n'
         print(f_metadata)
         return f_metadata
+
+    def get_processing_time(self):
+        return self.last_processing_time_ms
 
     def get_img_format(self):
         return self.path.split('.')[-1]

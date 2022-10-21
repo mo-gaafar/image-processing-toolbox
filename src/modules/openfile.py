@@ -21,13 +21,14 @@ def open_new(self, image_idx=1):
     try:
         # import the image into an image object
         self.image1 = importer.import_image(path)
+
+        # update the image and textbox in the viewer
+        interface.display_pixmap(self, image=self.image1, window_index=0)
+        interface.display_metatable(self, self.image1.get_metadata())
     except:
         QMessageBox.critical(
             self, 'Error', 'Failed to import image: make sure that the correct file format is used', QMessageBox.Ok)
         return
-    # update the image and textbox in the viewer
-    interface.display_pixmap(self, image=self.image1, window_index=0)
-    interface.display_metatable(self, self.image1.get_metadata())
 
 
 def read_importer(path) -> ImageImporter:
