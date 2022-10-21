@@ -1,4 +1,4 @@
-# Medical Image Viewer
+# Image Processing Toolbox
 
 Browse and open DICOM, JPG, BMP files and view their metadata
 
