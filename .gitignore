@@ -5,6 +5,7 @@
 
 dist/
 build/
+env/
 
 # Virtual environments
 lib/

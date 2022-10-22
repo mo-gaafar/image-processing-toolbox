@@ -27,7 +27,7 @@ def open_new(self, image_idx=1):
         interface.display_metatable(self, self.image1.get_metadata())
     except:
         QMessageBox.critical(
-            self, 'Error', 'Failed to import image: make sure that the correct file format is used', QMessageBox.Ok)
+            self, 'Error', 'Failed to import image: make sure that the correct file format is used \n and that the image is not corrupted', QMessageBox.Ok)
         return
 
 
