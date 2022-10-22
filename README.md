@@ -23,7 +23,7 @@ Browse and open DICOM, JPG, BMP files and view their metadata
 
 ## Preview
 
-![Preview](preview.gif)
+![Preview](resources/preview.gif)
 
 ## How to install
 
