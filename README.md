@@ -1,18 +1,29 @@
-# Medical Image Viewer
+# Image Processing Toolbox
 
 Browse and open DICOM, JPG, BMP files and view their metadata
 
 ## Features
 
-* Opens multiple image formats
-    * BMP
-    * JPEG
-    * DICOM
+### Opens Image files
+
+* Supported Types
+  * BMP
+  * JPEG
+  * DICOM
+
 * Displays Metadata
+
+### Image Resizing
+
+* Different Interpolation Methods
+  * Nearest Neighbor
+  * Bilinear
+
+* Factors ranging from 0.01x to 16x
 
 ## Preview
 
-![Preview](preview.gif)
+![Preview](resources/preview.gif)
 
 ## How to install
 
@@ -25,7 +36,7 @@ Just download the release from gh releases, unzip then run the executable.
 
     ```bash
     cd <this repo>/src
-    python -m venv ./
+    python -m venv ./env
     ```
 
 3. Activate the virtual environment

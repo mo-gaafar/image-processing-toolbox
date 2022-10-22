@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>863</width>
-    <height>721</height>
+    <height>759</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -102,9 +102,18 @@ QGroupBox::title  {
               <property name="title">
                <string>Image 1</string>
               </property>
+              <property name="flat">
+               <bool>false</bool>
+              </property>
               <layout class="QGridLayout" name="gridLayout_4">
                <item row="0" column="0">
                 <widget class="QScrollArea" name="scrollArea">
+                 <property name="frameShape">
+                  <enum>QFrame::NoFrame</enum>
+                 </property>
+                 <property name="sizeAdjustPolicy">
+                  <enum>QAbstractScrollArea::AdjustToContents</enum>
+                 </property>
                  <property name="widgetResizable">
                   <bool>true</bool>
                  </property>
@@ -113,21 +122,36 @@ QGroupBox::title  {
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>380</width>
-                    <height>270</height>
+                    <width>382</width>
+                    <height>291</height>
                    </rect>
                   </property>
-                  <layout class="QGridLayout" name="gridLayout_8">
-                   <item row="0" column="0">
+                  <layout class="QVBoxLayout" name="verticalLayout_2">
+                   <item>
                     <widget class="QLabel" name="image1_widget">
                      <property name="sizePolicy">
-                      <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                        <horstretch>0</horstretch>
                        <verstretch>0</verstretch>
                       </sizepolicy>
                      </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>100</width>
+                       <height>100</height>
+                      </size>
+                     </property>
+                     <property name="layoutDirection">
+                      <enum>Qt::LeftToRight</enum>
+                     </property>
+                     <property name="autoFillBackground">
+                      <bool>false</bool>
+                     </property>
                      <property name="styleSheet">
                       <string notr="true">background-color: rgb(0, 0, 0);</string>
+                     </property>
+                     <property name="frameShadow">
+                      <enum>QFrame::Sunken</enum>
                      </property>
                      <property name="pixmap">
                       <pixmap>placeholder.png</pixmap>
@@ -176,6 +200,12 @@ QGroupBox::title  {
               <layout class="QGridLayout" name="gridLayout_2">
                <item row="0" column="0">
                 <widget class="QScrollArea" name="scrollArea_2">
+                 <property name="frameShape">
+                  <enum>QFrame::NoFrame</enum>
+                 </property>
+                 <property name="sizeAdjustPolicy">
+                  <enum>QAbstractScrollArea::AdjustToContents</enum>
+                 </property>
                  <property name="widgetResizable">
                   <bool>true</bool>
                  </property>
@@ -184,18 +214,24 @@ QGroupBox::title  {
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>380</width>
-                    <height>269</height>
+                    <width>382</width>
+                    <height>290</height>
                    </rect>
                   </property>
-                  <layout class="QGridLayout" name="gridLayout_6">
-                   <item row="0" column="0">
+                  <layout class="QVBoxLayout" name="verticalLayout_5">
+                   <item>
                     <widget class="QLabel" name="image2_widget">
                      <property name="sizePolicy">
-                      <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                        <horstretch>0</horstretch>
                        <verstretch>0</verstretch>
                       </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>100</width>
+                       <height>100</height>
+                      </size>
                      </property>
                      <property name="styleSheet">
                       <string notr="true">background-color: rgb(0, 0, 0);</string>
@@ -261,7 +297,7 @@ QGroupBox::title  {
               <enum>QTabWidget::Triangular</enum>
              </property>
              <property name="currentIndex">
-              <number>1</number>
+              <number>0</number>
              </property>
              <property name="elideMode">
               <enum>Qt::ElideNone</enum>
@@ -369,7 +405,7 @@ rgb(163, 162, 165);
                   <bool>true</bool>
                  </property>
                  <attribute name="horizontalHeaderVisible">
-                  <bool>false</bool>
+                  <bool>true</bool>
                  </attribute>
                  <attribute name="horizontalHeaderCascadingSectionResizes">
                   <bool>true</bool>
@@ -390,6 +426,9 @@ rgb(163, 162, 165);
                   <bool>true</bool>
                  </attribute>
                  <attribute name="verticalHeaderVisible">
+                  <bool>true</bool>
+                 </attribute>
+                 <attribute name="verticalHeaderCascadingSectionResizes">
                   <bool>false</bool>
                  </attribute>
                  <attribute name="verticalHeaderShowSortIndicator" stdset="0">
@@ -563,7 +602,7 @@ rgb(163, 162, 165);
                      <double>0.010000000000000</double>
                     </property>
                     <property name="maximum">
-                     <double>10.000000000000000</double>
+                     <double>16.000000000000000</double>
                     </property>
                     <property name="singleStep">
                      <double>0.100000000000000</double>
@@ -729,10 +768,16 @@ QPushButton:pressed {
     <property name="title">
      <string>View</string>
     </property>
-    <addaction name="actionMetadata"/>
-    <addaction name="actionResizer"/>
+    <widget class="QMenu" name="menuTools">
+     <property name="title">
+      <string>Tools</string>
+     </property>
+     <addaction name="actionMetadata"/>
+     <addaction name="actionResizer"/>
+    </widget>
     <addaction name="actionImage1"/>
     <addaction name="actionImage2"/>
+    <addaction name="menuTools"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">

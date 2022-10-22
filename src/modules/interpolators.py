@@ -1,6 +1,8 @@
 import numpy as np
+import threading
 from modules.image import *
 from modules import interface
+
 
 # connected to the apply button in resize tab
 
@@ -10,57 +12,68 @@ def reset_image(self):
     try:
         # undo previous operations
         self.image1.clear_operations()
-    except AttributeError:
+        selected_window = int(self.interpolate_output_combobox.currentIndex())
+        interface.display_pixmap(
+            self, image=self.image1, window_index=selected_window)
+        interface.update_img_resize_dimensions(
+            self, 'resized', self.image1.get_pixels())
+        interface.print_statusbar(self, 'Image Reset')
+
+    except:
         QMessageBox.critical(
             self, 'Error', 'Error Running Operation: No Image Loaded')
         return
     # refresh the display
-    interface.update_browse(self)
 
 
 def resize_image(self):
     '''Resizes the image to the specified dimensions'''
-    # try:
-    # get user input parameters data
-    factor = interface.get_user_input(self)['resize factor']
+    try:
+        # get user input parameters data
+        factor = interface.get_user_input(self)['resize factor']
 
-    # get the selected interpolator class
-    interpolator = read_interpolator(
-        interface.get_user_input(self)['interpolation method'])
+        # get the selected interpolator class
+        interpolator = read_interpolator(
+            interface.get_user_input(self)['interpolation method'])
 
-    if interpolator == None:
+        if interpolator == None:
+            return
+
+        # configure the resize operation object
+        resize_operation = interpolator.configure(factor)
+
+        # undo previous operations
+        self.image1.clear_operations()
+
+        interface.update_img_resize_dimensions(
+            self, "original", self.image1.get_pixels())
+
+        # add the operation to the image
+        self.image1.add_operation(MonochoromeConversion())
+        self.image1.add_operation(resize_operation)
+
+        interface.print_statusbar(self, 'Processing Image..')
+        # run the processing
+        self.image1.run_processing()
+
+        # print procesing time in status bar
+        str_done = "Done processing in " + \
+            str(self.image1.get_processing_time()) + "ms"
+
+        interface.print_statusbar(self, str_done)
+
+        interface.update_img_resize_dimensions(
+            self, "resized", self.image1.get_pixels())
+
+        # refresh the display
+        selected_window = int(self.interpolate_output_combobox.currentIndex())
+        interface.display_pixmap(
+            self, image=self.image1, window_index=selected_window)
+
+    except:
+        QMessageBox.critical(
+            self, 'Error', 'Error Running Operation')
         return
-
-    # configure the resize operation object
-    resize_operation = interpolator.configure(factor)
-
-    # undo previous operations
-    self.image1.clear_operations()
-
-    interface.update_img_resize_dimensions(
-        self, "original", self.image1.get_pixels())
-
-    # add the operation to the image
-    self.image1.add_operation(MonochoromeConversion())
-    self.image1.add_operation(resize_operation)
-
-    interface.print_statusbar(self, 'Processing Image..')
-    # run the processing
-    self.image1.run_processing()
-    interface.print_statusbar(self, 'Done')
-
-    interface.update_img_resize_dimensions(
-        self, "resized", self.image1.get_pixels())
-    # refresh the display
-    # interface.refresh_display(self)
-    selected_window = int(self.interpolate_output_combobox.currentIndex())
-    interface.display_pixmap(
-        self, image=self.image1, window_index=selected_window)
-
-    # except AttributeError:
-    #     QMessageBox.critical(
-    #         self, 'Error', 'Error Running Operation')
-    #     return
 
 
 def read_interpolator(interpolator_name) -> ImageOperation:
@@ -103,8 +116,8 @@ class BilinearInterpolator(ImageOperation):
         # get p1, p2, p3 and p4 from original image and then perform bilinear interpolation for each new pixel
         for i in range(new_height):
             for j in range(new_width):
-                y = i/factor
-                x = j/factor
+                x = i/factor
+                y = j/factor
 
                 x1 = int(np.floor(x))
                 x2 = int(np.ceil(x))
@@ -124,14 +137,23 @@ class BilinearInterpolator(ImageOperation):
                     if y2 >= width:
                         y2 = y1
 
-                p1 = image_data[y1, x1]
-                p2 = image_data[y1, x2]
-                p3 = image_data[y2, x1]
-                p4 = image_data[y2, x2]
+                # # note: the the x y coordinates were swapped when parsing the image for some reason
+                # # x is rows, y is columns in the image
+                # # axis 0 -> rows
+
+                # p1 = image_data[y1, x1]
+                # p2 = image_data[y1, x2]
+                # p3 = image_data[y2, x1]
+                # p4 = image_data[y2, x2]
+
+                p1 = image_data[x1, y1]
+                p2 = image_data[x1, y2]
+                p3 = image_data[x2, y1]
+                p4 = image_data[x2, y2]
 
                 # calculate the new pixel value
                 new_image[i, j] = self.linear_interp(
-                    self.linear_interp(p1, p2, x-x1), self.linear_interp(p3, p4, x-x1), y-y1)
+                    self.linear_interp(p1, p2, y-y1), self.linear_interp(p3, p4, y-y1), x-x1)
         return new_image
 
     def execute(self):
@@ -148,8 +170,8 @@ class NearestNeighborInterpolator(ImageOperation):
         new_image = np.zeros(
             (int(np.floor(self.factor * height)), int(np.floor(self.factor * width))))
         # loop through the new image and interpolate the values
-        for i in range(0, new_image.shape[0]):
-            for j in range(0, new_image.shape[1]):
+        for i in range(0, new_image.shape[0]):  # rows
+            for j in range(0, new_image.shape[1]):  # columns
                 # get the new image coordinates
                 x = i / self.factor
                 y = j / self.factor
