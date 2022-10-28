@@ -107,8 +107,8 @@ class BilinearInterpolator(ImageOperation):
         factor = self.factor
 
         # calculate the new dimensions
-        new_height = int(height * factor)
-        new_width = int(width * factor)
+        new_height = round(height * factor)
+        new_width = round(width * factor)
 
         # create a new image with the new dimensions
         new_image = np.zeros((new_height, new_width))
@@ -168,7 +168,7 @@ class NearestNeighborInterpolator(ImageOperation):
         height, width = image_data.shape
         # create a new image with the new dimensions
         new_image = np.zeros(
-            (int(np.floor(self.factor * height)), int(np.floor(self.factor * width))))
+            (int(np.round(self.factor * height)), int(np.round(self.factor * width))))
         # loop through the new image and interpolate the values
         for i in range(0, new_image.shape[0]):  # rows
             for j in range(0, new_image.shape[1]):  # columns
