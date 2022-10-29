@@ -11,6 +11,26 @@ from modules import image
 from modules.utility import *
 
 
+def reset_image(self):
+    '''Resets the image to its original size'''
+    try:
+        # undo previous operations
+        self.image1.clear_operations()
+        selected_window = int(self.interpolate_output_combobox.currentIndex())
+        interface.display_pixmap(self,
+                                 image=self.image1,
+                                 window_index=selected_window)
+        interface.update_img_resize_dimensions(self, 'resized',
+                                               self.image1.get_pixels())
+        interface.print_statusbar(self, 'Image Reset')
+
+    except:
+        QMessageBox.critical(self, 'Error',
+                             'Error Running Operation: No Image Loaded')
+        return
+    # refresh the display
+
+
 class ImageOperation(ABC):
     '''Abstract class for image operations'''
 
@@ -42,6 +62,18 @@ class MonochoromeConversion(ImageOperation):
             self.image.data = np.mean(self.image.data, axis=2)
         # quantizing into 256 levels
         self.image.data = self.image.data.astype(np.uint8)
+        return deepcopy(self.image)
+
+
+class CreateTestImage(ImageOperation):
+
+    def execute(self):
+        # create a test image of size 128 x 128
+        self.image.data = np.zeros((128, 128), dtype=np.uint8)
+        # create a 70 x 70 letter T in the center of the image
+        self.image.data[28:49, 28:99] = 255  #top
+        self.image.data[48:99, 53:74] = 255  #leg
+
         return deepcopy(self.image)
 
 

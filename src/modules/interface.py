@@ -7,6 +7,7 @@ from PyQt5 import QtGui
 from modules.utility import print_debug
 from modules import openfile
 from modules import interpolators
+import modules.image
 
 
 def update_resize_tab(self, caller=None):
@@ -175,7 +176,7 @@ def init_connectors(self):
     # triggers the resizing
     self.resize_apply.clicked.connect(lambda: interpolators.resize_image(self))
     # undo resizing
-    self.resize_reset.clicked.connect(lambda: interpolators.reset_image(self))
+    self.resize_reset.clicked.connect(lambda: modules.image.reset_image(self))
 
     print_debug("Connectors Initialized")
 

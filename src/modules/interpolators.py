@@ -7,25 +7,6 @@ from modules import interface
 # connected to the apply button in resize tab
 
 
-def reset_image(self):
-    '''Resets the image to its original size'''
-    try:
-        # undo previous operations
-        self.image1.clear_operations()
-        selected_window = int(self.interpolate_output_combobox.currentIndex())
-        interface.display_pixmap(
-            self, image=self.image1, window_index=selected_window)
-        interface.update_img_resize_dimensions(
-            self, 'resized', self.image1.get_pixels())
-        interface.print_statusbar(self, 'Image Reset')
-
-    except:
-        QMessageBox.critical(
-            self, 'Error', 'Error Running Operation: No Image Loaded')
-        return
-    # refresh the display
-
-
 def resize_image(self):
     '''Resizes the image to the specified dimensions'''
     try:
@@ -33,7 +14,7 @@ def resize_image(self):
         factor = interface.get_user_input(self)['resize factor']
 
         # get the selected interpolator class
-        interpolator = read_interpolator(
+        interpolator = read_resize_interpolator(
             interface.get_user_input(self)['interpolation method'])
 
         if interpolator == None:
@@ -76,11 +57,11 @@ def resize_image(self):
         return
 
 
-def read_interpolator(interpolator_name) -> ImageOperation:
+def read_resize_interpolator(interpolator_name) -> ImageOperation:
     # array of supported interpolators
     interpolators = {
-        'Nearest-Neighbor': NearestNeighborInterpolator(),
-        'Bilinear': BilinearInterpolator(),
+        'Nearest-Neighbor': NearestNeighborScaling(),
+        'Bilinear': BilinearScaling(),
         'None': None
     }
     if interpolator_name in interpolators:
@@ -89,7 +70,7 @@ def read_interpolator(interpolator_name) -> ImageOperation:
         raise Warning("Unsupported interpolator")
 
 
-class BilinearInterpolator(ImageOperation):
+class BilinearScaling(ImageOperation):
     def configure(self, factor):
         self.factor = factor
         return self
@@ -141,11 +122,6 @@ class BilinearInterpolator(ImageOperation):
                 # # x is rows, y is columns in the image
                 # # axis 0 -> rows
 
-                # p1 = image_data[y1, x1]
-                # p2 = image_data[y1, x2]
-                # p3 = image_data[y2, x1]
-                # p4 = image_data[y2, x2]
-
                 p1 = image_data[x1, y1]
                 p2 = image_data[x1, y2]
                 p3 = image_data[x2, y1]
@@ -161,14 +137,14 @@ class BilinearInterpolator(ImageOperation):
         return self.image
 
 
-class NearestNeighborInterpolator(ImageOperation):
+class NearestNeighborScaling(ImageOperation):
 
     def interpolate(self, image_data):
         # get the image dimensions
         height, width = image_data.shape
         # create a new image with the new dimensions
         new_image = np.zeros(
-            (int(np.round(self.factor * height)), int(np.round(self.factor * width))))
+            (int(round(self.factor * height)), int(round(self.factor * width))))
         # loop through the new image and interpolate the values
         for i in range(0, new_image.shape[0]):  # rows
             for j in range(0, new_image.shape[1]):  # columns
