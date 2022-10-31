@@ -5,6 +5,29 @@ from modules import interface
 from modules.interpolators import *
 
 
+class MonochoromeConversion(ImageOperation):
+
+    def execute(self):
+        # calculate mean over image channels (color depth axis = 2)
+        if self.image.data.ndim == 3:
+            self.image.data = np.mean(self.image.data, axis=2)
+        # quantizing into 256 levels
+        self.image.data = self.image.data.astype(np.uint8)
+        return deepcopy(self.image)
+
+
+class CreateTestImage(ImageOperation):
+
+    def execute(self):
+        # create a test image of size 128 x 128
+        self.image.data = np.zeros((128, 128), dtype=np.uint8)
+        # create a 70 x 70 letter T in the center of the image
+        self.image.data[28:49, 28:99] = 255  #top
+        self.image.data[48:99, 53:74] = 255  #leg
+
+        return deepcopy(self.image)
+
+
 class BilinearScaling(ImageOperation):
     '''
     Scaling operation using bilinear interpolation.
@@ -21,7 +44,7 @@ class BilinearScaling(ImageOperation):
         '''Bilinear interpolation'''
 
         # get the image dimensions
-        height, width = image_data.shape
+        height, width = np.shape(image_data)
 
         # get the resize factor
         factor = self.factor
@@ -57,7 +80,7 @@ class NearestNeighborScaling(ImageOperation):
 
     def resize(self, image_data):
         # get the image dimensions
-        height, width = image_data.shape
+        height, width = np.shape(image_data)
         # create a new image with the new dimensions
         new_image = np.zeros((int(round(self.factor * height)),
                               int(round(self.factor * width))))
@@ -90,7 +113,7 @@ class BilinearRotation(ImageOperation):
     def rotate(self, image_data):
         '''Rotate image using Bilinear interpolation'''
         # get image dimensions
-        height, width = image_data.shape
+        height, width = np.shape(image_data)
 
         # create a new image with the new dimensions
         new_image = np.zeros((height, width), dtype=np.uint8)
@@ -143,7 +166,7 @@ class NearestNeighborRotation(ImageOperation):
 
     def rotate(self, image_data):
         # get the image dimensions
-        height, width = image_data.shape
+        height, width = np.shape(image_data)
         # create a new image with the same dimensions
         new_image = np.zeros((height, width), dtype=np.uint8)
 
@@ -201,7 +224,7 @@ class BilinearHorizontalShearing(ImageOperation):
     def shear(self, image_data):
         '''Shear image using Bilinear interpolation'''
         # get image dimensions
-        height, width = image_data.shape
+        height, width = np.shape(image_data)
 
         # create a new image with the new dimensions
         new_image = np.zeros((height, width), dtype=np.uint8)
@@ -249,7 +272,7 @@ class NNHorizontalShearing(ImageOperation):
 
     def shear(self, image_data):
         # get the image dimensions
-        height, width = image_data.shape
+        height, width = np.shape(image_data)
 
         # create a new image with the same dimensions
         new_image = np.zeros((height, width), dtype=np.uint8)

@@ -54,29 +54,6 @@ class ImageOperation(ABC):
         pass
 
 
-class MonochoromeConversion(ImageOperation):
-
-    def execute(self):
-        # calculate mean over image channels (color depth axis = 2)
-        if self.image.data.ndim == 3:
-            self.image.data = np.mean(self.image.data, axis=2)
-        # quantizing into 256 levels
-        self.image.data = self.image.data.astype(np.uint8)
-        return deepcopy(self.image)
-
-
-class CreateTestImage(ImageOperation):
-
-    def execute(self):
-        # create a test image of size 128 x 128
-        self.image.data = np.zeros((128, 128), dtype=np.uint8)
-        # create a 70 x 70 letter T in the center of the image
-        self.image.data[28:49, 28:99] = 255  #top
-        self.image.data[48:99, 53:74] = 255  #leg
-
-        return deepcopy(self.image)
-
-
 # frozen = True means that the class cannot be modified
 # kw_only = True means that the class cannot be instantiated with positional arguments
 @dataclass(frozen=False)
@@ -89,12 +66,19 @@ class Image:
     image_backup = None
     last_processing_time_ms = 0
 
-    # def append_operation(self, operation):
-    #     self.operations_dict[operation.__class__.__name__] = operation
-
-    def clear_operations(self):
+    def clear_operations(self, clear_backup=False):
+        if clear_backup == True and self.image_backup is not None:
+            self.image_backup = None
         self.operations_dict = {}
         self.undo()
+
+    def clear_image_data(self):
+        self.data = None
+        self.path = ''
+        self.metadata = {}
+        self.operations_dict = {}
+        self.image_backup = None
+        self.last_processing_time_ms = 0
 
     def add_operation(self, operation):
         self.operations_dict[operation.__class__.__name__] = operation

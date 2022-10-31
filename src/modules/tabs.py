@@ -1,122 +1,138 @@
 from PyQt5.QtWidgets import QMessageBox
 from modules import interface
-from modules.transformations import *
-from modules.image import *
+from modules.operations import *
 
 
-# connected to the apply button in resize tab
-def resize_image(self):
-    '''Resizes the image to the specified dimensions'''
+#TODO: make the functions more generic and reduce code repetiton
+def generate_test_image(self):
+    '''Generates a test image'''
+
+    if self.image1 == None:
+        self.image1 = Image(data=np.zeros((256, 256), dtype=np.uint8))
+
+    self.image1.clear_image_data()
+
+    self.image1.add_operation(CreateTestImage())
+
+    # run the processing and display the result
+    interface.display_run_processing(self)
+
+    # clear the operations
+    self.image1.clear_operations(clear_backup=True)
+
+
+def apply_resize(self):
+    '''Applies the resize operation to the image'''
     try:
         # get user input parameters data
         factor = interface.get_user_input(self)['resize factor']
 
         # get the selected interpolator class
-        interpolator = read_resize(
+        operation = read_transformation(
+            interface.get_user_input(self)['transformation type'],
             interface.get_user_input(self)['interpolation method'])
 
-        if interpolator == None:
+        if operation == None:
             return
 
         # configure the resize operation object
-        resize_operation = interpolator.configure(factor)
+        resize_operation = operation.configure(factor)
 
-        # undo previous operations
-        self.image1.clear_operations()
-
-        interface.update_img_resize_dimensions(self, "original",
-                                               self.image1.get_pixels())
-
-        # add the operation to the image
-        self.image1.add_operation(MonochoromeConversion())
-        self.image1.add_operation(resize_operation)
-
-        interface.print_statusbar(self, 'Processing Image..')
-        # run the processing
-        selected_window_idx = int(
-            self.interpolate_output_combobox.currentIndex())
-        interface.display_run_processing(self, selected_window_idx)
-
+        apply_image_operation(self, resize_operation)
     except:
         QMessageBox.critical(self, 'Error', 'Error Running Operation')
-        return
 
 
-def read_resize(interpolator_name) -> ImageOperation:
-    # array of supported interpolators
-    interpolators = {
-        'Nearest-Neighbor': NearestNeighborScaling(),
-        'Bilinear': BilinearScaling(),
-        'None': None
-    }
-    if interpolator_name in interpolators:
-        return interpolators[interpolator_name]
-    else:
-        raise Warning("Unsupported interpolator")
-
-
-# connected to the apply button in transform tab
-def transform_image(self):
+def apply_rotate(self):
+    '''Applies the rotation operation to the image'''
     try:
-
         # get user input parameters data
-        factor = interface.get_user_input(self)['resize factor']
-        type = interface.get_user_input(self)['transformation type']
-        interpolator = interface.get_user_input(
-            self)['transformation interpolation method']
+        factor = interface.get_user_input(self)['rotation angle']
+
+        # get the selected class
+        operation = read_transformation(
+            interface.get_user_input(self)['transformation type'],
+            interface.get_user_input(self)['interpolation method'])
+
+        if operation == None:
+            return
+
+        # configure the resize operation object
+        rotate_operation = operation.configure(factor)
+
+        apply_image_operation(self, rotate_operation)
+    except:
+        QMessageBox.critical(self, 'Error', 'Error Running Operation')
+
+
+def apply_shear(self):
+    '''Applies the shear operation to the image'''
+    try:
+        # get user input parameters data
+        factor = interface.get_user_input(self)['shearing factor']
 
         # get the selected interpolator class
-        transformation = read_transformation(type, interpolator)
+        operation = read_transformation(
+            interface.get_user_input(self)['transformation type'],
+            interface.get_user_input(self)['interpolation method'])
 
-        if transformation == None:
-            return
-            
-        if self.image1.data.empty:
-            QMessageBox.critical(self, 'Error',
-                                 'Error Running Operation: No Image Loaded')
+        if operation == None:
             return
 
-        # configure the transformation operation object
-        transformation_operation = transformation.configure(factor)
+        # configure the resize operation object
+        shear_operation = operation.configure(factor)
 
-        # undo previous operations
-        self.image1.clear_operations()
-
-        self.image1.add_operation(CreateTestImage())
-        interface.update_img_resize_dimensions(self, "original",
-                                               self.image1.get_pixels())
-
-        # add the operation to the image
-        self.image1.add_operation(transformation_operation)
-
-        selected_window_idx = int(
-            self.interpolate_output_combobox.currentIndex())
-        interface.display_run_processing(self, selected_window_idx)
-
+        apply_image_operation(self, shear_operation)
     except:
         QMessageBox.critical(self, 'Error', 'Error Running Operation')
-        return
 
 
-def read_transformation(interpolator_name,
-                        transformation_name) -> ImageOperation:
+def apply_image_operation(self, operation):
+    '''Applies the given operation to the image'''
+    # undo previous operations
+    self.image1.clear_operations()
+
+    interface.update_img_resize_dimensions(self, "original",
+                                           self.image1.get_pixels())
+
+    # add the operation to the image
+    self.image1.add_operation(MonochoromeConversion())
+    self.image1.add_operation(operation)
+
+    # run the processing
+    selected_window_idx = int(self.output_window_combobox.currentIndex())
+    interface.display_run_processing(self, selected_window_idx)
+
+
+def read_transformation(transformation_name,
+                        interpolator_name) -> ImageOperation:
     # array of supported interpolators
     transformation = {
-        'Rotation': {
+        'Rotate': {
             'Nearest-Neighbor': NearestNeighborRotation(),
             'Bilinear': BilinearRotation(),
-            'None': None
         },
-        'Shearing': {
+        'Shear': {
             'Nearest-Neighbor': NNHorizontalShearing(),
             'Bilinear': BilinearHorizontalShearing(),
-            'None': None
+        },
+        'Resize': {
+            'Nearest-Neighbor': NearestNeighborScaling(),
+            'Bilinear': BilinearScaling(),
         }
     }
-    if interpolator_name in transformation and transformation_name in transformation:
-        if transformation_name == 'Rotation':
-            return transformation['Rotation'][interpolator_name]
-        elif transformation_name == 'Shearing':
-            return transformation['Shearing'][interpolator_name]
-    else:
-        raise Warning("Unsupported interpolator")
+    print_debug("Transformation: " + transformation_name)
+    print_debug("Interpolator: " + interpolator_name)
+
+    if interpolator_name == 'None' or transformation_name == 'None':
+        return
+
+    if transformation_name in transformation:
+        if transformation_name == 'Rotate':
+            return transformation['Rotate'][interpolator_name]
+        elif transformation_name == 'Shear':
+            return transformation['Shear'][interpolator_name]
+        elif transformation_name == 'Resize':
+            return transformation['Resize'][interpolator_name]
+        else:
+            raise Warning("Unsupported interpolator")

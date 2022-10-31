@@ -1,10 +1,10 @@
 import numpy as np
 from PIL import Image as PILImage
-from PyQt5.QtWidgets import QTableWidgetItem, QMessageBox
+from PyQt5.QtWidgets import QTableWidgetItem, QMessageBox, QToolBox
 from PyQt5.QtGui import *
 from PyQt5 import QtGui
 from modules.utility import print_debug
-from modules import openfile, transformations
+from modules import openfile, operations, tabs
 import modules.image
 
 
@@ -18,22 +18,27 @@ def update_resize_tab(self, caller=None):
 
 def update_img_resize_dimensions(self, selector, data_arr):
     if selector == 'original':
-        dimensions_string = str(data_arr.shape[0]) + " x " + str(
-            data_arr.shape[1]) + " px"
+        dimensions_string = str(np.shape(data_arr)[0]) + " x " + str(
+            np.shape(data_arr)[1]) + " px"
         self.resize_original_dim_textbox.setText(dimensions_string)
     elif selector == 'resized':
-        dimensions_string = str(data_arr.shape[0]) + " x " + str(
-            data_arr.shape[1]) + " px"
+        dimensions_string = str(np.shape(data_arr)[0]) + " x " + str(
+            np.shape(data_arr)[1]) + " px"
         self.resize_modified_dim_textbox.setText(dimensions_string)
 
 
 def get_user_input(self):
     '''Gets the user input from the GUI and returns it as a dictionary'''
     user_input = {}
+    user_input['interpolation method'] = self.interpolate_combobox.currentText(
+    )
+    user_input['transformation type'] = self.toolbox_transform.itemText(
+        self.toolbox_transform.currentIndex())
     user_input['resize factor'] = self.resize_spinbox.value()
-    user_input[
-        'resize interpolation method'] = self.interpolate_combobox.currentText(
-        )
+    user_input['rotation angle'] = self.rotation_angle_spinbox.value()
+    user_input['shearing factor'] = self.shearing_factor_spinbox.value()
+    user_input['output window'] = self.output_window_combobox.currentIndex()
+
     return user_input
 
 
@@ -41,7 +46,7 @@ def print_statusbar(self, message):
     self.statusbar.showMessage(message)
 
 
-def display_run_processing(self, selected_window_idx):
+def display_run_processing(self, selected_window_idx=None):
 
     print_statusbar(self, 'Processing Image..')
     # run the processing
@@ -57,24 +62,24 @@ def display_run_processing(self, selected_window_idx):
     display_pixmap(self, image=self.image1, window_index=selected_window_idx)
 
 
-def display_pixmap(self, image, window_index=0):
+def display_pixmap(self, image, window_index=None):
     '''Displays the image data in the image display area'''
     # then convert it to image format
     image_data = image.get_pixels()
 
     print_debug("Displaying Image")
-    print_debug(image_data.shape)
+    print_debug(np.shape(image_data))
 
     qim = None
 
-    if len(image_data.shape) == 2:
+    if len(np.shape(image_data)) == 2:
         im = PILImage.fromarray(image_data)
         if im.mode != 'L':
             im = im.convert('L')
 
         qim = im.toqimage()
 
-    elif len(image_data.shape) == 3:
+    elif len(np.shape(image_data)) == 3:
         try:
             im = PILImage.fromarray(image_data)
             if im.mode != 'RGB':
@@ -97,6 +102,9 @@ def display_pixmap(self, image, window_index=0):
     # convert the image to binary in RGB format
 
     # display saved image in Qpixmap
+    if window_index == None:
+        window_index = get_user_input(self)['output window']
+
     if window_index == 0:
         self.image1_pixmap = QPixmap.fromImage(qim)
         self.image1_widget.setPixmap(self.image1_pixmap)
@@ -168,17 +176,19 @@ def init_connectors(self):
     # Tools
 
     # Resize Tab
-    # triggers the resizing
-    self.resize_apply.clicked.connect(
-        lambda: transformations.resize_image(self))
-    # undo resizing
-    self.resize_reset.clicked.connect(lambda: modules.image.reset_image(self))
 
     #Transform Tab
-    self.transform_apply.clicked.connect(
-        lambda: transformations.transform_image(self))
-    
-
+    # triggers the resizing
+    self.resize_apply.clicked.connect(lambda: tabs.apply_resize(self))
+    # triggers the rotation
+    self.rotate_apply.clicked.connect(lambda: tabs.apply_rotate(self))
+    # triggers the shear
+    self.shear_apply.clicked.connect(lambda: tabs.apply_shear(self))
+    # undo transformations
+    self.reset_operations.clicked.connect(
+        lambda: modules.image.reset_image(self))
+    # generate test image "T"
+    self.gen_test_image.clicked.connect(lambda: tabs.generate_test_image(self))
     print_debug("Connectors Initialized")
 
 

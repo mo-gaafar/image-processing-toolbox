@@ -2,7 +2,7 @@ import numpy as np
 from modules.image import *
 
 
-def linear_interp(self, p1, p2, px):
+def linear_interp(p1, p2, px):
     return p1 * (1 - px) + p2 * px
 
 
@@ -22,11 +22,12 @@ def bilinear_interp_pixel(x, y, img):
     # p3 --p''---- p4
 
     # check if p1,p2,p3,p4 are out of bounds
-    if x1 < 0 or x2 >= img.shape[0] or y1 < 0 or y2 >= img.shape[1]:
-        if x2 >= img.shape[0]:
-            x2 = x1
-        if y2 >= img.shape[1]:
-            y2 = y1
+    if x1 < 0 or x2 >= np.shape(img)[0] or y1 < 0 or y2 >= np.shape(img)[1]:
+        return 0
+        # if x2 >= np.shape(img)[0]:
+        #     x2 = x1
+        # if y2 >= np.shape(img)[1]:
+        #     y2 = y1
 
     # x is rows, y is columns in the image
     # axis 0 -> rows
@@ -58,7 +59,7 @@ def nn_interp_pixel(x, y, img):
     y1 = int(special_round(y))
 
     # check if p1 is out of bounds
-    if x1 < 0 or y1 < 0 or x1 >= img.shape[0] or y1 >= img.shape[1]:
+    if x1 < 0 or y1 < 0 or x1 >= np.shape(img)[0] or y1 >= np.shape(img)[1]:
         return 0
 
     return img[x1, y1]

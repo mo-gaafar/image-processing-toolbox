@@ -43,9 +43,9 @@ class BMPImporter(ImageImporter):
         metadata = {}
 
         # if image has a third dimension
-        if len(image_arr.shape) == 3:
+        if len(np.shape(image_arr)) == 3:
             depth = int(
-                np.ceil(image_arr.shape[2] * np.log2(image_arr.max()+1)))
+                np.ceil(np.shape(image_arr)[2] * np.log2(image_arr.max()+1)))
         else:
             depth = int(np.ceil(np.log2(image_arr.max()+1)))
 
@@ -86,9 +86,9 @@ class JPGImporter(ImageImporter):
         # image_arr = np.array(pil_image)
 
         # if image has a third dimension
-        if len(image_arr.shape) == 3:
+        if len(np.shape(image_arr)) == 3:
             depth = int(
-                np.ceil(image_arr.shape[2] * np.log2(image_arr.max()+1)))
+                np.ceil(np.shape(image_arr)[2] * np.log2(image_arr.max()+1)))
         else:
             depth = int(np.ceil(np.log2(image_arr.max()+1)))
 
