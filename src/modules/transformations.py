@@ -2,88 +2,90 @@ import numpy as np
 import threading
 from modules.image import *
 from modules import interface
+from modules.interpolators import *
 
 
-def transform_image(self):
-    try:
+class BilinearScaling(ImageOperation):
+    '''
+    Scaling operation using bilinear interpolation.
 
-        # get user input parameters data
-        factor = interface.get_user_input(self)['resize factor']
-        type = interface.get_user_input(self)['transformation type']
-        interpolator = interface.get_user_input(
-            self)['transformation interpolation method']
-
-        # get the selected interpolator class
-        transformation = read_transformation(type, interpolator)
-
-        if transformation == None:
-            return
-
-        # configure the transformation operation object
-        transformation_operation = transformation.configure(factor)
-
-        # undo previous operations
-        self.image1.clear_operations()
-
-        self.image1.add_operation(CreateTestImage())
-        interface.update_img_resize_dimensions(self, "original",
-                                               self.image1.get_pixels())
-
-        # add the operation to the image
-        self.image1.add_operation(transformation_operation)
-
-        interface.print_statusbar(self, 'Processing Image..')
-        # run the processing
-        self.image1.run_processing()
-
-        # print procesing time in status bar
-        str_done = "Done processing in " + \
-            str(self.image1.get_processing_time()) + "ms"
-
-        interface.print_statusbar(self, str_done)
-
-        # refresh the display
-        selected_window = int(self.interpolate_output_combobox.currentIndex())
-        interface.display_pixmap(self,
-                                 image=self.image1,
-                                 window_index=selected_window)
-    except:
-        QMessageBox.critical(self, 'Error', 'Error Running Operation')
-        return
-
-
-def read_transformation(interpolator_name,
-                        transformation_name) -> ImageOperation:
-    # array of supported interpolators
-    transformation = {
-        'Rotation': {
-            'Nearest-Neighbor': NearestNeighborRotation(),
-            'Bilinear': BilinearRotation(),
-            'None': None
-        },
-        'Shearing': {
-            'Nearest-Neighbor': NNHorizontalShearing(),
-            'Bilinear': BilinearHorizontalShearing(),
-            'None': None
-        }
-    }
-    if interpolator_name in transformation and transformation_name in transformation:
-        if transformation_name == 'Rotation':
-            return transformation['Rotation'][interpolator_name]
-        elif transformation_name == 'Shearing':
-            return transformation['Shearing'][interpolator_name]
-    else:
-        raise Warning("Unsupported interpolator")
-
-
-class BilinearRotation(ImageOperation):
+    Note: 
+        This operation must be configured with a scaling factor.
+    '''
 
     def configure(self, factor):
         self.factor = factor
         return self
 
-    def linear_interp(self, p1, p2, px):
-        return p1 * (1 - px) + p2 * px
+    def resize(self, image_data):
+        '''Bilinear interpolation'''
+
+        # get the image dimensions
+        height, width = image_data.shape
+
+        # get the resize factor
+        factor = self.factor
+
+        # calculate the new dimensions
+        new_height = round(height * factor)
+        new_width = round(width * factor)
+
+        # create a new image with the new dimensions
+        new_image = np.zeros((new_height, new_width))
+
+        # get p1, p2, p3 and p4 from original image and then perform bilinear interpolation for each new pixel
+        for i in range(new_height):
+            for j in range(new_width):
+                x = i / factor
+                y = j / factor
+
+                new_image[i, j] = bilinear_interp_pixel(x, y, image_data)
+
+        return new_image
+
+    def execute(self):
+        self.image.data = self.resize(self.image.data)
+        return self.image
+
+
+class NearestNeighborScaling(ImageOperation):
+    '''Scaling operation using nearest neighbor interpolation.
+    
+    Note:
+        This operation must be configured with a scaling factor.
+    '''
+
+    def resize(self, image_data):
+        # get the image dimensions
+        height, width = image_data.shape
+        # create a new image with the new dimensions
+        new_image = np.zeros((int(round(self.factor * height)),
+                              int(round(self.factor * width))))
+        # loop through the new image and interpolate the values
+        for i in range(0, new_image.shape[0]):  # rows
+            for j in range(0, new_image.shape[1]):  # columns
+                # get the new image coordinates
+                x = i / self.factor
+                y = j / self.factor
+                # interpolate the pixel value
+                new_image[i, j] = nn_interp_pixel(x, y, image_data)
+        return new_image
+
+    def execute(self):
+        self.image.data = self.resize(self.image.data)
+        return self.image
+
+
+class BilinearRotation(ImageOperation):
+    '''Rotation operation using bilinear interpolation.
+    
+    Note:
+        This operation must be configured with a rotation angle.
+    '''
+
+    def configure(self, factor):
+        self.factor = factor
+        return self
 
     def rotate(self, image_data):
         '''Rotate image using Bilinear interpolation'''
@@ -122,23 +124,8 @@ class BilinearRotation(ImageOperation):
                 x2 = x2 + center_x
                 y2 = y2 + center_y
 
-                # get the nearest 4 pixels
-                p1 = image_data[int(x2), int(y2)]  #top left
-                p2 = image_data[int(x2), int(y2 + 1)]  #top right
-                p3 = image_data[int(x2 + 1), int(y2)]  #bottom left
-                p4 = image_data[int(x2 + 1), int(y2 + 1)]  #bottom right
-
-                # get the fractional part of the pixel coordinates
-                x2_frac = x2 - int(x2)
-                y2_frac = y2 - int(y2)
-
-                # interpolate the pixel intensity values
-                p12 = self.linear_interp(p1, p2, y2_frac)
-                p34 = self.linear_interp(p3, p4, y2_frac)
-                p1234 = self.linear_interp(p12, p34, x2_frac)
-
-                # set the new pixel value
-                new_image[x, y] = p1234
+                # interpolate the pixel value
+                new_image[x, y] = bilinear_interp_pixel(x2, y2, image_data)
 
         return new_image
 
@@ -148,6 +135,11 @@ class BilinearRotation(ImageOperation):
 
 
 class NearestNeighborRotation(ImageOperation):
+    ''' Rotation operation using nearest neighbor interpolation.
+
+    Note:
+        This operation must be configured with a rotation angle.
+    '''
 
     def rotate(self, image_data):
         # get the image dimensions
@@ -180,8 +172,13 @@ class NearestNeighborRotation(ImageOperation):
                 # apply the inverse rotation matrix
                 y2, x2 = inverse_rotation_matrix.dot([y1, x1])
 
+                # move back to the center of the image
+
+                x2 = x2 + center_x
+                y2 = y2 + center_y
+
                 # get the nearest pixel
-                new_image[x, y] = image_data[round(x2), round(y2)]
+                new_image[x, y] = nn_interp_pixel(x2, y2, image_data)
 
         return new_image
 
@@ -191,13 +188,15 @@ class NearestNeighborRotation(ImageOperation):
 
 
 class BilinearHorizontalShearing(ImageOperation):
+    '''Horizontal shearing operation using bilinear interpolation.
+    
+    Note:
+        This operation must be configured with a shearing factor.
+    '''
 
     def configure(self, factor):
         self.factor = factor
         return self
-
-    def linear_interp(self, p1, p2, px):
-        return p1 * (1 - px) + p2 * px
 
     def shear(self, image_data):
         '''Shear image using Bilinear interpolation'''
@@ -223,23 +222,8 @@ class BilinearHorizontalShearing(ImageOperation):
                 # get the pixel coordinates in the original image
                 x1, y1 = inverse_shear_matrix.dot([x, y])
 
-                # get the nearest 4 pixels
-                p1 = image_data[int(x1), int(y1)]  #top left
-                p2 = image_data[int(x1), int(y1 + 1)]  #top right
-                p3 = image_data[int(x1 + 1), int(y1)]  #bottom left
-                p4 = image_data[int(x1 + 1), int(y1 + 1)]  #bottom right
-
-                # get the fractional part of the pixel coordinates
-                x1_frac = x1 - int(x1)
-                y1_frac = y1 - int(y1)
-
-                # interpolate the pixel intensity values
-                p12 = self.linear_interp(p1, p2, y1_frac)
-                p34 = self.linear_interp(p3, p4, y1_frac)
-                p1234 = self.linear_interp(p12, p34, x1_frac)
-
                 # set the new pixel value
-                new_image[x, y] = p1234
+                new_image[x, y] = bilinear_interp_pixel(x1, y1, image_data)
 
         return new_image
 
@@ -249,6 +233,11 @@ class BilinearHorizontalShearing(ImageOperation):
 
 
 class NNHorizontalShearing(ImageOperation):
+    ''' Horizontal shearing operation using nearest neighbor interpolation.
+
+    Note:
+        This operation must be configured with a shearing factor.
+    '''
 
     def configure(self, factor):
         self.factor = factor
@@ -282,6 +271,6 @@ class NNHorizontalShearing(ImageOperation):
                 x1, y1 = inverse_shear_matrix.dot([x, y])
 
                 # get the nearest pixel
-                new_image[x, y] = image_data[round(x1), round(y1)]
+                new_image[x, y] = nn_interp_pixel(x1, y1, image_data)
 
         return new_image

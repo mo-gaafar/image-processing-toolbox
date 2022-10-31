@@ -1,165 +1,64 @@
 import numpy as np
-import threading
 from modules.image import *
-from modules import interface
 
 
-# connected to the apply button in resize tab
+def linear_interp(self, p1, p2, px):
+    return p1 * (1 - px) + p2 * px
 
 
-def resize_image(self):
-    '''Resizes the image to the specified dimensions'''
-    try:
-        # get user input parameters data
-        factor = interface.get_user_input(self)['resize factor']
+def bilinear_interp_pixel(x, y, img):
+    '''Bilinear interpolation of a pixel'''
+    '''x and y are the relative coordinates of the pixel in original image'''
 
-        # get the selected interpolator class
-        interpolator = read_resize_interpolator(
-            interface.get_user_input(self)['interpolation method'])
+    x1 = int(np.floor(x))
+    x2 = int(np.ceil(x))
+    y1 = int(np.floor(y))
+    y2 = int(np.ceil(y))
 
-        if interpolator == None:
-            return
+    # p1 -- p' ---- p2
+    # |     |       |
+    # |     |       |
+    # |     |       |
+    # p3 --p''---- p4
 
-        # configure the resize operation object
-        resize_operation = interpolator.configure(factor)
+    # check if p1,p2,p3,p4 are out of bounds
+    if x1 < 0 or x2 >= img.shape[0] or y1 < 0 or y2 >= img.shape[1]:
+        if x2 >= img.shape[0]:
+            x2 = x1
+        if y2 >= img.shape[1]:
+            y2 = y1
 
-        # undo previous operations
-        self.image1.clear_operations()
+    # x is rows, y is columns in the image
+    # axis 0 -> rows
 
-        interface.update_img_resize_dimensions(
-            self, "original", self.image1.get_pixels())
+    p1 = img[x1, y1]
+    p2 = img[x1, y2]
+    p3 = img[x2, y1]
+    p4 = img[x2, y2]
 
-        # add the operation to the image
-        self.image1.add_operation(MonochoromeConversion())
-        self.image1.add_operation(resize_operation)
-
-        interface.print_statusbar(self, 'Processing Image..')
-        # run the processing
-        self.image1.run_processing()
-
-        # print procesing time in status bar
-        str_done = "Done processing in " + \
-            str(self.image1.get_processing_time()) + "ms"
-
-        interface.print_statusbar(self, str_done)
-
-        interface.update_img_resize_dimensions(
-            self, "resized", self.image1.get_pixels())
-
-        # refresh the display
-        selected_window = int(self.interpolate_output_combobox.currentIndex())
-        interface.display_pixmap(
-            self, image=self.image1, window_index=selected_window)
-
-    except:
-        QMessageBox.critical(
-            self, 'Error', 'Error Running Operation')
-        return
+    # calculate the new pixel value
+    return linear_interp(linear_interp(p1, p2, y - y1),
+                         linear_interp(p3, p4, y - y1), x - x1)
 
 
-def read_resize_interpolator(interpolator_name) -> ImageOperation:
-    # array of supported interpolators
-    interpolators = {
-        'Nearest-Neighbor': NearestNeighborScaling(),
-        'Bilinear': BilinearScaling(),
-        'None': None
-    }
-    if interpolator_name in interpolators:
-        return interpolators[interpolator_name]
+def special_round(x):
+    '''Special rounding function for nearest neighbor
+    rounds down the value if the fractional part is 0.5 or less'''
+    if x - int(x) <= 0.5:
+        return int(x)
     else:
-        raise Warning("Unsupported interpolator")
+        return int(x) + 1
 
 
-class BilinearScaling(ImageOperation):
-    def configure(self, factor):
-        self.factor = factor
-        return self
+def nn_interp_pixel(x, y, img):
+    '''Nearest neighbor interpolation of a pixel'''
+    '''x and y are the relative coordinates of the pixel in original image'''
 
-    def linear_interp(self, p1, p2, px):
-        return p1*(1-px) + p2 * px
+    x1 = int(special_round(x))
+    y1 = int(special_round(y))
 
-    def interpolate(self, image_data):
-        '''Bilinear interpolation'''
+    # check if p1 is out of bounds
+    if x1 < 0 or y1 < 0 or x1 >= img.shape[0] or y1 >= img.shape[1]:
+        return 0
 
-        # get the image dimensions
-        height, width = image_data.shape
-
-        # get the resize factor
-        factor = self.factor
-
-        # calculate the new dimensions
-        new_height = round(height * factor)
-        new_width = round(width * factor)
-
-        # create a new image with the new dimensions
-        new_image = np.zeros((new_height, new_width))
-
-        # get p1, p2, p3 and p4 from original image and then perform bilinear interpolation for each new pixel
-        for i in range(new_height):
-            for j in range(new_width):
-                x = i/factor
-                y = j/factor
-
-                x1 = int(np.floor(x))
-                x2 = int(np.ceil(x))
-                y1 = int(np.floor(y))
-                y2 = int(np.ceil(y))
-
-                # p1 -- p' ---- p2
-                # |     |       |
-                # |     |       |
-                # |     |       |
-                # p3 --p''---- p4
-
-                # check if p1,p2,p3,p4 are out of bounds
-                if x1 < 0 or x2 >= height or y1 < 0 or y2 >= width:
-                    if x2 >= height:
-                        x2 = x1
-                    if y2 >= width:
-                        y2 = y1
-
-                # # note: the the x y coordinates were swapped when parsing the image for some reason
-                # # x is rows, y is columns in the image
-                # # axis 0 -> rows
-
-                p1 = image_data[x1, y1]
-                p2 = image_data[x1, y2]
-                p3 = image_data[x2, y1]
-                p4 = image_data[x2, y2]
-
-                # calculate the new pixel value
-                new_image[i, j] = self.linear_interp(
-                    self.linear_interp(p1, p2, y-y1), self.linear_interp(p3, p4, y-y1), x-x1)
-        return new_image
-
-    def execute(self):
-        self.image.data = self.interpolate(self.image.data)
-        return self.image
-
-
-class NearestNeighborScaling(ImageOperation):
-
-    def interpolate(self, image_data):
-        # get the image dimensions
-        height, width = image_data.shape
-        # create a new image with the new dimensions
-        new_image = np.zeros(
-            (int(round(self.factor * height)), int(round(self.factor * width))))
-        # loop through the new image and interpolate the values
-        for i in range(0, new_image.shape[0]):  # rows
-            for j in range(0, new_image.shape[1]):  # columns
-                # get the new image coordinates
-                x = i / self.factor
-                y = j / self.factor
-                # get the coordinates of the nearest neighbors
-                x1 = int(np.floor(x))
-                y1 = int(np.floor(y))
-                # get the pixel values of the nearest neighbors
-                q11 = image_data[x1, y1]
-                # interpolate the pixel value
-                new_image[i, j] = q11
-        return new_image
-
-    def execute(self):
-        self.image.data = self.interpolate(self.image.data)
-        return self.image
+    return img[x1, y1]

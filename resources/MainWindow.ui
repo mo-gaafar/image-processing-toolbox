@@ -297,7 +297,7 @@ QGroupBox::title  {
               <enum>QTabWidget::Triangular</enum>
              </property>
              <property name="currentIndex">
-              <number>2</number>
+              <number>1</number>
              </property>
              <property name="elideMode">
               <enum>Qt::ElideNone</enum>
@@ -456,106 +456,6 @@ rgb(163, 162, 165);
                <string>Resize</string>
               </attribute>
               <layout class="QGridLayout" name="gridLayout_7">
-               <item row="12" column="0">
-                <widget class="QLabel" name="label_7">
-                 <property name="text">
-                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;After Resizing&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="13" column="0">
-                <widget class="QLabel" name="resize_modified_dim_textbox">
-                 <property name="text">
-                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;.... x .... px&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="0" colspan="3">
-                <widget class="Line" name="line_6">
-                 <property name="maximumSize">
-                  <size>
-                   <width>16777215</width>
-                   <height>1</height>
-                  </size>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">background-color: rgba(255, 255, 255,100);</string>
-                 </property>
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="label_3">
-                 <property name="text">
-                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Image Interpolation&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0" colspan="3">
-                <widget class="Line" name="line_5">
-                 <property name="maximumSize">
-                  <size>
-                   <width>16777215</width>
-                   <height>1</height>
-                  </size>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">background-color: rgba(255, 255, 255,100);</string>
-                 </property>
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="0">
-                <widget class="QLabel" name="label_4">
-                 <property name="text">
-                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Select Method&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="0">
-                <widget class="QComboBox" name="interpolate_combobox">
-                 <item>
-                  <property name="text">
-                   <string>None</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>Nearest-Neighbor</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>Bilinear</string>
-                  </property>
-                 </item>
-                </widget>
-               </item>
-               <item row="5" column="0">
-                <widget class="QLabel" name="label_5">
-                 <property name="text">
-                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Resizing Factor (times)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="10" column="0">
-                <widget class="QLabel" name="label_6">
-                 <property name="text">
-                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Original Dimensions&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="11" column="0">
-                <widget class="QLabel" name="resize_original_dim_textbox">
-                 <property name="text">
-                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;.... x .... px&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                 </property>
-                </widget>
-               </item>
                <item row="6" column="0" colspan="3">
                 <widget class="QFrame" name="frame">
                  <property name="minimumSize">
@@ -697,18 +597,104 @@ QPushButton:pressed {
                  </layout>
                 </widget>
                </item>
-               <item row="8" column="0">
-                <widget class="QComboBox" name="interpolate_output_combobox">
+               <item row="0" column="0" colspan="3">
+                <widget class="Line" name="line_6">
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>1</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: rgba(255, 255, 255,100);</string>
+                 </property>
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="label_4">
+                 <property name="text">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Select Method&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_3">
+                 <property name="text">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Image Interpolation&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QComboBox" name="interpolate_combobox">
                  <item>
                   <property name="text">
-                   <string>Preview1</string>
+                   <string>None</string>
                   </property>
                  </item>
                  <item>
                   <property name="text">
-                   <string>Preview2</string>
+                   <string>Nearest-Neighbor</string>
                   </property>
                  </item>
+                 <item>
+                  <property name="text">
+                   <string>Bilinear</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item row="2" column="0" colspan="3">
+                <widget class="Line" name="line_5">
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>1</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: rgba(255, 255, 255,100);</string>
+                 </property>
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="12" column="0">
+                <widget class="QLabel" name="label_7">
+                 <property name="text">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;After Resizing&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel" name="label_5">
+                 <property name="text">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Resizing Factor (times)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="10" column="0">
+                <widget class="QLabel" name="label_6">
+                 <property name="text">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Original Dimensions&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="13" column="0">
+                <widget class="QLabel" name="resize_modified_dim_textbox">
+                 <property name="text">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;.... x .... px&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="0">
+                <widget class="QLabel" name="label_10">
+                 <property name="text">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Output To&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                 </widget>
                </item>
                <item row="16" column="1">
@@ -727,10 +713,24 @@ QPushButton:pressed {
                  </property>
                 </spacer>
                </item>
-               <item row="7" column="0">
-                <widget class="QLabel" name="label_10">
+               <item row="8" column="0">
+                <widget class="QComboBox" name="interpolate_output_combobox">
+                 <item>
+                  <property name="text">
+                   <string>Preview1</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Preview2</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item row="11" column="0">
+                <widget class="QLabel" name="resize_original_dim_textbox">
                  <property name="text">
-                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Output To&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;.... x .... px&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                 </widget>
                </item>
@@ -742,36 +742,20 @@ QPushButton:pressed {
               </attribute>
               <layout class="QGridLayout" name="gridLayout_5">
                <item row="4" column="0">
-                <widget class="QPushButton" name="resize_apply_3">
-                 <property name="minimumSize">
-                  <size>
-                   <width>100</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">QPushButton {
-    border-radius: 5px;
-    border-style: outset;
-    background: rgb(12, 17, 24);
-	padding: 3;
-    }
-
-QPushButton:hover {
-    background: rgb(63, 95, 127)
-    }
-
-QPushButton:pressed {
-    border-style: inset;
-    background:rgb(20, 20, 20)
-    }</string>
-                 </property>
-                 <property name="text">
-                  <string>Generate Test Image</string>
-                 </property>
+                <widget class="QComboBox" name="interpolate_output_combobox_2">
+                 <item>
+                  <property name="text">
+                   <string>Preview1</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Preview2</string>
+                  </property>
+                 </item>
                 </widget>
                </item>
-               <item row="4" column="1">
+               <item row="6" column="1">
                 <widget class="QPushButton" name="resize_reset_2">
                  <property name="minimumSize">
                   <size>
@@ -801,24 +785,66 @@ QPushButton:pressed {
                  </property>
                 </widget>
                </item>
-               <item row="2" column="1">
-                <widget class="QComboBox" name="interpolate_output_combobox_2">
+               <item row="6" column="0">
+                <widget class="QPushButton" name="resize_apply_3">
+                 <property name="minimumSize">
+                  <size>
+                   <width>100</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+    border-radius: 5px;
+    border-style: outset;
+    background: rgb(12, 17, 24);
+	padding: 3;
+    }
+
+QPushButton:hover {
+    background: rgb(63, 95, 127)
+    }
+
+QPushButton:pressed {
+    border-style: inset;
+    background:rgb(20, 20, 20)
+    }</string>
+                 </property>
+                 <property name="text">
+                  <string>Generate Test Image</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="label_11">
+                 <property name="text">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Output To&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QComboBox" name="transform_interpolate_combobox">
                  <item>
                   <property name="text">
-                   <string>Preview1</string>
+                   <string>None</string>
                   </property>
                  </item>
                  <item>
                   <property name="text">
-                   <string>Preview2</string>
+                   <string>Nearest-Neighbor</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Bilinear</string>
                   </property>
                  </item>
                 </widget>
                </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="label_11">
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_13">
                  <property name="text">
-                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Output To&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Interpolation Method&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                 </widget>
                </item>
@@ -840,44 +866,48 @@ QPushButton:pressed {
                     <x>0</x>
                     <y>0</y>
                     <width>362</width>
-                    <height>487</height>
+                    <height>419</height>
                    </rect>
                   </property>
                   <attribute name="label">
                    <string>Rotate</string>
                   </attribute>
                   <layout class="QGridLayout" name="gridLayout_6">
+                   <item row="14" column="0" colspan="2">
+                    <widget class="QPushButton" name="resize_apply_2">
+                     <property name="minimumSize">
+                      <size>
+                       <width>100</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QPushButton {
+    border-radius: 5px;
+    border-style: outset;
+    background: rgb(12, 17, 24);
+	padding: 3;
+    }
+
+QPushButton:hover {
+    background: rgb(63, 95, 127)
+    }
+
+QPushButton:pressed {
+    border-style: inset;
+    background:rgb(20, 20, 20)
+    }</string>
+                     </property>
+                     <property name="text">
+                      <string>Apply Operation</string>
+                     </property>
+                    </widget>
+                   </item>
                    <item row="4" column="0">
                     <widget class="QLabel" name="label_14">
                      <property name="text">
                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Rotation Angle&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                      </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="0">
-                    <widget class="QLabel" name="label_12">
-                     <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Image Rotation&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="0">
-                    <widget class="QComboBox" name="interpolate_combobox_2">
-                     <item>
-                      <property name="text">
-                       <string>None</string>
-                      </property>
-                     </item>
-                     <item>
-                      <property name="text">
-                       <string>Nearest-Neighbor</string>
-                      </property>
-                     </item>
-                     <item>
-                      <property name="text">
-                       <string>Bilinear</string>
-                      </property>
-                     </item>
                     </widget>
                    </item>
                    <item row="1" column="0" colspan="2">
@@ -896,25 +926,12 @@ QPushButton:pressed {
                      </property>
                     </widget>
                    </item>
-                   <item row="2" column="0">
-                    <widget class="QLabel" name="label_13">
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_12">
                      <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Interpolation Method&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Image Rotation&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                      </property>
                     </widget>
-                   </item>
-                   <item row="10" column="0">
-                    <spacer name="verticalSpacer_2">
-                     <property name="orientation">
-                      <enum>Qt::Vertical</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>20</width>
-                       <height>40</height>
-                      </size>
-                     </property>
-                    </spacer>
                    </item>
                    <item row="8" column="0" colspan="2">
                     <widget class="QFrame" name="frame_3">
@@ -944,6 +961,9 @@ QPushButton:pressed {
                         </property>
                         <property name="maximum">
                          <number>360</number>
+                        </property>
+                        <property name="singleStep">
+                         <number>1</number>
                         </property>
                         <property name="sliderPosition">
                          <number>10</number>
@@ -987,16 +1007,123 @@ QPushButton:pressed {
                      </layout>
                     </widget>
                    </item>
-                   <item row="12" column="0" colspan="2">
-                    <widget class="QPushButton" name="resize_apply_2">
-                     <property name="minimumSize">
+                   <item row="9" column="0">
+                    <spacer name="verticalSpacer_2">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeType">
+                      <enum>QSizePolicy::Expanding</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
                       <size>
-                       <width>100</width>
-                       <height>0</height>
+                       <width>20</width>
+                       <height>40</height>
                       </size>
                      </property>
-                     <property name="styleSheet">
-                      <string notr="true">QPushButton {
+                    </spacer>
+                   </item>
+                  </layout>
+                 </widget>
+                 <widget class="QWidget" name="page_2">
+                  <property name="geometry">
+                   <rect>
+                    <x>0</x>
+                    <y>0</y>
+                    <width>362</width>
+                    <height>419</height>
+                   </rect>
+                  </property>
+                  <attribute name="label">
+                   <string>Shear</string>
+                  </attribute>
+                  <widget class="Line" name="line_8">
+                   <property name="geometry">
+                    <rect>
+                     <x>0</x>
+                     <y>42</y>
+                     <width>344</width>
+                     <height>1</height>
+                    </rect>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>1</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">background-color: rgba(255, 255, 255,100);</string>
+                   </property>
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                  </widget>
+                  <widget class="QLabel" name="label_15">
+                   <property name="geometry">
+                    <rect>
+                     <x>0</x>
+                     <y>20</y>
+                     <width>169</width>
+                     <height>16</height>
+                    </rect>
+                   </property>
+                   <property name="text">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Image Rotation&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                  </widget>
+                  <widget class="QLabel" name="label_16">
+                   <property name="geometry">
+                    <rect>
+                     <x>0</x>
+                     <y>60</y>
+                     <width>169</width>
+                     <height>16</height>
+                    </rect>
+                   </property>
+                   <property name="text">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Shearing Factor&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                  </widget>
+                  <widget class="QDoubleSpinBox" name="resize_spinbox_3">
+                   <property name="geometry">
+                    <rect>
+                     <x>260</x>
+                     <y>60</y>
+                     <width>51</width>
+                     <height>18</height>
+                    </rect>
+                   </property>
+                   <property name="minimum">
+                    <double>0.010000000000000</double>
+                   </property>
+                   <property name="maximum">
+                    <double>16.000000000000000</double>
+                   </property>
+                   <property name="singleStep">
+                    <double>0.100000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>1.000000000000000</double>
+                   </property>
+                  </widget>
+                  <widget class="QPushButton" name="resize_apply_4">
+                   <property name="geometry">
+                    <rect>
+                     <x>0</x>
+                     <y>370</y>
+                     <width>344</width>
+                     <height>19</height>
+                    </rect>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>100</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">QPushButton {
     border-radius: 5px;
     border-style: outset;
     background: rgb(12, 17, 24);
@@ -1011,26 +1138,11 @@ QPushButton:pressed {
     border-style: inset;
     background:rgb(20, 20, 20)
     }</string>
-                     </property>
-                     <property name="text">
-                      <string>Apply Operation</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
-                 <widget class="QWidget" name="page_2">
-                  <property name="geometry">
-                   <rect>
-                    <x>0</x>
-                    <y>0</y>
-                    <width>362</width>
-                    <height>487</height>
-                   </rect>
-                  </property>
-                  <attribute name="label">
-                   <string>Shear</string>
-                  </attribute>
+                   </property>
+                   <property name="text">
+                    <string>Apply Operation</string>
+                   </property>
+                  </widget>
                  </widget>
                 </widget>
                </item>

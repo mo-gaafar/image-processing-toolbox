@@ -1,31 +1,29 @@
-
 import numpy as np
 from PIL import Image as PILImage
 from PyQt5.QtWidgets import QTableWidgetItem, QMessageBox
 from PyQt5.QtGui import *
 from PyQt5 import QtGui
 from modules.utility import print_debug
-from modules import openfile
-from modules import interpolators
+from modules import openfile, transformations
 import modules.image
 
 
 def update_resize_tab(self, caller=None):
     ''' Synchrnoizes slider values and spinbox values'''
     if caller == 'slider':
-        self.resize_spinbox.setValue(self.resize_slider.value()/10)
+        self.resize_spinbox.setValue(self.resize_slider.value() / 10)
     elif caller == 'spinbox':
-        self.resize_slider.setValue(int(self.resize_spinbox.value()*10))
+        self.resize_slider.setValue(int(self.resize_spinbox.value() * 10))
 
 
 def update_img_resize_dimensions(self, selector, data_arr):
     if selector == 'original':
-        dimensions_string = str(
-            data_arr.shape[0]) + " x " + str(data_arr.shape[1]) + " px"
+        dimensions_string = str(data_arr.shape[0]) + " x " + str(
+            data_arr.shape[1]) + " px"
         self.resize_original_dim_textbox.setText(dimensions_string)
     elif selector == 'resized':
-        dimensions_string = str(
-            data_arr.shape[0]) + " x " + str(data_arr.shape[1]) + " px"
+        dimensions_string = str(data_arr.shape[0]) + " x " + str(
+            data_arr.shape[1]) + " px"
         self.resize_modified_dim_textbox.setText(dimensions_string)
 
 
@@ -33,24 +31,30 @@ def get_user_input(self):
     '''Gets the user input from the GUI and returns it as a dictionary'''
     user_input = {}
     user_input['resize factor'] = self.resize_spinbox.value()
-    user_input['interpolation method'] = self.interpolate_combobox.currentText()
+    user_input[
+        'resize interpolation method'] = self.interpolate_combobox.currentText(
+        )
     return user_input
-
-
-# def update_browse(self):
-#     ''' Updates the user interface with the current image and data'''
-#     try:
-#         display_pixmap(self, image=self.image1)
-#     except TypeError:
-#         # error message pyqt
-#         QMessageBox.critical(
-#             self, 'Error', 'Error Displaying Image: Unsupported Image Format')
-
-#     display_metatable(self)
 
 
 def print_statusbar(self, message):
     self.statusbar.showMessage(message)
+
+
+def display_run_processing(self, selected_window_idx):
+
+    print_statusbar(self, 'Processing Image..')
+    # run the processing
+    self.image1.run_processing()
+
+    # print procesing time in status bar
+    str_done = "Done processing in " + \
+        str(self.image1.get_processing_time()) + "ms"
+
+    print_statusbar(self, str_done)
+
+    # refresh the display
+    display_pixmap(self, image=self.image1, window_index=selected_window_idx)
 
 
 def display_pixmap(self, image, window_index=0):
@@ -82,12 +86,13 @@ def display_pixmap(self, image, window_index=0):
         except:
             # error message pyqt
             QMessageBox.critical(
-                self, 'Error', 'Error Displaying Image: Unsupported Image Format')
+                self, 'Error',
+                'Error Displaying Image: Unsupported Image Format')
             return
 
         data = im.tobytes()
-        qim = QtGui.QImage(
-            data, im.size[0], im.size[1], QtGui.QImage.Format_RGB888)
+        qim = QtGui.QImage(data, im.size[0], im.size[1],
+                           QtGui.QImage.Format_RGB888)
 
     # convert the image to binary in RGB format
 
@@ -139,7 +144,6 @@ def display_metatable(self, f_metadata=None):
 
 def init_connectors(self):
     '''Initializes all event connectors and triggers'''
-
     ''' Menu Bar'''
 
     # File Menu
@@ -155,32 +159,31 @@ def init_connectors(self):
 
     # Help Menu
     self.actionAbout.triggered.connect(lambda: about_us(self))
-
-    # self.actionAbout_Us = self.findChild(QAction, "actionAbout_Us")
-    # self.actionAbout_Us.triggered.connect(
-    #     lambda: about_us(self))
-
-    # self.WindowTabs = self.findChild(QTabWidget, "WindowTabs")
-
-    # ''' browse buttons'''
-    # # the index argument maps each function to its respective slot
-    # self.insert_image1_pushButton.clicked.connect(
-    #     lambda: openfile.open_new(self, 1))
-
     ''' Interpolation (resize) tab'''
     self.resize_slider.sliderReleased.connect(
         lambda: update_resize_tab(self, 'slider'))
     self.resize_spinbox.valueChanged.connect(
         lambda: update_resize_tab(self, 'spinbox'))
 
+    # Tools
+
+    # Resize Tab
     # triggers the resizing
-    self.resize_apply.clicked.connect(lambda: interpolators.resize_image(self))
+    self.resize_apply.clicked.connect(
+        lambda: transformations.resize_image(self))
     # undo resizing
     self.resize_reset.clicked.connect(lambda: modules.image.reset_image(self))
+
+    #Transform Tab
+    self.transform_apply.clicked.connect(
+        lambda: transformations.transform_image(self))
+    
 
     print_debug("Connectors Initialized")
 
 
 def about_us(self):
     QMessageBox.about(
-        self, ' About ', 'This is a Medical Image Toolbox \nCreated by Senior students from the faculty of Engineering, Cairo Uniersity, Systems and Biomedical Engineering department \n \n Created By: Mohamed Nasser ')
+        self, ' About ',
+        'This is a Medical Image Toolbox \nCreated by Senior students from the faculty of Engineering, Cairo Uniersity, Systems and Biomedical Engineering department \n \n Created By: Mohamed Nasser '
+    )
