@@ -2,6 +2,13 @@ from PyQt5.QtWidgets import QMessageBox
 from modules import interface
 from modules.operations import *
 
+#!Important: missing functionality
+# TODO: fix slider synchronization
+# TODO: fix rotation angle values in the UI
+# TODO: fix rotation direction (make it anti-clockwise)
+# TODO: make sure shearing is correct
+# TODO: add axes option to the output image
+
 
 #TODO: make the functions more generic and reduce code repetiton
 def generate_test_image(self):
@@ -89,19 +96,23 @@ def apply_shear(self):
 
 def apply_image_operation(self, operation):
     '''Applies the given operation to the image'''
-    # undo previous operations
-    self.image1.clear_operations()
+    try:
 
-    interface.update_img_resize_dimensions(self, "original",
-                                           self.image1.get_pixels())
+        # clear previous operations
+        self.image1.clear_operations(clear_backup=True, undo_old=False)
 
-    # add the operation to the image
-    self.image1.add_operation(MonochoromeConversion())
-    self.image1.add_operation(operation)
+        interface.update_img_resize_dimensions(self, "original",
+                                               self.image1.get_pixels())
 
-    # run the processing
-    selected_window_idx = int(self.output_window_combobox.currentIndex())
-    interface.display_run_processing(self, selected_window_idx)
+        # add the operation to the image
+        self.image1.add_operation(MonochoromeConversion())
+        self.image1.add_operation(operation)
+
+        # run the processing
+        selected_window_idx = int(self.output_window_combobox.currentIndex())
+        interface.display_run_processing(self, selected_window_idx)
+    except:
+        QMessageBox.critical(self, 'Error', 'Error Running Operation')
 
 
 def read_transformation(transformation_name,

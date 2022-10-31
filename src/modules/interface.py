@@ -58,6 +58,9 @@ def display_run_processing(self, selected_window_idx=None):
 
     print_statusbar(self, str_done)
 
+    # update resize dimensions
+    update_img_resize_dimensions(self, 'resized', self.image1.get_pixels())
+
     # refresh the display
     display_pixmap(self, image=self.image1, window_index=selected_window_idx)
 

@@ -16,7 +16,7 @@ def reset_image(self):
     try:
         # undo previous operations
         self.image1.clear_operations()
-        selected_window = int(self.interpolate_output_combobox.currentIndex())
+        selected_window = interface.get_user_input(self)['output window']
         interface.display_pixmap(self,
                                  image=self.image1,
                                  window_index=selected_window)
@@ -66,11 +66,18 @@ class Image:
     image_backup = None
     last_processing_time_ms = 0
 
-    def clear_operations(self, clear_backup=False):
+    def clear_operations(self, undo_old=True, clear_backup=False):
+        ''' Clears all operations from the image.
+        
+        undo_old: if True, the image is restored to its original state
+        clear_backup: if True, the backup image is cleared
+
+        '''
         if clear_backup == True and self.image_backup is not None:
             self.image_backup = None
         self.operations_dict = {}
-        self.undo()
+        if undo_old == True:
+            self.undo()
 
     def clear_image_data(self):
         self.data = None
