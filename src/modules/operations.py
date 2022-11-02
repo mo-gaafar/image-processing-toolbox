@@ -28,6 +28,9 @@ class CreateTestImage(ImageOperation):
         return deepcopy(self.image)
 
 
+#TODO: refactor affine or pixelwise transformations
+
+
 class BilinearScaling(ImageOperation):
     '''
     Scaling operation using bilinear interpolation.
@@ -141,7 +144,7 @@ class BilinearRotation(ImageOperation):
                 y1 = y - center_y
 
                 # apply the inverse rotation matrix
-                y2, x2 = inverse_rotation_matrix.dot([y1, x1])
+                x2, y2 = inverse_rotation_matrix.dot([x1, y1])
 
                 # get the pixel coordinates in the original image
                 x2 = x2 + center_x
@@ -193,10 +196,9 @@ class NearestNeighborRotation(ImageOperation):
                 y1 = y - center_y
 
                 # apply the inverse rotation matrix
-                y2, x2 = inverse_rotation_matrix.dot([y1, x1])
+                x2, y2 = inverse_rotation_matrix.dot([x1, y1])
 
-                # move back to the center of the image
-
+                # get the pixel coordinates in the original image
                 x2 = x2 + center_x
                 y2 = y2 + center_y
 
@@ -230,20 +232,31 @@ class BilinearHorizontalShearing(ImageOperation):
         new_image = np.zeros((height, width), dtype=np.uint8)
 
         # get the shear factor
-        shear_factor = self.factor
+        shear_factor = -1 * np.tan(np.radians(self.factor) / 2)
 
         # get the shear matrix
-        shear_matrix = np.array([[1, shear_factor], [0, 1]])
+        shear_matrix = np.array([[1, 0], [shear_factor, 1]])
 
         # get the inverse shear matrix
         inverse_shear_matrix = np.linalg.inv(shear_matrix)
 
+        # get the center of the image
+        center_x = height / 2
+        center_y = width / 2
+
         # iterate over the new image pixels
-        for x in range(width):
-            for y in range(height):
+        for y in range(width):
+            for x in range(height):
+                # move to the origin
+                x1 = x - center_x
+                y1 = y - center_y
+
+                # apply the inverse shear matrix
+                x1, y1 = inverse_shear_matrix.dot([x1, y1])
 
                 # get the pixel coordinates in the original image
-                x1, y1 = inverse_shear_matrix.dot([x, y])
+                x1 = x1 + center_x
+                y1 = y1 + center_y
 
                 # set the new pixel value
                 new_image[x, y] = bilinear_interp_pixel(x1, y1, image_data)
@@ -278,20 +291,31 @@ class NNHorizontalShearing(ImageOperation):
         new_image = np.zeros((height, width), dtype=np.uint8)
 
         # get the shear factor
-        shear_factor = self.factor
+        shear_factor = -1 * np.tan(np.radians(self.factor) / 2)
 
         # get the shear matrix
-        shear_matrix = np.array([[1, shear_factor], [0, 1]])
+        shear_matrix = np.array([[1, 0], [shear_factor, 1]])
 
         # get the inverse shear matrix
         inverse_shear_matrix = np.linalg.inv(shear_matrix)
 
+        # get the center of the image
+        center_x = height / 2
+        center_y = width / 2
+
         # iterate over the new image pixels
         for y in range(width):
             for x in range(height):
+                # move to center
+                x1 = x - center_x
+                y1 = y - center_y
 
-                # get the pixel coordinates in the original image
-                x1, y1 = inverse_shear_matrix.dot([x, y])
+                # apply the inverse shear matrix
+                x1, y1 = inverse_shear_matrix.dot([x1, y1])
+
+                # move back to center to get original
+                x1 = x1 + center_x
+                y1 = y1 + center_y
 
                 # get the nearest pixel
                 new_image[x, y] = nn_interp_pixel(x1, y1, image_data)

@@ -1,4 +1,3 @@
-
 import sys
 import numpy as np
 from PyQt5 import QtGui, QtWidgets, uic, QtCore
@@ -8,6 +7,7 @@ from modules.utility import print_debug, print_log
 
 # if macos
 import ctypes
+
 myappid = 'mycompany.myproduct.subproduct.version'  # arbitrary string
 # tells windows to use the string as the app id
 # so that taskbar grouping works correctly

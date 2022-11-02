@@ -55,8 +55,8 @@ def nn_interp_pixel(x, y, img):
     '''Nearest neighbor interpolation of a pixel'''
     '''x and y are the relative coordinates of the pixel in original image'''
 
-    x1 = int(special_round(x))
-    y1 = int(special_round(y))
+    x1 = special_round(x)
+    y1 = special_round(y)
 
     # check if p1 is out of bounds
     if x1 < 0 or y1 < 0 or x1 >= np.shape(img)[0] or y1 >= np.shape(img)[1]:

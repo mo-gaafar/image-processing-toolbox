@@ -1,10 +1,9 @@
+from pickle import TRUE
 from PyQt5.QtWidgets import QMessageBox
 from modules import interface
 from modules.operations import *
 
 #!Important: missing functionality
-# TODO: fix slider synchronization
-# TODO: fix rotation angle values in the UI
 # TODO: fix rotation direction (make it anti-clockwise)
 # TODO: make sure shearing is correct
 # TODO: add axes option to the output image
@@ -99,7 +98,7 @@ def apply_image_operation(self, operation):
     try:
 
         # clear previous operations
-        self.image1.clear_operations(clear_backup=False, undo_old=False)
+        self.image1.clear_operations(clear_backup=False, undo_old=True)
 
         interface.update_img_resize_dimensions(self, "original",
                                                self.image1.get_pixels())
