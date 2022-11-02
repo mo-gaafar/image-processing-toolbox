@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>863</width>
-    <height>789</height>
+    <width>861</width>
+    <height>631</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -72,21 +72,17 @@ QGroupBox::title  {
     color: rgb(255, 255, 255);
 }</string>
           </property>
-          <layout class="QGridLayout" name="gridLayout_9">
-           <item row="0" column="0">
-            <widget class="QSplitter" name="splitter_2">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <item>
+            <widget class="QGroupBox" name="image1_groupbox">
+             <property name="minimumSize">
+              <size>
+               <width>400</width>
+               <height>0</height>
+              </size>
              </property>
-             <widget class="QGroupBox" name="image1_groupbox">
-              <property name="minimumSize">
-               <size>
-                <width>400</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">QGroupBox {
+             <property name="styleSheet">
+              <string notr="true">QGroupBox {
 background-color: rgb(1, 4, 9);
 border: 1.2px solid #ffffff;
 border-style: outset;
@@ -98,90 +94,92 @@ QGroupBox::title  {
     padding: -5px 0px 0px 0px;
     color: rgb(255, 255, 255);
 }</string>
-              </property>
-              <property name="title">
-               <string>Image 1</string>
-              </property>
-              <property name="flat">
-               <bool>false</bool>
-              </property>
-              <layout class="QGridLayout" name="gridLayout_4">
-               <item row="0" column="0">
-                <widget class="QScrollArea" name="scrollArea">
-                 <property name="frameShape">
-                  <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="title">
+              <string>Image 1</string>
+             </property>
+             <property name="flat">
+              <bool>false</bool>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_4">
+              <item row="0" column="0">
+               <widget class="QScrollArea" name="scrollArea">
+                <property name="frameShape">
+                 <enum>QFrame::NoFrame</enum>
+                </property>
+                <property name="sizeAdjustPolicy">
+                 <enum>QAbstractScrollArea::AdjustToContents</enum>
+                </property>
+                <property name="widgetResizable">
+                 <bool>true</bool>
+                </property>
+                <widget class="QWidget" name="scrollAreaWidgetContents_3">
+                 <property name="geometry">
+                  <rect>
+                   <x>0</x>
+                   <y>0</y>
+                   <width>380</width>
+                   <height>144</height>
+                  </rect>
                  </property>
-                 <property name="sizeAdjustPolicy">
-                  <enum>QAbstractScrollArea::AdjustToContents</enum>
-                 </property>
-                 <property name="widgetResizable">
-                  <bool>true</bool>
-                 </property>
-                 <widget class="QWidget" name="scrollAreaWidgetContents_3">
-                  <property name="geometry">
-                   <rect>
-                    <x>0</x>
-                    <y>0</y>
-                    <width>382</width>
-                    <height>306</height>
-                   </rect>
-                  </property>
-                  <layout class="QVBoxLayout" name="verticalLayout_2">
-                   <item>
-                    <widget class="QLabel" name="image1_widget">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="minimumSize">
-                      <size>
-                       <width>100</width>
-                       <height>100</height>
-                      </size>
-                     </property>
-                     <property name="layoutDirection">
-                      <enum>Qt::LeftToRight</enum>
-                     </property>
-                     <property name="autoFillBackground">
-                      <bool>false</bool>
-                     </property>
-                     <property name="styleSheet">
-                      <string notr="true">background-color: rgb(0, 0, 0);</string>
-                     </property>
-                     <property name="frameShadow">
-                      <enum>QFrame::Sunken</enum>
-                     </property>
-                     <property name="pixmap">
-                      <pixmap>../../../../../moham/.designer/backup/placeholder.png</pixmap>
-                     </property>
-                     <property name="scaledContents">
-                      <bool>false</bool>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignCenter</set>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
+                 <layout class="QVBoxLayout" name="verticalLayout_2">
+                  <item>
+                   <widget class="QLabel" name="image1_widget">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>100</width>
+                      <height>100</height>
+                     </size>
+                    </property>
+                    <property name="layoutDirection">
+                     <enum>Qt::LeftToRight</enum>
+                    </property>
+                    <property name="autoFillBackground">
+                     <bool>false</bool>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">background-color: rgb(0, 0, 0);</string>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Sunken</enum>
+                    </property>
+                    <property name="pixmap">
+                     <pixmap>../../../../../moham/.designer/backup/placeholder.png</pixmap>
+                    </property>
+                    <property name="scaledContents">
+                     <bool>false</bool>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </widget>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QGroupBox" name="image2_groupbox">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>400</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">QGroupBox {
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="image2_groupbox">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>400</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QGroupBox {
 background-color: rgb(1, 4, 9);
 border: 1.2px solid #ffffff;
 border-style: outset;
@@ -193,66 +191,125 @@ QGroupBox::title  {
     padding: -5px 0px 0px 0px;
     color: rgb(255, 255, 255);
 }</string>
-              </property>
-              <property name="title">
-               <string>Image 2</string>
-              </property>
-              <layout class="QGridLayout" name="gridLayout_2">
-               <item row="0" column="0">
-                <widget class="QScrollArea" name="scrollArea_2">
-                 <property name="frameShape">
-                  <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="title">
+              <string>Image 2</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_2">
+              <item row="0" column="0">
+               <widget class="QScrollArea" name="scrollArea_2">
+                <property name="frameShape">
+                 <enum>QFrame::NoFrame</enum>
+                </property>
+                <property name="sizeAdjustPolicy">
+                 <enum>QAbstractScrollArea::AdjustToContents</enum>
+                </property>
+                <property name="widgetResizable">
+                 <bool>true</bool>
+                </property>
+                <widget class="QWidget" name="scrollAreaWidgetContents_4">
+                 <property name="geometry">
+                  <rect>
+                   <x>0</x>
+                   <y>0</y>
+                   <width>380</width>
+                   <height>145</height>
+                  </rect>
                  </property>
-                 <property name="sizeAdjustPolicy">
-                  <enum>QAbstractScrollArea::AdjustToContents</enum>
-                 </property>
-                 <property name="widgetResizable">
-                  <bool>true</bool>
-                 </property>
-                 <widget class="QWidget" name="scrollAreaWidgetContents_4">
-                  <property name="geometry">
-                   <rect>
-                    <x>0</x>
-                    <y>0</y>
-                    <width>382</width>
-                    <height>305</height>
-                   </rect>
-                  </property>
-                  <layout class="QVBoxLayout" name="verticalLayout_5">
-                   <item>
-                    <widget class="QLabel" name="image2_widget">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="minimumSize">
-                      <size>
-                       <width>100</width>
-                       <height>100</height>
-                      </size>
-                     </property>
-                     <property name="styleSheet">
-                      <string notr="true">background-color: rgb(0, 0, 0);</string>
-                     </property>
-                     <property name="pixmap">
-                      <pixmap>../../../../../moham/.designer/backup/placeholder.png</pixmap>
-                     </property>
-                     <property name="scaledContents">
-                      <bool>false</bool>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignCenter</set>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
+                 <layout class="QVBoxLayout" name="verticalLayout_5">
+                  <item>
+                   <widget class="QLabel" name="image2_widget">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>100</width>
+                      <height>100</height>
+                     </size>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">background-color: rgb(0, 0, 0);</string>
+                    </property>
+                    <property name="pixmap">
+                     <pixmap>../../../../../moham/.designer/backup/placeholder.png</pixmap>
+                    </property>
+                    <property name="scaledContents">
+                     <bool>false</bool>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </widget>
-               </item>
-              </layout>
-             </widget>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="plot1_groupbox">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>400</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QGroupBox {
+background-color: rgb(1, 4, 9);
+border: 1.2px solid #ffffff;
+border-style: outset;
+border-radius: 15px;
+}
+QGroupBox::title  {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    padding: -5px 0px 0px 0px;
+    color: rgb(255, 255, 255);
+}</string>
+             </property>
+             <property name="title">
+              <string>Plot 1</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_9">
+              <item row="0" column="0">
+               <widget class="QScrollArea" name="scrollArea_3">
+                <property name="frameShape">
+                 <enum>QFrame::NoFrame</enum>
+                </property>
+                <property name="sizeAdjustPolicy">
+                 <enum>QAbstractScrollArea::AdjustToContents</enum>
+                </property>
+                <property name="widgetResizable">
+                 <bool>true</bool>
+                </property>
+                <widget class="QWidget" name="scrollAreaWidgetContents_5">
+                 <property name="geometry">
+                  <rect>
+                   <x>0</x>
+                   <y>0</y>
+                   <width>380</width>
+                   <height>144</height>
+                  </rect>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_6">
+                  <item>
+                   <layout class="QGridLayout" name="gridLayout_11"/>
+                  </item>
+                 </layout>
+                </widget>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
           </layout>
@@ -468,6 +525,11 @@ rgb(163, 162, 165);
                    <string>Preview2</string>
                   </property>
                  </item>
+                 <item>
+                  <property name="text">
+                   <string>Preview3 Axis</string>
+                  </property>
+                 </item>
                 </widget>
                </item>
                <item row="6" column="1">
@@ -573,7 +635,7 @@ QPushButton:pressed {
                   </font>
                  </property>
                  <property name="currentIndex">
-                  <number>1</number>
+                  <number>0</number>
                  </property>
                  <widget class="QWidget" name="page">
                   <property name="geometry">
@@ -581,7 +643,7 @@ QPushButton:pressed {
                     <x>0</x>
                     <y>0</y>
                     <width>362</width>
-                    <height>422</height>
+                    <height>271</height>
                    </rect>
                   </property>
                   <attribute name="label">
@@ -703,7 +765,7 @@ QPushButton:pressed {
                      <property name="sizeHint" stdset="0">
                       <size>
                        <width>20</width>
-                       <height>272</height>
+                       <height>50</height>
                       </size>
                      </property>
                     </spacer>
@@ -746,7 +808,7 @@ QPushButton:pressed {
                     <x>0</x>
                     <y>0</y>
                     <width>362</width>
-                    <height>422</height>
+                    <height>271</height>
                    </rect>
                   </property>
                   <attribute name="label">
@@ -810,7 +872,7 @@ QPushButton:pressed {
                      <property name="sizeHint" stdset="0">
                       <size>
                        <width>20</width>
-                       <height>323</height>
+                       <height>50</height>
                       </size>
                      </property>
                     </spacer>
@@ -852,8 +914,8 @@ QPushButton:pressed {
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>199</width>
-                    <height>229</height>
+                    <width>362</width>
+                    <height>271</height>
                    </rect>
                   </property>
                   <attribute name="label">
@@ -993,7 +1055,7 @@ QPushButton:pressed {
                      <property name="sizeHint" stdset="0">
                       <size>
                        <width>20</width>
-                       <height>20</height>
+                       <height>10</height>
                       </size>
                      </property>
                     </spacer>
@@ -1027,7 +1089,7 @@ QPushButton:pressed {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>863</width>
+     <width>861</width>
      <height>21</height>
     </rect>
    </property>
@@ -1052,8 +1114,9 @@ QPushButton:pressed {
     </widget>
     <addaction name="actionImage1"/>
     <addaction name="actionImage2"/>
+    <addaction name="actionPlot1"/>
+    <addaction name="separator"/>
     <addaction name="menuTools"/>
-    <addaction name="actionImage_Axes"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -1151,12 +1214,15 @@ QPushButton:pressed {
     <string>Image2</string>
    </property>
   </action>
-  <action name="actionImage_Axes">
+  <action name="actionPlot1">
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
    <property name="text">
-    <string>Image Axes</string>
+    <string>Plot 1 (Axes)</string>
    </property>
   </action>
  </widget>

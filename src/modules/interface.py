@@ -1,6 +1,8 @@
 import numpy as np
 from PIL import Image as PILImage
 from PyQt5.QtWidgets import QTableWidgetItem, QMessageBox, QToolBox
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+import matplotlib.pylab as plt
 from PyQt5.QtGui import *
 from PyQt5 import QtGui
 from modules.utility import print_debug
@@ -30,7 +32,8 @@ def sync_sliders(self, caller=None, tab=None):
             self.resize_slider.setValue(int(self.resize_spinbox.value() * 10))
     elif tab == 'rotate':
         if caller == 'slider':
-            self.rotation_angle_spinbox.setValue(self.rotation_slider.value()%360)
+            self.rotation_angle_spinbox.setValue(self.rotation_slider.value() %
+                                                 360)
         elif caller == 'spinbox':
             self.rotation_slider.setValue(
                 int(self.rotation_angle_spinbox.value()) % 360)
@@ -83,6 +86,13 @@ def display_run_processing(self, selected_window_idx=None):
 
     # refresh the display
     display_pixmap(self, image=self.image1, window_index=selected_window_idx)
+
+
+plt.rcParams['axes.facecolor'] = 'black'
+plt.rc('axes', edgecolor='k')
+plt.rc('xtick', color='k')
+plt.rc('ytick', color='k')
+plt.rcParams["figure.autolayout"] = True
 
 
 def display_pixmap(self, image, window_index=None):
@@ -138,6 +148,14 @@ def display_pixmap(self, image, window_index=None):
         self.image2_widget.setPixmap(self.image2_pixmap)
         self.image2_widget.adjustSize()
         self.image2_widget.show()
+    elif window_index == 2:
+
+        self.figure = plt.figure(figsize=(15, 5))
+        self.canvas = FigureCanvas(self.figure)
+        self.gridLayout_11.addWidget(self.canvas, 0, 0, 1, 1)
+        plt.axis('on')
+        plt.imshow(image_data, cmap='gray', interpolation=None)
+        self.canvas.draw()
     else:
         raise ValueError("Invalid window index")
 
@@ -157,6 +175,13 @@ def toggle_image_window(self, window_index):
         else:
             self.image2_groupbox.hide()
             self.actionImage2.setChecked(False)
+    elif window_index == 2:
+        if self.plot1_groupbox.isHidden():
+            self.plot1_groupbox.show()
+            self.actionPlot1.setChecked(True)
+        else:
+            self.plot1_groupbox.hide()
+            self.actionPlot1.setChecked(False)
     else:
         raise ValueError("Invalid window index")
 
@@ -187,6 +212,7 @@ def init_connectors(self):
     # self.actionResizer.triggered.connect(lambda: self.toggle_resize_tab())
     self.actionImage1.triggered.connect(lambda: toggle_image_window(self, 0))
     self.actionImage2.triggered.connect(lambda: toggle_image_window(self, 1))
+    self.actionPlot1.triggered.connect(lambda: toggle_image_window(self, 2))
 
     # Help Menu
     self.actionAbout.triggered.connect(lambda: about_us(self))

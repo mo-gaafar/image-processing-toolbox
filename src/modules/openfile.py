@@ -23,7 +23,7 @@ def open_new(self, image_idx=1):
         self.image1 = importer.import_image(path)
 
         # update the image and textbox in the viewer
-        interface.display_pixmap(self, image=self.image1, window_index=0)
+        interface.display_pixmap(self, image=self.image1)
         interface.display_metatable(self, self.image1.get_metadata())
     except:
         QMessageBox.critical(
