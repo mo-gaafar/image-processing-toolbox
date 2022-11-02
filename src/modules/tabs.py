@@ -54,7 +54,7 @@ def apply_rotate(self):
     '''Applies the rotation operation to the image'''
     try:
         # get user input parameters data
-        factor = interface.get_user_input(self)['rotation angle']
+        factor = np.radians(interface.get_user_input(self)['rotation angle'])
 
         # get the selected class
         operation = read_transformation(
@@ -99,7 +99,7 @@ def apply_image_operation(self, operation):
     try:
 
         # clear previous operations
-        self.image1.clear_operations(clear_backup=True, undo_old=False)
+        self.image1.clear_operations(clear_backup=False, undo_old=False)
 
         interface.update_img_resize_dimensions(self, "original",
                                                self.image1.get_pixels())

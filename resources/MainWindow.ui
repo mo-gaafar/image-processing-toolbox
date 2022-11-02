@@ -154,7 +154,7 @@ QGroupBox::title  {
                       <enum>QFrame::Sunken</enum>
                      </property>
                      <property name="pixmap">
-                      <pixmap>C:/Users/moham/.designer/backup/placeholder.png</pixmap>
+                      <pixmap>../../../../../moham/.designer/backup/placeholder.png</pixmap>
                      </property>
                      <property name="scaledContents">
                       <bool>false</bool>
@@ -237,7 +237,7 @@ QGroupBox::title  {
                       <string notr="true">background-color: rgb(0, 0, 0);</string>
                      </property>
                      <property name="pixmap">
-                      <pixmap>C:/Users/moham/.designer/backup/placeholder.png</pixmap>
+                      <pixmap>../../../../../moham/.designer/backup/placeholder.png</pixmap>
                      </property>
                      <property name="scaledContents">
                       <bool>false</bool>
@@ -676,16 +676,16 @@ QPushButton:pressed {
                       <item>
                        <widget class="QDoubleSpinBox" name="rotation_angle_spinbox">
                         <property name="minimum">
-                         <double>0.010000000000000</double>
+                         <double>0.000000000000000</double>
                         </property>
                         <property name="maximum">
-                         <double>16.000000000000000</double>
+                         <double>360.000000000000000</double>
                         </property>
                         <property name="singleStep">
                          <double>0.100000000000000</double>
                         </property>
                         <property name="value">
-                         <double>1.000000000000000</double>
+                         <double>0.000000000000000</double>
                         </property>
                        </widget>
                       </item>
@@ -745,8 +745,8 @@ QPushButton:pressed {
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>362</width>
-                    <height>422</height>
+                    <width>203</width>
+                    <height>419</height>
                    </rect>
                   </property>
                   <attribute name="label">
@@ -848,6 +848,14 @@ QPushButton:pressed {
                   </layout>
                  </widget>
                  <widget class="QWidget" name="page_3">
+                  <property name="geometry">
+                   <rect>
+                    <x>0</x>
+                    <y>0</y>
+                    <width>199</width>
+                    <height>229</height>
+                   </rect>
+                  </property>
                   <attribute name="label">
                    <string>Resize</string>
                   </attribute>

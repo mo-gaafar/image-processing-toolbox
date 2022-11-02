@@ -7,13 +7,29 @@ from modules.utility import print_debug
 from modules import openfile, operations, tabs
 import modules.image
 
-
-def update_resize_tab(self, caller=None):
+def init_sync_sliders(self):
+    self.tab_slider_sync_dict = {
+        'resize':{
+            'slider':self.resize_slider,
+            'spinbox':self.resize_spinbox
+        },
+        'rotate':{
+            'slider':self.rotation_slider,
+            'spinbox':self.rotation_angle_spinbox
+        }
+    }
+def sync_sliders(self, caller=None, tab =None):
     ''' Synchrnoizes slider values and spinbox values'''
-    if caller == 'slider':
-        self.resize_spinbox.setValue(self.resize_slider.value() / 10)
-    elif caller == 'spinbox':
-        self.resize_slider.setValue(int(self.resize_spinbox.value() * 10))
+    if tab =='resize':
+        if caller == 'slider':
+            self.resize_spinbox.setValue(self.resize_slider.value() / 10)
+        elif caller == 'spinbox':
+            self.resize_slider.setValue(int(self.resize_spinbox.value() * 10))
+    elif tab =='rotate':
+        if caller =='slider':
+            self.rotation_angle_spinbox.setValue(self.rotation_slider.value())
+        elif caller =='spinbox':
+            self.rotation_slider.setValue(int(self.rotation_angle_spinbox.value()))
 
 
 def update_img_resize_dimensions(self, selector, data_arr):
@@ -170,17 +186,18 @@ def init_connectors(self):
 
     # Help Menu
     self.actionAbout.triggered.connect(lambda: about_us(self))
-    ''' Interpolation (resize) tab'''
-    self.resize_slider.sliderReleased.connect(
-        lambda: update_resize_tab(self, 'slider'))
-    self.resize_spinbox.valueChanged.connect(
-        lambda: update_resize_tab(self, 'spinbox'))
 
     # Tools
 
     # Resize Tab
 
+    ''' Interpolation (resize) tab'''
+    self.resize_slider.sliderReleased.connect(
+        lambda: sync_sliders(self, 'slider','resize'))
+    self.resize_spinbox.valueChanged.connect(
+        lambda: sync_sliders(self, 'spinbox','resize'))
     #Transform Tab
+    init_sync_sliders(self)
     # triggers the resizing
     self.resize_apply.clicked.connect(lambda: tabs.apply_resize(self))
     # triggers the rotation
@@ -193,6 +210,11 @@ def init_connectors(self):
     # generate test image "T"
     self.gen_test_image.clicked.connect(lambda: tabs.generate_test_image(self))
     print_debug("Connectors Initialized")
+    #sync rotation sliders
+    self.rotation_angle_spinbox.valueChanged.connect(
+        lambda: sync_sliders(self, 'spinbox','rotate'))
+    self.rotation_slider.valueChanged.connect(
+        lambda: sync_sliders(self, 'spinbox','rotate'))
 
 
 def about_us(self):
