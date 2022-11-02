@@ -603,11 +603,6 @@ QPushButton:pressed {
                 <widget class="QComboBox" name="interpolate_combobox">
                  <item>
                   <property name="text">
-                   <string>None</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
                    <string>Nearest-Neighbor</string>
                   </property>
                  </item>
