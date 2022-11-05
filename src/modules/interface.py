@@ -60,7 +60,17 @@ def get_user_input(self):
     user_input['resize factor'] = self.resize_spinbox.value()
     user_input['rotation angle'] = self.rotation_angle_spinbox.value()
     user_input['shearing factor'] = self.shearing_factor_spinbox.value()
-    user_input['output window'] = self.output_window_combobox.currentIndex()
+
+    output_window_dict = {
+        'Image1': 0,
+        'Image2': 1,
+        'Plot1': 2,
+        'Plot2': 3,
+        'None': None
+    }
+    
+    user_input['output window'] = output_window_dict[
+        self.output_window_combobox.currentText()]
 
     return user_input
 
@@ -97,40 +107,43 @@ plt.rcParams["figure.autolayout"] = True
 
 def display_pixmap(self, image, window_index=None):
     '''Displays the image data in the image display area'''
-    # then convert it to image format
-    image_data = image.get_pixels()
 
-    print_debug("Displaying Image")
-    print_debug(np.shape(image_data))
+    if type(image) == modules.image.Image:
+        image_data = image.get_pixels()
 
-    qim = None
+        print_debug("Displaying Image")
+        print_debug(np.shape(image_data))
 
-    if len(np.shape(image_data)) == 2:
-        im = PILImage.fromarray(image_data)
-        if im.mode != 'L':
-            im = im.convert('L')
+        qim = None
 
-        qim = im.toqimage()
-
-    elif len(np.shape(image_data)) == 3:
-        try:
+        if len(np.shape(image_data)) == 2:
             im = PILImage.fromarray(image_data)
-            if im.mode != 'RGB':
-                im = im.convert('RGB')
-        except TypeError:
-            image_data = image_data.astype(np.uint8)
-            image_data = np.mean(image_data, axis=2)
-            im = PILImage.fromarray(image_data, 'L')
-        except:
-            # error message pyqt
-            QMessageBox.critical(
-                self, 'Error',
-                'Error Displaying Image: Unsupported Image Format')
-            return
+            if im.mode != 'L':
+                im = im.convert('L')
 
-        data = im.tobytes()
-        qim = QtGui.QImage(data, im.size[0], im.size[1],
-                           QtGui.QImage.Format_RGB888)
+            qim = im.toqimage()
+
+        elif len(np.shape(image_data)) == 3:
+            try:
+                im = PILImage.fromarray(image_data)
+                if im.mode != 'RGB':
+                    im = im.convert('RGB')
+            except TypeError:
+                image_data = image_data.astype(np.uint8)
+                image_data = np.mean(image_data, axis=2)
+                im = PILImage.fromarray(image_data, 'L')
+            except:
+                # error message pyqt
+                QMessageBox.critical(
+                    self, 'Error',
+                    'Error Displaying Image: Unsupported Image Format')
+                return
+
+            data = im.tobytes()
+            qim = QtGui.QImage(data, im.size[0], im.size[1],
+                            QtGui.QImage.Format_RGB888)
+    else:
+        image_data = image
 
     # convert the image to binary in RGB format
 
@@ -153,6 +166,13 @@ def display_pixmap(self, image, window_index=None):
         self.figure = plt.figure(figsize=(15, 5))
         self.canvas = FigureCanvas(self.figure)
         self.gridLayout_11.addWidget(self.canvas, 0, 0, 1, 1)
+        plt.axis('on')
+        plt.imshow(image_data, cmap='gray', interpolation=None)
+        self.canvas.draw()
+    elif window_index == 3:
+        self.figure = plt.figure(figsize=(15, 5))
+        self.canvas = FigureCanvas(self.figure)
+        self.gridLayout_15.addWidget(self.canvas, 0, 0, 1, 1)
         plt.axis('on')
         plt.imshow(image_data, cmap='gray', interpolation=None)
         self.canvas.draw()
@@ -182,6 +202,13 @@ def toggle_image_window(self, window_index):
         else:
             self.plot1_groupbox.hide()
             self.actionPlot1.setChecked(False)
+    elif window_index == 3:
+        if self.plot2_groupbox.isHidden():
+            self.plot2_groupbox.show()
+            self.actionPlot2.setChecked(True)
+        else:
+            self.plot2_groupbox.hide()
+            self.actionPlot2.setChecked(False)
     else:
         raise ValueError("Invalid window index")
 
@@ -213,6 +240,7 @@ def init_connectors(self):
     self.actionImage1.triggered.connect(lambda: toggle_image_window(self, 0))
     self.actionImage2.triggered.connect(lambda: toggle_image_window(self, 1))
     self.actionPlot1.triggered.connect(lambda: toggle_image_window(self, 2))
+    self.actionPlot2.triggered.connect(lambda: toggle_image_window(self, 3))
 
     # Help Menu
     self.actionAbout.triggered.connect(lambda: about_us(self))

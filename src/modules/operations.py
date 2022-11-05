@@ -27,7 +27,19 @@ class CreateTestImage(ImageOperation):
 
         return deepcopy(self.image)
 
+class HistogramEqualization(ImageOperation):
 
+    def execute(self):
+        # calculate histogram
+        histogram = np.histogram(self.image.data, bins=256, range=(0, 255))[0]
+        # calculate cumulative histogram
+        cumulative_histogram = np.cumsum(histogram)
+        # calculate cumulative histogram normalized
+        cumulative_histogram_normalized = cumulative_histogram * \
+            255 / cumulative_histogram[-1]
+        # apply transformation
+        self.image.data = cumulative_histogram_normalized[self.image.data]
+        return deepcopy(self.image) 
 #TODO: refactor affine or pixelwise transformations
 
 

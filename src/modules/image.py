@@ -119,6 +119,34 @@ class Image:
     def get_metadata(self):
         return self.metadata
 
+    def get_histogram(self, relative=True):
+        """
+        Returns the histogram of the image.
+
+        Args:
+            relative (bool): if True, the histogram is normalized to sum to 1
+        
+        Returns:
+            histogram (np.ndarray): the histogram of the image
+            range (tuple): the range of the histogram
+
+        """
+        # get the range
+        range = (np.min(self.data), np.max(self.data))
+        # create empty array for the histogram
+        histogram = np.zeros(range[0] - range[1] + 1)
+        sum = 0
+
+        for x in range(len(np.shape(self.data)[0])):
+            for y in range(len(np.shape(self.data)[1])):
+                histogram[self.data[x, y]] += 1
+                sum += 1
+
+        if relative == True:
+            histogram = histogram / sum
+
+        return histogram, range
+
     def get_formatted_metadata(self):
         f_metadata = ''
         for key, value in self.metadata.items():
