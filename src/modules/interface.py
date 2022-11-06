@@ -68,9 +68,18 @@ def get_user_input(self):
         'Plot2': 3,
         'None': None
     }
-    
+
     user_input['output window'] = output_window_dict[
         self.output_window_combobox.currentText()]
+
+    user_input['histogram output original'] = output_window_dict[
+        self.histo_output_original_combobox.currentText()]
+    user_input['histogram output equalized'] = output_window_dict[
+        self.histo_output_equalized_combobox.currentText()]
+    user_input['histogram output original plot'] = output_window_dict[
+        self.histo_output_original_plot_combobox.currentText()]
+    user_input['histogram output equalized plot'] = output_window_dict[
+        self.histo_output_equalized_plot_combobox.currentText()]
 
     return user_input
 
@@ -141,7 +150,7 @@ def display_pixmap(self, image, window_index=None):
 
             data = im.tobytes()
             qim = QtGui.QImage(data, im.size[0], im.size[1],
-                            QtGui.QImage.Format_RGB888)
+                               QtGui.QImage.Format_RGB888)
     else:
         image_data = image
 
@@ -273,6 +282,9 @@ def init_connectors(self):
     self.rotation_slider.sliderReleased.connect(
         lambda: sync_sliders(self, 'slider', 'rotate'))
 
+
+    # Histogram Tab
+    self.histogram_apply.clicked.connect(lambda: tabs.apply_histogram(self))
 
 def about_us(self):
     QMessageBox.about(

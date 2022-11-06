@@ -168,7 +168,7 @@ def apply_histogram(self):
 
         # output the original image
         interface.display_run_processing(self, output_original)
-        histogram, range = self.image1.get_histogram(normalize=True)
+        histogram, range = self.image1.get_histogram(relative=True)
         interface.display_pixmap(self, histogram, output_original_plot)
 
         # equalize the image
@@ -177,7 +177,7 @@ def apply_histogram(self):
 
         # output the equalized image
         interface.display_run_processing(self, output_equalized)
-        histogram, range = self.image1.get_histogram(normalize=True)
+        histogram, range = self.image1.get_histogram(relative=True)
         interface.display_pixmap(self, histogram, output_equalized_plot)
 
         # histogram_operation = operation.configure(bins)

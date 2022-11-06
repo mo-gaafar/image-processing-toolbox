@@ -132,20 +132,23 @@ class Image:
 
         """
         # get the range
-        range = (np.min(self.data), np.max(self.data))
+        #TODO: get range from channel depth
+        range_histo = (np.min(self.data), np.max(self.data))
         # create empty array for the histogram
-        histogram = np.zeros(range[0] - range[1] + 1)
+        histogram = np.zeros(range_histo[1] - range_histo[0] + 1)
         sum = 0
 
-        for x in range(len(np.shape(self.data)[0])):
-            for y in range(len(np.shape(self.data)[1])):
+        height, width = np.shape(self.data)
+
+        for x in range(height):
+            for y in range(width):
                 histogram[self.data[x, y]] += 1
                 sum += 1
 
         if relative == True:
             histogram = histogram / sum
 
-        return histogram, range
+        return histogram, range_histo
 
     def get_formatted_metadata(self):
         f_metadata = ''

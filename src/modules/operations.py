@@ -27,19 +27,30 @@ class CreateTestImage(ImageOperation):
 
         return deepcopy(self.image)
 
+
 class HistogramEqualization(ImageOperation):
 
     def execute(self):
-        # calculate histogram
-        histogram = np.histogram(self.image.data, bins=256, range=(0, 255))[0]
-        # calculate cumulative histogram
-        cumulative_histogram = np.cumsum(histogram)
-        # calculate cumulative histogram normalized
-        cumulative_histogram_normalized = cumulative_histogram * \
-            255 / cumulative_histogram[-1]
-        # apply transformation
-        self.image.data = cumulative_histogram_normalized[self.image.data]
-        return deepcopy(self.image) 
+        # get the cumulative sum of the histogram
+        histogram, range_histo = self.image.get_histogram()
+        cdf = np.cumsum(histogram)
+        # normalize the cdf
+        L = 256  #TODO: get from channel depth
+        cdf = (cdf - cdf.min()) * (L - 1) / (cdf.max() - cdf.min())
+
+        # cast back to uint8 from float
+        cdf = cdf.astype(np.uint8)
+
+        # apply the cdf to the image
+        height, width = np.shape(self.data)
+
+        for x in range(height):
+            for y in range(width):
+                self.image.data[x, y] = cdf[self.image.data[x, y]]
+
+        return deepcopy(self.image)
+
+
 #TODO: refactor affine or pixelwise transformations
 
 

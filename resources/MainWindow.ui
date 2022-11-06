@@ -153,7 +153,7 @@ QGroupBox::title  {
              <enum>QTabWidget::Triangular</enum>
             </property>
             <property name="currentIndex">
-             <number>1</number>
+             <number>2</number>
             </property>
             <property name="elideMode">
              <enum>Qt::ElideNone</enum>
@@ -889,17 +889,22 @@ QPushButton:pressed {
                <widget class="QComboBox" name="output_window_combobox">
                 <item>
                  <property name="text">
-                  <string>Preview1</string>
+                  <string>Image1</string>
                  </property>
                 </item>
                 <item>
                  <property name="text">
-                  <string>Preview2</string>
+                  <string>Image2</string>
                  </property>
                 </item>
                 <item>
                  <property name="text">
-                  <string>Preview3 Axis</string>
+                  <string>Plot1</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Plot2</string>
                  </property>
                 </item>
                </widget>
@@ -958,15 +963,18 @@ QPushButton:pressed {
                </widget>
               </item>
               <item row="4" column="0">
-               <widget class="QComboBox" name="output_window_combobox_3">
+               <widget class="QComboBox" name="histo_output_original_combobox">
+                <property name="currentIndex">
+                 <number>0</number>
+                </property>
                 <item>
                  <property name="text">
-                  <string>Preview1</string>
+                  <string>Image1</string>
                  </property>
                 </item>
                 <item>
                  <property name="text">
-                  <string>Preview2</string>
+                  <string>Image2</string>
                  </property>
                 </item>
                 <item>
@@ -994,7 +1002,7 @@ QPushButton:pressed {
                </widget>
               </item>
               <item row="6" column="0">
-               <widget class="QComboBox" name="output_window_combobox_4">
+               <widget class="QComboBox" name="histo_output_original_plot_combobox">
                 <item>
                  <property name="text">
                   <string>Plot1</string>
@@ -1036,15 +1044,15 @@ QPushButton:pressed {
                </widget>
               </item>
               <item row="9" column="0">
-               <widget class="QComboBox" name="output_window_combobox_2">
+               <widget class="QComboBox" name="histo_output_equalized_combobox">
                 <item>
                  <property name="text">
-                  <string>Preview1</string>
+                  <string>Image1</string>
                  </property>
                 </item>
                 <item>
                  <property name="text">
-                  <string>Preview2</string>
+                  <string>Image2</string>
                  </property>
                 </item>
                 <item>
@@ -1072,7 +1080,7 @@ QPushButton:pressed {
                </widget>
               </item>
               <item row="11" column="0">
-               <widget class="QComboBox" name="output_window_combobox_5">
+               <widget class="QComboBox" name="histo_output_equalized_plot_combobox">
                 <item>
                  <property name="text">
                   <string>Plot1</string>
@@ -1107,7 +1115,7 @@ QPushButton:pressed {
                </spacer>
               </item>
               <item row="13" column="0">
-               <widget class="QPushButton" name="rotate_apply_2">
+               <widget class="QPushButton" name="histogram_apply">
                 <property name="minimumSize">
                  <size>
                   <width>100</width>
@@ -1132,7 +1140,7 @@ QPushButton:pressed {
     }</string>
                 </property>
                 <property name="text">
-                 <string>Apply Operation</string>
+                 <string>Equalize</string>
                 </property>
                </widget>
               </item>
