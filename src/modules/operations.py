@@ -33,12 +33,18 @@ class HistogramEqualization(ImageOperation):
     def execute(self):
         # get the cumulative sum of the histogram
         histogram, range_histo = self.image.get_histogram()
-        cdf = np.cumsum(histogram)
+
+        # cumulative sum of histogram array
+        cdf = []
+        for i in range(1, len(histogram)):
+            for j in range(i):
+                cdf[i] += histogram[j]
+
         # normalize the cdf
         L = 256  #TODO: get from channel depth
-        cdf = (cdf - cdf.min()) * (L - 1) / (cdf.max() - cdf.min())
+        cdf = np.round((cdf - cdf.min()) * (L - 1) / (cdf.max() - cdf.min()))
 
-        # cast back to uint8 from float
+        # cast back to uint8 from float? #TODO: check if this is necessary
         cdf = cdf.astype(np.uint8)
 
         # apply the cdf to the image
