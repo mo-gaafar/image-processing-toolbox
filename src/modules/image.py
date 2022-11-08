@@ -12,7 +12,7 @@ from modules.utility import *
 
 
 def reset_image(self):
-    '''Resets the image to its original size'''
+    '''Resets the image to its original state'''
     try:
         # undo previous operations
         self.image1.clear_operations()
@@ -118,6 +118,38 @@ class Image:
 
     def get_metadata(self):
         return self.metadata
+
+    def get_histogram(self, relative=True):
+        """
+        Returns the histogram of the image.
+
+        Args:
+            relative (bool): if True, the histogram is normalized to sum to 1
+        
+        Returns:
+            histogram (np.ndarray): the histogram of the image
+            range (tuple): the range of the histogram
+
+        """
+        # get the range
+        #TODO: get range from channel depth
+        L = 256
+        range_histo = (0, L - 1)
+        # create empty array for the histogram
+        histogram = np.zeros(range_histo[1] - range_histo[0] + 1)
+        sum = 0
+
+        height, width = np.shape(self.data)
+
+        for x in range(height):
+            for y in range(width):
+                histogram[self.data[x, y]] += 1
+                sum += 1
+
+        if relative == True:
+            histogram = histogram / sum
+
+        return histogram, range_histo
 
     def get_formatted_metadata(self):
         f_metadata = ''

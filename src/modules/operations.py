@@ -11,7 +11,7 @@ class MonochoromeConversion(ImageOperation):
         # calculate mean over image channels (color depth axis = 2)
         if self.image.data.ndim == 3:
             self.image.data = np.mean(self.image.data, axis=2)
-        # quantizing into 256 levels
+        # quantizing into 256 levels #TODO: decide whether to keep this
         self.image.data = self.image.data.astype(np.uint8)
         return deepcopy(self.image)
 
@@ -24,6 +24,36 @@ class CreateTestImage(ImageOperation):
         # create a 70 x 70 letter T in the center of the image
         self.image.data[28:49, 28:99] = 255  #top
         self.image.data[48:99, 53:74] = 255  #leg
+
+        return deepcopy(self.image)
+
+
+class HistogramEqualization(ImageOperation):
+
+    def execute(self):
+        # get the cumulative sum of the histogram
+        histogram, range_histo = self.image.get_histogram()
+
+        L = range_histo[1] + 1  #TODO: get from channel depth
+
+        # cumulative sum of histogram array
+        cdf = np.zeros(range_histo[1]+1)
+        for i in range(len(histogram)):
+            for j in range(i):
+                cdf[i] += histogram[j]
+
+
+        # apply the cdf to the image
+        height, width = np.shape(self.image.data)
+
+        # normalize the cdf
+        for x in range(height):
+            for y in range(width):
+                self.image.data[x, y] = np.round(cdf[self.image.data[x, y]] *
+                                                 (L - 1))
+
+        # convert to uint8 #TODO: adapt to channel depth
+        self.image.data = self.image.data.astype(np.uint8)
 
         return deepcopy(self.image)
 

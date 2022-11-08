@@ -93,7 +93,7 @@ def apply_shear(self):
         QMessageBox.critical(self, 'Error', 'Error Running Operation')
 
 
-def apply_image_operation(self, operation):
+def apply_image_operation(self, operation, window=None):
     '''Applies the given operation to the image'''
     try:
 
@@ -108,7 +108,12 @@ def apply_image_operation(self, operation):
         self.image1.add_operation(operation)
 
         # run the processing
-        selected_window_idx = int(self.output_window_combobox.currentIndex())
+        if window == None:
+            selected_window_idx = int(
+                self.output_window_combobox.currentIndex())
+        else:
+            selected_window_idx = window
+
         interface.display_run_processing(self, selected_window_idx)
     except:
         QMessageBox.critical(self, 'Error', 'Error Running Operation')
@@ -146,3 +151,35 @@ def read_transformation(transformation_name,
             return transformation['Resize'][interpolator_name]
         else:
             raise Warning("Unsupported interpolator")
+
+
+def apply_histogram(self):
+    '''Applies the histogram operation to the image'''
+    try:
+        # get user input parameters data
+        output_original = interface.get_user_input(
+            self)['histogram output original']
+        output_equalized = interface.get_user_input(
+            self)['histogram output equalized']
+        output_original_plot = interface.get_user_input(
+            self)['histogram output original plot']
+        output_equalized_plot = interface.get_user_input(
+            self)['histogram output equalized plot']
+
+        # output the original image
+        self.image1.add_operation(MonochoromeConversion())
+        interface.display_run_processing(self, output_original)
+        # output the original image histogram
+        histogram, range = self.image1.get_histogram(relative=True)
+        interface.display_histogram(self, histogram, range,
+                                    output_original_plot)
+
+        # equalize the image
+        apply_image_operation(self, HistogramEqualization(), output_equalized)
+        histogram, range = self.image1.get_histogram(relative=True)
+        interface.display_histogram(self, histogram, range,
+                                    output_equalized_plot)
+
+
+    except:
+        QMessageBox.critical(self, 'Error', 'Error Running Operation')
