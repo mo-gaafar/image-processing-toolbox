@@ -167,21 +167,19 @@ def apply_histogram(self):
             self)['histogram output equalized plot']
 
         # output the original image
+        self.image1.add_operation(MonochoromeConversion())
         interface.display_run_processing(self, output_original)
+        # output the original image histogram
         histogram, range = self.image1.get_histogram(relative=True)
-        interface.display_pixmap(self, histogram, output_original_plot)
+        interface.display_histogram(self, histogram, range,
+                                    output_original_plot)
 
         # equalize the image
-        operation = HistogramEqualization()
-        self.image1.add_operation(operation)
-
-        # output the equalized image
-        interface.display_run_processing(self, output_equalized)
+        apply_image_operation(self, HistogramEqualization(), output_equalized)
         histogram, range = self.image1.get_histogram(relative=True)
-        interface.display_pixmap(self, histogram, output_equalized_plot)
+        interface.display_histogram(self, histogram, range,
+                                    output_equalized_plot)
 
-        # histogram_operation = operation.configure(bins)
 
-        apply_image_operation(self, operation)
     except:
         QMessageBox.critical(self, 'Error', 'Error Running Operation')

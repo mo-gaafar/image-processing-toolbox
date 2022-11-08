@@ -12,7 +12,7 @@ from modules.utility import *
 
 
 def reset_image(self):
-    '''Resets the image to its original size'''
+    '''Resets the image to its original state'''
     try:
         # undo previous operations
         self.image1.clear_operations()
@@ -133,7 +133,8 @@ class Image:
         """
         # get the range
         #TODO: get range from channel depth
-        range_histo = (np.min(self.data), np.max(self.data))
+        L = 256
+        range_histo = (0, L - 1)
         # create empty array for the histogram
         histogram = np.zeros(range_histo[1] - range_histo[0] + 1)
         sum = 0

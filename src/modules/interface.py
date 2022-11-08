@@ -50,6 +50,16 @@ def update_img_resize_dimensions(self, selector, data_arr):
         self.resize_modified_dim_textbox.setText(dimensions_string)
 
 
+# global dictionary for output window selection
+output_window_dict = {
+    'Image1': 0,
+    'Image2': 1,
+    'Plot1': 2,
+    'Plot2': 3,
+    'None': None
+}
+
+
 def get_user_input(self):
     '''Gets the user input from the GUI and returns it as a dictionary'''
     user_input = {}
@@ -60,14 +70,6 @@ def get_user_input(self):
     user_input['resize factor'] = self.resize_spinbox.value()
     user_input['rotation angle'] = self.rotation_angle_spinbox.value()
     user_input['shearing factor'] = self.shearing_factor_spinbox.value()
-
-    output_window_dict = {
-        'Image1': 0,
-        'Image2': 1,
-        'Plot1': 2,
-        'Plot2': 3,
-        'None': None
-    }
 
     user_input['output window'] = output_window_dict[
         self.output_window_combobox.currentText()]
@@ -108,9 +110,9 @@ def display_run_processing(self, selected_window_idx=None):
 
 
 plt.rcParams['axes.facecolor'] = 'black'
-plt.rc('axes', edgecolor='k')
-plt.rc('xtick', color='k')
-plt.rc('ytick', color='k')
+plt.rc('axes', edgecolor='white')
+plt.rc('xtick', color='white')
+plt.rc('ytick', color='white')
 plt.rcParams["figure.autolayout"] = True
 
 
@@ -172,14 +174,14 @@ def display_pixmap(self, image, window_index=None):
         self.image2_widget.show()
     elif window_index == 2:
 
-        self.figure = plt.figure(figsize=(15, 5))
+        self.figure = plt.figure(figsize=(15, 5), facecolor='black')
         self.canvas = FigureCanvas(self.figure)
         self.gridLayout_11.addWidget(self.canvas, 0, 0, 1, 1)
         plt.axis('on')
         plt.imshow(image_data, cmap='gray', interpolation=None)
         self.canvas.draw()
     elif window_index == 3:
-        self.figure = plt.figure(figsize=(15, 5))
+        self.figure = plt.figure(figsize=(15, 5), facecolor='black')
         self.canvas = FigureCanvas(self.figure)
         self.gridLayout_15.addWidget(self.canvas, 0, 0, 1, 1)
         plt.axis('on')
@@ -187,6 +189,32 @@ def display_pixmap(self, image, window_index=None):
         self.canvas.draw()
     else:
         raise ValueError("Invalid window index")
+
+
+def display_histogram(self, histogram, range_hist, window_index=None):
+    '''Displays the histogram of the image in the histogram display area'''
+
+    if window_index == None:
+        return
+
+    if window_index == output_window_dict['Plot1']:
+        self.figure = plt.figure(figsize=(15, 5), facecolor='black')
+        self.canvas = FigureCanvas(self.figure)
+        self.gridLayout_11.addWidget(self.canvas, 0, 0, 1, 1)
+        plt.axis('on')
+        plt.bar(range(range_hist[0], range_hist[1] + 1),
+                histogram,
+                color='red')
+        self.canvas.draw()
+    elif window_index == output_window_dict['Plot2']:
+        self.figure = plt.figure(figsize=(15, 5), facecolor='black')
+        self.canvas = FigureCanvas(self.figure)
+        self.gridLayout_15.addWidget(self.canvas, 0, 0, 1, 1)
+        plt.axis('on')
+        plt.bar(range(range_hist[0], range_hist[1] + 1),
+                histogram,
+                color='blue')
+        self.canvas.draw()
 
 
 def toggle_image_window(self, window_index):
@@ -282,9 +310,11 @@ def init_connectors(self):
     self.rotation_slider.sliderReleased.connect(
         lambda: sync_sliders(self, 'slider', 'rotate'))
 
-
     # Histogram Tab
     self.histogram_apply.clicked.connect(lambda: tabs.apply_histogram(self))
+    self.reset_operations_2.clicked.connect(
+        lambda: modules.image.reset_image(self))
+
 
 def about_us(self):
     QMessageBox.about(

@@ -1045,6 +1045,9 @@ QPushButton:pressed {
               </item>
               <item row="9" column="0">
                <widget class="QComboBox" name="histo_output_equalized_combobox">
+                <property name="currentIndex">
+                 <number>1</number>
+                </property>
                 <item>
                  <property name="text">
                   <string>Image1</string>
@@ -1081,6 +1084,9 @@ QPushButton:pressed {
               </item>
               <item row="11" column="0">
                <widget class="QComboBox" name="histo_output_equalized_plot_combobox">
+                <property name="currentIndex">
+                 <number>1</number>
+                </property>
                 <item>
                  <property name="text">
                   <string>Plot1</string>
