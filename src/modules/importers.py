@@ -62,6 +62,7 @@ class BMPImporter(ImageImporter):
         # color mode data
         metadata['Image Color'] = pil_image.mode
 
+
         return metadata
 
 

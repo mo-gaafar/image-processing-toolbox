@@ -11,8 +11,10 @@ class MonochoromeConversion(ImageOperation):
         # calculate mean over image channels (color depth axis = 2)
         if self.image.data.ndim == 3:
             self.image.data = np.mean(self.image.data, axis=2)
-        # quantizing into 256 levels #TODO: decide whether to keep this
-        self.image.data = self.image.data.astype(np.uint8)
+        
+        # quantize floating point values to integers
+        print_log('Quantizing image to grayscale ' + str(self.image.get_alloc_pixel_dtype()))
+        self.image.data = self.image.data.astype(self.image.get_alloc_pixel_dtype())
         return deepcopy(self.image)
 
 
@@ -33,8 +35,7 @@ class HistogramEqualization(ImageOperation):
     def execute(self):
         # get the cumulative sum of the histogram
         histogram, range_histo = self.image.get_histogram()
-
-        L = range_histo[1] + 1  #TODO: get from channel depth
+        L = range_histo[1] + 1 
 
         # cumulative sum of histogram array
         cdf = np.zeros(range_histo[1]+1)
@@ -52,8 +53,8 @@ class HistogramEqualization(ImageOperation):
                 self.image.data[x, y] = np.round(cdf[self.image.data[x, y]] *
                                                  (L - 1))
 
-        # convert to uint8 #TODO: adapt to channel depth
-        self.image.data = self.image.data.astype(np.uint8)
+        # quantize to previous integer values
+        self.image.data = self.image.data.astype(self.image.get_alloc_pixel_dtype())
 
         return deepcopy(self.image)
 

@@ -167,6 +167,10 @@ def apply_histogram(self):
             self)['histogram output equalized plot']
 
         # output the original image
+        
+        # clear previous operations
+        self.image1.clear_operations(clear_backup=False, undo_old=True)
+
         self.image1.add_operation(MonochoromeConversion())
         interface.display_run_processing(self, output_original)
         # output the original image histogram

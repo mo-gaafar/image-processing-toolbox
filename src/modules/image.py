@@ -65,6 +65,7 @@ class Image:
     operations_dict = {}
     image_backup = None
     last_processing_time_ms = 0
+    alloc_dtype = None
 
     def clear_operations(self, undo_old=True, clear_backup=False):
         ''' Clears all operations from the image.
@@ -83,6 +84,7 @@ class Image:
         self.data = None
         self.path = ''
         self.metadata = {}
+        self.alloc_dtype = None
         self.operations_dict = {}
         self.image_backup = None
         self.last_processing_time_ms = 0
@@ -131,9 +133,8 @@ class Image:
             range (tuple): the range of the histogram
 
         """
-        # get the range
-        #TODO: get range from channel depth
-        L = 256
+        # get range from allocated depth
+        L = 2**self.get_channel_depth()
         range_histo = (0, L - 1)
         # create empty array for the histogram
         histogram = np.zeros(range_histo[1] - range_histo[0] + 1)
@@ -160,6 +161,22 @@ class Image:
 
     def get_processing_time(self):
         return self.last_processing_time_ms
+    
+    def get_channel_depth(self):
+        # calculate the number of bits per pixel using log2 and max
+        depth = int(np.log2(np.max(self.data))+1)
+        print_log('Calculating channel depth' + str(depth))
+        return depth
+        
+
+    def get_alloc_pixel_dtype(self):
+        # saved only once
+        # if self.alloc_dtype is None:
+        #     self.alloc_dtype = self.data.dtype 
+        #     return self.data.dtype
+        # else:
+        #     return self.alloc_dtype
+        return np.uint
 
     def get_img_format(self):
         return self.path.split('.')[-1]
