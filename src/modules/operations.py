@@ -4,6 +4,17 @@ from modules.image import *
 from modules import interface
 from modules.interpolators import *
 
+#TODO: refactor affine or pixelwise transformations
+# class PerPixelOperation(ImageOperation):
+#     def __init__(self, name, image, function, *args, **kwargs):
+#         super().__init__(name, image)
+#         self.function = function
+#         self.args = args
+#         self.kwargs = kwargs
+
+#     def execute(self):
+#         self.image = self.function(self.image, *self.args, **self.kwargs)
+
 
 class MonochoromeConversion(ImageOperation):
 
@@ -11,10 +22,12 @@ class MonochoromeConversion(ImageOperation):
         # calculate mean over image channels (color depth axis = 2)
         if self.image.data.ndim == 3:
             self.image.data = np.mean(self.image.data, axis=2)
-        
+
         # quantize floating point values to integers
-        print_log('Quantizing image to grayscale ' + str(self.image.get_alloc_pixel_dtype()))
-        self.image.data = self.image.data.astype(self.image.get_alloc_pixel_dtype())
+        print_log('Quantizing image to grayscale ' +
+                  str(self.image.get_alloc_pixel_dtype()))
+        self.image.data = self.image.data.astype(
+            self.image.get_alloc_pixel_dtype())
         return deepcopy(self.image)
 
 
@@ -29,6 +42,93 @@ class CreateTestImage(ImageOperation):
 
         return deepcopy(self.image)
 
+
+class AddSaltPepperNoise(ImageOperation):
+
+    def __init__(self, name, image, amount, salt_prob=0.5):
+        super().__init__(name, image)
+        self.amount = amount
+        self.salt_prob = salt_prob
+
+    def execute(self):
+        # add salt and pepper noise to the image
+        # amount is the percentage of pixels to be affected
+        # salt_prob is the probability of a pixel to be salted instead of peppered
+        for x in range(self.image.data.shape[0]):
+            for y in range(self.image.data.shape[1]):
+                if np.random.rand() < self.amount:
+                    if np.random.rand() < self.salt_prob:
+                        self.image.data[x, y] = 2**self.get_channel_depth()
+                    else:
+                        self.image.data[x, y] = 0
+
+
+class ApplyBoxFilter(ImageOperation):
+
+    def __init__(self, name, image, size):
+        super().__init__(name, image)
+        self.size = size
+
+    def create_kernel(self):
+        # create a kernel of size x size with all values = 1
+        kernel = np.ones((self.size, self.size), dtype=np.float32)
+        # normalize the kernel
+        kernel = kernel / np.sum(kernel)
+        return kernel
+
+    def multiply_sum_kernel(self, kernel, img_section):
+        # multiply the kernel with the image section and sum
+        # kernel: the kernel to be applied
+        # img_section: the image section to be filtered
+        sum = 0
+        for x in range(kernel.shape[0]):
+            for y in range(kernel.shape[1]):
+                sum += kernel[x, y] * img_section[x, y]
+        return sum
+
+    def execute(self):
+        # apply a box filter to the image
+
+        # size: size of the filter
+
+        pass
+
+
+class ApplyHighboostFilter(ApplyBoxFilter):
+
+    def __init__(self, name, image, size, boost):
+        super().__init__(name, image, size)
+        self.boost = boost
+
+    def execute(self):
+        # apply a highboost filter to the image
+
+        # size: size of the filter
+        # alpha: the highboost factor
+
+        pass
+
+class ApplyMedianFilter(ImageOperation):
+
+    def __init__(self, name, image, size):
+        super().__init__(name, image)
+        self.size = size
+
+    def execute(self):
+        # apply a median filter to the image
+        # size: size of the filter
+
+        for x in range(self.image.data.shape[0]):
+            for y in range(self.image.data.shape[1]):
+                # get the image section
+                img_section = self.image.data[x:x + self.size, y:y + self.size]
+                # calculate the median
+                median = np.median(img_section)
+                # set the pixel value to the median
+                self.image.data[x, y] = median
+
+
+#TODO: use memoization for histogram to save processing time
 
 class HistogramEqualization(ImageOperation):
 
