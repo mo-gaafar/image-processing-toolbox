@@ -7,7 +7,7 @@ from modules.importers import *
 
 def open_new(self, image_idx=1):
     self.filename = QFileDialog.getOpenFileName(
-        None, 'open the image file', './', filter="Raw Data(*.bmp *.jpg *.dcm *.jpeg)")
+        None, 'open the image file', './', filter="Raw Data(*.bmp *.jpg *.dcm *.jpeg *.png)")
     path = self.filename[0]
     print_debug("Selected path: " + path)
 
@@ -37,6 +37,7 @@ def read_importer(path) -> ImageImporter:
     # array of supported extensions
     importers = {
         'bmp': BMPImporter(),
+        'png': BMPImporter(),
         'jpeg': JPGImporter(),
         'jpg': JPGImporter(),
         'dcm': DICOMImporter()
