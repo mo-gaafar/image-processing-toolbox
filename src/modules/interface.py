@@ -122,6 +122,11 @@ def display_pixmap(self, image, window_index=None):
     if type(image) == modules.image.Image:
         image_data = image.get_pixels()
 
+        # quantize the image data to 8 bit for display
+        image_data = np.interp(image_data,
+                               (image_data.min(), image_data.max()), (0, 255))
+        image_data = np.array(image_data, dtype=np.uint8)
+
         print_debug("Displaying Image")
         print_debug(np.shape(image_data))
 

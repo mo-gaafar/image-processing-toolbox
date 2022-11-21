@@ -1,4 +1,3 @@
-
 import os
 import numpy as np
 import pydicom
@@ -24,6 +23,7 @@ class ImageImporter(ABC):
 
 
 class BMPImporter(ImageImporter):
+
     def import_image(self, path) -> Image:
         '''converts imported bitmap path to a
         numpy array and then parses metadata
@@ -45,16 +45,16 @@ class BMPImporter(ImageImporter):
         # if image has a third dimension
         if len(np.shape(image_arr)) == 3:
             depth = int(
-                np.ceil(np.shape(image_arr)[2] * np.log2(image_arr.max()+1)))
+                np.ceil(np.shape(image_arr)[2] * np.log2(image_arr.max() + 1)))
         else:
-            depth = int(np.ceil(np.log2(image_arr.max()+1)))
+            depth = int(np.ceil(np.log2(image_arr.max() + 1)))
 
         metadata['Width'] = pil_image.size[0]
         metadata['Height'] = pil_image.size[1]
 
         # image total size
-        metadata['Size'] = str(pil_image.size[0] *
-                               pil_image.size[1] * depth) + ' bits'
+        metadata['Size'] = str(
+            pil_image.size[0] * pil_image.size[1] * depth) + ' bits'
 
         # bit depth data (lossless)
         metadata['Bit Depth'] = str(depth) + ' bits'
@@ -66,6 +66,7 @@ class BMPImporter(ImageImporter):
 
 
 class JPGImporter(ImageImporter):
+
     def import_image(self, path) -> Image:
         '''converts imported jpg path to a
         numpy array and then parses metadata
@@ -88,19 +89,20 @@ class JPGImporter(ImageImporter):
         # if image has a third dimension
         if len(np.shape(image_arr)) == 3:
             depth = int(
-                np.ceil(np.shape(image_arr)[2] * np.log2(image_arr.max()+1)))
+                np.ceil(np.shape(image_arr)[2] * np.log2(image_arr.max() + 1)))
         else:
-            depth = int(np.ceil(np.log2(image_arr.max()+1)))
+            depth = int(np.ceil(np.log2(image_arr.max() + 1)))
 
         metadata['Width'] = pil_image.size[0]
         metadata['Height'] = pil_image.size[1]
 
         # image size information
-        metadata['Image Size'] = str(int(
-            pil_image.size[0] * pil_image.size[1] * depth)) + ' bits'
-        metadata['File Size'] = str(os.path.getsize(path)*8) + ' bits'
-        metadata['Compression ratio'] = str(int(
-            (pil_image.size[0] * pil_image.size[1] * depth) / (os.path.getsize(path)*8) * 100)) + '%'
+        metadata['Image Size'] = str(
+            int(pil_image.size[0] * pil_image.size[1] * depth)) + ' bits'
+        metadata['File Size'] = str(os.path.getsize(path) * 8) + ' bits'
+        metadata['Compression ratio'] = str(
+            int((pil_image.size[0] * pil_image.size[1] * depth) /
+                (os.path.getsize(path) * 8) * 100)) + '%'
 
         # bit depth data by counting no of channels and multiplying by color depth
         metadata['Bit Depth'] = str(depth) + ' bits'
@@ -111,6 +113,7 @@ class JPGImporter(ImageImporter):
 
 
 class DICOMImporter(ImageImporter):
+
     def import_image(self, path) -> Image:
         '''converts imported dicom path to a
         numpy array and then parses metadata
@@ -123,9 +126,9 @@ class DICOMImporter(ImageImporter):
         image_data = ds.pixel_array
 
         # map each element to be between 0 and 255
-        # TODO: add support for more formats
-        image_data = np.interp(
-            image_data, (image_data.min(), image_data.max()), (0, 255))
+        # # TODO: add support for more formats
+        # image_data = np.interp(
+        #     image_data, (image_data.min(), image_data.max()), (0, 255))
 
         # parse dicom metadata into dictionary
         metadata = self.read_metadata(ds, path)
@@ -141,7 +144,7 @@ class DICOMImporter(ImageImporter):
         metadata['Height'] = ds.Rows
 
         # image size info
-        metadata['Size'] = str((os.stat(path).st_size)*8) + " bits"
+        metadata['Size'] = str((os.stat(path).st_size) * 8) + " bits"
         metadata['Color Depth'] = str(ds.BitsStored) + " bits"
 
         # dicom header data
