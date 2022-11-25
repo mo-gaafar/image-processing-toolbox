@@ -1,4 +1,5 @@
 import numpy as np
+from modules import utility as util
 import threading
 from modules.image import *
 from modules import interface
@@ -15,6 +16,24 @@ from modules.interpolators import *
 #     def execute(self):
 #         self.image = self.function(self.image, *self.args, **self.kwargs)
 
+
+# class AffineOperation(ImageOperation):
+#     def __init__(self, name, image, function, *args, **kwargs):
+#         super().__init__(name, image)
+#         self.function = function
+#         self.args = args
+#         self.kwargs = kwargs
+
+#     def execute(self):
+#         self.image = self.function(self.image, *self.args, **self.kwargs)
+
+class FFTMagnitude(ImageOperation):
+    def __init__(self, name, image):
+        super().__init__(name, image)
+
+    def execute(self):
+        #TODO: implement shifting and log scaling manually
+        self.image = np.absolute(np.fft.fftshift(np.fft.fft2(self.image)))
 
 class MonochoromeConversion(ImageOperation):
 
@@ -63,13 +82,14 @@ class AddSaltPepperNoise(ImageOperation):
                         self.image.data[x, y] = 0
 
 
-class ApplyBoxFilter(ImageOperation):
+class ApplyLinearFilter(ImageOperation):
 
     def __init__(self, name, image, size):
         super().__init__(name, image)
         self.size = size
+        self.kernel = None
 
-    def create_kernel(self):
+    def create_box_kernel(self):
         # create a kernel of size x size with all values = 1
         kernel = np.ones((self.size, self.size), dtype=np.float32)
         # normalize the kernel
@@ -87,26 +107,60 @@ class ApplyBoxFilter(ImageOperation):
         return sum
 
     def execute(self):
+        # add padding to image data arr
+        padded_data = util.uniform_padding(image.data, self.size//2, 0)
+        self.kernel = self.create_box_kernel(self.size)
         # apply a box filter to the image
-
         # size: size of the filter
+        for x in range(0, self.image.data.shape[0]):
+            for y in range(0, self.image.data.shape[1]):
+                img_section = padded_data[x-self.size:x+self.size, y-self.size:y+self.size]
+                self.image.data[x, y] = self.multiply_sum_kernel(
+                    self.create_kernel(), img_section)
+        
+        return deepcopy(self.image)
 
-        pass
 
-
-class ApplyHighboostFilter(ApplyBoxFilter):
+class ApplyHighboostFilter(ImageOperation):
 
     def __init__(self, name, image, size, boost):
         super().__init__(name, image, size)
         self.boost = boost
+        self.clip = None
+        self.image2 = deepcopy(self.image)
+
+        #! would cause a considerable amount of errors
+        #TODO: think of cutting the pipeline short
+    def get_sharp_image(self):
+        #blur image2
+        self.image2.add_operation(ApplyLinearFilter(self.size))
+        self.image2.run_operations()
+        diff = []
+        diff.np.astype(np.int)
+        diff = self.image2.data - self.image.data
+        return diff
 
     def execute(self):
+
         # apply a highboost filter to the image
+        self.image.data = self.image.data + self.boost * self.get_sharp_image()
+        # normalize or crop
+        L = 2**self.image.get_channel_depth()
 
-        # size: size of the filter
-        # alpha: the highboost factor
+        if self.clip:
+            #clip values to [0, L]
+            for x in range(0, self.image.data.shape[0]):
+                for y in range(0, self.image.data.shape[1]):
+                    if self.image.data[x, y] > L-1:
+                        self.image.data[x, y] = L-1
+                    elif self.image.data[x, y] < 0:
+                        self.image.data[x, y] = 0
+        else:
+            # normalize
+            self.image.data = self.image.data - np.min(self.image.data)
+            self.image.data = self.image.data / np.max(self.image.data) * (L-1)
 
-        pass
+        return deepcopy(self.image)
 
 class ApplyMedianFilter(ImageOperation):
 
@@ -123,7 +177,7 @@ class ApplyMedianFilter(ImageOperation):
                 # get the image section
                 img_section = self.image.data[x:x + self.size, y:y + self.size]
                 # calculate the median
-                median = np.median(img_section)
+                median = util.get_median(img_section)
                 # set the pixel value to the median
                 self.image.data[x, y] = median
 
@@ -261,8 +315,7 @@ class BilinearRotation(ImageOperation):
 
         # get the rotation matrix
         rotation_matrix = np.array([[np.cos(angle), -np.sin(angle)],
-                                    [np.sin(angle),
-                                     np.cos(angle)]])
+                                    [np.sin(angle), np.cos(angle)]])
         # get the inverse rotation matrix
         inverse_rotation_matrix = np.linalg.inv(rotation_matrix)
 
