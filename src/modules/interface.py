@@ -5,7 +5,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pylab as plt
 from PyQt5.QtGui import *
 from PyQt5 import QtGui
-from modules.utility import print_debug
+from modules.utility import print_debug, round_nearest_odd
 from modules import openfile, operations, tabs
 import modules.image
 
@@ -23,20 +23,45 @@ def init_sync_sliders(self):
     }
 
 
-def sync_sliders(self, caller=None, tab=None):
+def sync_sliders(self, caller=None, name=None):
     ''' Synchrnoizes slider values and spinbox values'''
-    if tab == 'resize':
+    if name == 'resize':
         if caller == 'slider':
             self.resize_spinbox.setValue(self.resize_slider.value() / 10)
         elif caller == 'spinbox':
             self.resize_slider.setValue(int(self.resize_spinbox.value() * 10))
-    elif tab == 'rotate':
+    elif name == 'rotate':
         if caller == 'slider':
             self.rotation_angle_spinbox.setValue(self.rotation_slider.value() %
                                                  360)
         elif caller == 'spinbox':
             self.rotation_slider.setValue(
                 int(self.rotation_angle_spinbox.value()) % 360)
+    elif name == 'spfilter kernel':
+        if caller == 'slider':
+            self.sp_kernel_spinbox.setValue(self.sp_kernel_slider.value())
+        elif caller == 'spinbox':
+            self.sp_kernel_slider.setValue(
+                int(self.sp_kernel_spinbox.value()))
+    elif name == 'spfilter highboost factor':
+        if caller == 'slider':
+            self.highboost_factor_spinbox.setValue(
+                self.sp_highboost_factor_slider.value()/2)
+        elif caller == 'spinbox':
+            self.highboost_factor_slider.setValue(
+                int(self.sp_highboost_factor_spinbox.value()*2))
+    elif name == 'saltpepper noise weight':
+        if caller == 'slider':
+            self.noise_wt_spinbox.setValue(self.noise_wt_slider.value())
+        elif caller == 'spinbox':
+            self.noise_wt_slider.setValue(
+                int(self.noise_wt_spinbox.value()))
+    elif name == 'saltpepper salt prob':
+        if caller == 'slider':
+            self.noise_salt_spinbox.setValue(self.noise_salt_slider.value())
+        elif caller == 'spinbox':
+            self.noise_salt_slider.setValue(
+                int(self.noise_salt_spinbox.value()))
 
 
 def update_img_resize_dimensions(self, selector, data_arr):
@@ -63,6 +88,8 @@ output_window_dict = {
 def get_user_input(self):
     '''Gets the user input from the GUI and returns it as a dictionary'''
     user_input = {}
+
+    # Affine Transformations
     user_input['interpolation method'] = self.interpolate_combobox.currentText(
     )
     user_input['transformation type'] = self.toolbox_transform.itemText(
@@ -74,6 +101,7 @@ def get_user_input(self):
     user_input['output window'] = output_window_dict[
         self.output_window_combobox.currentText()]
 
+    # Histogram Equalization
     user_input['histogram output original'] = output_window_dict[
         self.histo_output_original_combobox.currentText()]
     user_input['histogram output equalized'] = output_window_dict[
@@ -82,6 +110,16 @@ def get_user_input(self):
         self.histo_output_original_plot_combobox.currentText()]
     user_input['histogram output equalized plot'] = output_window_dict[
         self.histo_output_equalized_plot_combobox.currentText()]
+
+    # Spatial Filtering
+    user_input['spfilter output'] = output_window_dict[self.spfilter_output_combobox.currentText()]
+    user_input['spfilter kernel size'] = self.sp_kernel_spinbox.value()
+
+    user_input['spfilter highboost factor'] = self.sp_highboost_factor_spinbox.value()
+    user_input['spfilter highboost clipping'] = self.clipping_checkbox.isChecked()
+
+    user_input['saltpepper noise weight'] = self.noise_wt_spinbox.value()
+    user_input['saltpepper salt prob'] = self.noise_salt_spinbox.value()
 
     return user_input
 
@@ -269,6 +307,7 @@ def display_metatable(self, f_metadata=None):
 
 def init_connectors(self):
     '''Initializes all event connectors and triggers'''
+
     ''' Menu Bar'''
 
     # File Menu
@@ -287,15 +326,13 @@ def init_connectors(self):
     # Help Menu
     self.actionAbout.triggered.connect(lambda: about_us(self))
 
-    # Tools
-
+    ''' Transformation Tab'''
     # Resize Tab
-    ''' Interpolation (resize) tab'''
     self.resize_slider.sliderReleased.connect(
         lambda: sync_sliders(self, 'slider', 'resize'))
     self.resize_spinbox.valueChanged.connect(
         lambda: sync_sliders(self, 'spinbox', 'resize'))
-    #Transform Tab
+    # Transform Tab
     init_sync_sliders(self)
     # triggers the resizing
     self.resize_apply.clicked.connect(lambda: tabs.apply_resize(self))
@@ -309,16 +346,45 @@ def init_connectors(self):
     # generate test image "T"
     self.gen_test_image.clicked.connect(lambda: tabs.generate_test_image(self))
     print_debug("Connectors Initialized")
-    #sync rotation sliders
+    # sync rotation sliders
     self.rotation_angle_spinbox.valueChanged.connect(
         lambda: sync_sliders(self, 'spinbox', 'rotate'))
     self.rotation_slider.sliderReleased.connect(
         lambda: sync_sliders(self, 'slider', 'rotate'))
 
+    """ Histogram Tab"""
     # Histogram Tab
     self.histogram_apply.clicked.connect(lambda: tabs.apply_histogram(self))
     self.reset_operations_2.clicked.connect(
         lambda: modules.image.reset_image(self))
+
+    """ Spatial Filtering Tab """
+    # Spatial Filtering Tab
+    self.boxblurr_apply.clicked.connect(lambda: tabs.apply_boxblurr(self))
+    self.highboost_apply.clicked.connect(lambda: tabs.apply_highboost(self))
+    self.median_apply.clicked.connect(lambda: tabs.apply_median(self))
+    self.saltpepper_apply.clicked.connect(lambda: tabs.apply_saltpepper(self))
+
+    # Sync sliders
+    self.sp_kernel_slider.sliderReleased.connect(
+        lambda: sync_sliders(self, 'slider', 'spfilter kernel size'))
+    self.sp_kernel_spinbox.valueChanged.connect(
+        lambda: sync_sliders(self, 'spinbox', 'spfilter kernel size'))
+
+    self.highboost_factor_slider.sliderReleased.connect(
+        lambda: sync_sliders(self, 'slider', 'spfilter highboost factor'))
+    self.highboost_factor_spinbox.valueChanged.connect(
+        lambda: sync_sliders(self, 'spinbox', 'spfilter highboost factor'))
+
+    self.noise_wt_slider.sliderReleased.connect(
+        lambda: sync_sliders(self, 'slider', 'saltpepper noise weight'))
+    self.noise_wt_spinbox.valueChanged.connect(
+        lambda: sync_sliders(self, 'spinbox', 'saltpepper noise weight'))
+
+    self.noise_salt_slider.sliderReleased.connect(
+        lambda: sync_sliders(self, 'slider', 'saltpepper noise salt'))
+    self.noise_salt_spinbox.valueChanged.connect(
+        lambda: sync_sliders(self, 'spinbox', 'saltpepper noise salt'))
 
 
 def about_us(self):

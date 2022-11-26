@@ -5,7 +5,7 @@ from modules.image import *
 from modules import interface
 from modules.interpolators import *
 
-#TODO: refactor affine or pixelwise transformations
+# TODO: refactor affine or pixelwise transformations
 # class PerPixelOperation(ImageOperation):
 #     def __init__(self, name, image, function, *args, **kwargs):
 #         super().__init__(name, image)
@@ -28,12 +28,11 @@ from modules.interpolators import *
 #         self.image = self.function(self.image, *self.args, **self.kwargs)
 
 class FFTMagnitude(ImageOperation):
-    def __init__(self, name, image):
-        super().__init__(name, image)
 
     def execute(self):
-        #TODO: implement shifting and log scaling manually
+        # TODO: implement shifting and log scaling manually
         self.image = np.absolute(np.fft.fftshift(np.fft.fft2(self.image)))
+
 
 class MonochoromeConversion(ImageOperation):
 
@@ -56,18 +55,24 @@ class CreateTestImage(ImageOperation):
         # create a test image of size 128 x 128
         self.image.data = np.zeros((128, 128), dtype=np.uint8)
         # create a 70 x 70 letter T in the center of the image
-        self.image.data[28:49, 28:99] = 255  #top
-        self.image.data[48:99, 53:74] = 255  #leg
+        self.image.data[28:49, 28:99] = 255  # top
+        self.image.data[48:99, 53:74] = 255  # leg
 
         return deepcopy(self.image)
 
 
 class AddSaltPepperNoise(ImageOperation):
 
-    def __init__(self, name, image, amount, salt_prob=0.5):
-        super().__init__(name, image)
-        self.amount = amount
-        self.salt_prob = salt_prob
+    def configure(self, **kwargs):
+        """
+        Configure the operation with the given parameters.
+        args:
+            amount: the percentage of pixels to be affected
+            salt_prob: the probability of a pixel to be salted instead of peppered
+
+        """
+        self.amount = kwargs['amount']
+        self.salt_prob = kwargs['salt_prob']
 
     def execute(self):
         # add salt and pepper noise to the image
@@ -77,17 +82,15 @@ class AddSaltPepperNoise(ImageOperation):
             for y in range(self.image.data.shape[1]):
                 if np.random.rand() < self.amount:
                     if np.random.rand() < self.salt_prob:
-                        self.image.data[x, y] = 2**self.get_channel_depth()
+                        self.image.data[x, y] = 2**self.get_channel_depth() - 1
                     else:
                         self.image.data[x, y] = 0
 
 
 class ApplyLinearFilter(ImageOperation):
 
-    def __init__(self, name, image, size):
-        super().__init__(name, image)
-        self.size = size
-        self.kernel = None
+    def configure(self, **kwargs):
+        self.size = kwargs['size']
 
     def create_box_kernel(self):
         # create a kernel of size x size with all values = 1
@@ -114,26 +117,42 @@ class ApplyLinearFilter(ImageOperation):
         # size: size of the filter
         for x in range(0, self.image.data.shape[0]):
             for y in range(0, self.image.data.shape[1]):
-                img_section = padded_data[x-self.size:x+self.size, y-self.size:y+self.size]
+                img_section = padded_data[x-self.size:x +
+                                          self.size, y-self.size:y+self.size]
                 self.image.data[x, y] = self.multiply_sum_kernel(
                     self.create_kernel(), img_section)
-        
+
         return deepcopy(self.image)
 
 
 class ApplyHighboostFilter(ImageOperation):
 
-    def __init__(self, name, image, size, boost):
-        super().__init__(name, image, size)
-        self.boost = boost
-        self.clip = None
+    def __init__(self, name, image):
+        super().__init__(name, image)
         self.image2 = deepcopy(self.image)
 
         #! would cause a considerable amount of errors
-        #TODO: think of cutting the pipeline short
+        # TODO: fix pipeline in second image?
+
+    # ? solid principle violation
+    def configure(self, **kwargs):
+        """
+        Configure the operation with the given parameters.
+
+        args:
+            size: the size of the filter
+            alpha: the alpha value of the highboost filter
+            clip: whether to clip the image to the range of the original image
+        """
+        self.boost = kwargs['boost']
+        self.clip = kwargs['clip']
+        self.size = kwargs['size']
+
     def get_sharp_image(self):
-        #blur image2
-        self.image2.add_operation(ApplyLinearFilter(self.size))
+        # blur image2
+        linfiltoperation = ApplyLinearFilter()
+        linfiltoperation.configure(size=self.size)
+        self.image2.add_operation(ApplyLinearFilter())
         self.image2.run_operations()
         diff = []
         diff.np.astype(np.int)
@@ -148,7 +167,7 @@ class ApplyHighboostFilter(ImageOperation):
         L = 2**self.image.get_channel_depth()
 
         if self.clip:
-            #clip values to [0, L]
+            # clip values to [0, L]
             for x in range(0, self.image.data.shape[0]):
                 for y in range(0, self.image.data.shape[1]):
                     if self.image.data[x, y] > L-1:
@@ -162,41 +181,51 @@ class ApplyHighboostFilter(ImageOperation):
 
         return deepcopy(self.image)
 
+
 class ApplyMedianFilter(ImageOperation):
 
-    def __init__(self, name, image, size):
-        super().__init__(name, image)
-        self.size = size
+    def configure(self, **kwargs):
+        """
+        Configure the operation with the given parameters.
+        args:
+            size: the size of the filter
+        """
+        self.size = kwargs['size']
+        # self.maintain_padding = kwargs['maintain_padding']
 
     def execute(self):
         # apply a median filter to the image
         # size: size of the filter
+        # zero padding
+        padded_image = util.uniform_padding(self.image.data, self.size//2, 0)
+        out_image = self.image.data
 
-        for x in range(self.image.data.shape[0]):
-            for y in range(self.image.data.shape[1]):
-                # get the image section
-                img_section = self.image.data[x:x + self.size, y:y + self.size]
-                # calculate the median
-                median = util.get_median(img_section)
-                # set the pixel value to the median
-                self.image.data[x, y] = median
+        for x in range(self.size, self.image.data.shape[0] + self.size):
+            for y in range(self.size, self.image.data.shape[1] + self.size):
+                img_section = padded_image[x-self.size:x +
+                                           self.size, y-self.size:y+self.size]
 
+                out_image[x-self.size, y-self.size] = np.median(img_section)
 
-#TODO: use memoization for histogram to save processing time
+        self.image.data = out_image
+
+        return deepcopy(self.image)
+
+# TODO: use memoization for histogram to save processing time
+
 
 class HistogramEqualization(ImageOperation):
 
     def execute(self):
         # get the cumulative sum of the histogram
         histogram, range_histo = self.image.get_histogram()
-        L = range_histo[1] + 1 
+        L = range_histo[1] + 1
 
         # cumulative sum of histogram array
         cdf = np.zeros(range_histo[1]+1)
         for i in range(len(histogram)):
             for j in range(i):
                 cdf[i] += histogram[j]
-
 
         # apply the cdf to the image
         height, width = np.shape(self.image.data)
@@ -208,12 +237,13 @@ class HistogramEqualization(ImageOperation):
                                                  (L - 1))
 
         # quantize to previous integer values
-        self.image.data = self.image.data.astype(self.image.get_alloc_pixel_dtype())
+        self.image.data = self.image.data.astype(
+            self.image.get_channel_depth())
 
         return deepcopy(self.image)
 
 
-#TODO: refactor affine or pixelwise transformations
+# TODO: refactor affine or pixelwise transformations
 
 
 class BilinearScaling(ImageOperation):
@@ -261,7 +291,7 @@ class BilinearScaling(ImageOperation):
 
 class NearestNeighborScaling(ImageOperation):
     '''Scaling operation using nearest neighbor interpolation.
-    
+
     Note:
         This operation must be configured with a scaling factor.
     '''
@@ -289,7 +319,7 @@ class NearestNeighborScaling(ImageOperation):
 
 class BilinearRotation(ImageOperation):
     '''Rotation operation using bilinear interpolation.
-    
+
     Note:
         This operation must be configured with a rotation angle.
     '''
@@ -398,7 +428,7 @@ class NearestNeighborRotation(ImageOperation):
 
 class BilinearHorizontalShearing(ImageOperation):
     '''Horizontal shearing operation using bilinear interpolation.
-    
+
     Note:
         This operation must be configured with a shearing factor.
     '''

@@ -187,3 +187,39 @@ def apply_histogram(self):
 
     except:
         QMessageBox.critical(self, 'Error', 'Error Running Operation')
+
+def apply_boxblur(self):
+    pass
+
+def apply_highboost(self):
+    pass
+
+def apply_median(self):
+    pass
+
+def apply_salt_pepper(self):
+    '''Applies the salt and pepper noise operation to the image'''
+    try:
+        # get user input parameters data
+        output_noisy = interface.get_user_input(self)['spfilter output']
+
+        salt_noise = interface.get_user_input(self)['spfilter salt noise']
+        salt_noise = salt_noise / 100
+        
+        noise_weight = interface.get_user_input(self)['spfilter noise weight']
+        noise_weight = noise_weight / 100
+
+        # clear previous operations
+        self.image1.clear_operations(clear_backup=False, undo_old=True)
+
+
+        # configure operation
+        operation = AddSaltPepperNoise()
+        operation.configure()
+
+        # add the noise
+        apply_image_operation(self, operation, output_noisy)
+
+
+    except:
+        QMessageBox.critical(self, 'Error', 'Error Running Operation')

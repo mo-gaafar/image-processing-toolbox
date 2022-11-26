@@ -1468,17 +1468,20 @@ QPushButton:pressed {
               </item>
               <item row="3" column="1">
                <widget class="QDoubleSpinBox" name="sp_kernel_spinbox">
+                <property name="decimals">
+                 <number>0</number>
+                </property>
                 <property name="minimum">
-                 <double>-360.000000000000000</double>
+                 <double>1.000000000000000</double>
                 </property>
                 <property name="maximum">
-                 <double>360.000000000000000</double>
+                 <double>101.000000000000000</double>
                 </property>
                 <property name="singleStep">
-                 <double>0.100000000000000</double>
+                 <double>2.000000000000000</double>
                 </property>
                 <property name="value">
-                 <double>0.000000000000000</double>
+                 <double>1.000000000000000</double>
                 </property>
                </widget>
               </item>
@@ -1513,7 +1516,7 @@ QPushButton:pressed {
                </widget>
               </item>
               <item row="6" column="0">
-               <widget class="QComboBox" name="output_window_combobox_2">
+               <widget class="QComboBox" name="spfilter_output_combobox">
                 <item>
                  <property name="text">
                   <string>Image1</string>
@@ -1544,7 +1547,7 @@ QPushButton:pressed {
                </widget>
               </item>
               <item row="4" column="0" colspan="2">
-               <widget class="QToolBox" name="toolbox_transform_2">
+               <widget class="QToolBox" name="toolbox_spfilt">
                 <property name="font">
                  <font>
                   <weight>75</weight>
@@ -1553,7 +1556,7 @@ QPushButton:pressed {
                  </font>
                 </property>
                 <property name="currentIndex">
-                 <number>3</number>
+                 <number>1</number>
                 </property>
                 <widget class="QWidget" name="page_4">
                  <property name="geometry">
@@ -1706,6 +1709,9 @@ QPushButton:pressed {
                     <property name="maximum">
                      <number>20</number>
                     </property>
+                    <property name="singleStep">
+                     <number>1</number>
+                    </property>
                     <property name="sliderPosition">
                      <number>10</number>
                     </property>
@@ -1726,10 +1732,10 @@ QPushButton:pressed {
                   <item row="3" column="2">
                    <widget class="QDoubleSpinBox" name="highboost_factor_spinbox">
                     <property name="minimum">
-                     <double>-180.000000000000000</double>
+                     <double>0.000000000000000</double>
                     </property>
                     <property name="maximum">
-                     <double>180.000000000000000</double>
+                     <double>100.000000000000000</double>
                     </property>
                     <property name="singleStep">
                      <double>0.100000000000000</double>
@@ -1827,7 +1833,7 @@ QPushButton:pressed {
                  </attribute>
                  <layout class="QGridLayout" name="gridLayout_17">
                   <item row="3" column="0" colspan="2">
-                   <widget class="QPushButton" name="resize_apply_2">
+                   <widget class="QPushButton" name="median_apply">
                     <property name="minimumSize">
                      <size>
                       <width>100</width>
@@ -1946,7 +1952,10 @@ QPushButton:pressed {
                      <number>1</number>
                     </property>
                     <property name="maximum">
-                     <number>20</number>
+                     <number>100</number>
+                    </property>
+                    <property name="singleStep">
+                     <number>1</number>
                     </property>
                     <property name="sliderPosition">
                      <number>10</number>
@@ -1961,7 +1970,7 @@ QPushButton:pressed {
                      <enum>QSlider::TicksBelow</enum>
                     </property>
                     <property name="tickInterval">
-                     <number>1</number>
+                     <number>5</number>
                     </property>
                    </widget>
                   </item>
@@ -1971,7 +1980,7 @@ QPushButton:pressed {
                      <double>0.010000000000000</double>
                     </property>
                     <property name="maximum">
-                     <double>16.000000000000000</double>
+                     <double>100.000000000000000</double>
                     </property>
                     <property name="singleStep">
                      <double>0.100000000000000</double>
@@ -1994,7 +2003,7 @@ QPushButton:pressed {
                      <number>1</number>
                     </property>
                     <property name="maximum">
-                     <number>20</number>
+                     <number>100</number>
                     </property>
                     <property name="sliderPosition">
                      <number>10</number>
@@ -2009,7 +2018,7 @@ QPushButton:pressed {
                      <enum>QSlider::TicksBelow</enum>
                     </property>
                     <property name="tickInterval">
-                     <number>1</number>
+                     <number>5</number>
                     </property>
                    </widget>
                   </item>
@@ -2019,7 +2028,7 @@ QPushButton:pressed {
                      <double>0.010000000000000</double>
                     </property>
                     <property name="maximum">
-                     <double>16.000000000000000</double>
+                     <double>100.000000000000000</double>
                     </property>
                     <property name="singleStep">
                      <double>0.100000000000000</double>
@@ -2046,7 +2055,7 @@ QPushButton:pressed {
                    </spacer>
                   </item>
                   <item row="7" column="0" colspan="2">
-                   <widget class="QPushButton" name="shear_apply_3">
+                   <widget class="QPushButton" name="saltpepper_apply">
                     <property name="minimumSize">
                      <size>
                       <width>100</width>

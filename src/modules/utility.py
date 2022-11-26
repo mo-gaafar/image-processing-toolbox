@@ -25,12 +25,15 @@ def print_debug(string):
     if LOGGING_MODE:
         logger.info(string)
 
+
 def print_log(string):
     if LOGGING_MODE:
         logger.info(string)
 
+
 def mapRange(value, inMin, inMax, outMin, outMax):
     return outMin + (((value - inMin) / (inMax - inMin)) * (outMax - outMin))
+
 
 def uniform_padding(array, n, val):
     """
@@ -43,7 +46,7 @@ def uniform_padding(array, n, val):
 
     out_arr = []
     for i in range(0, array.shape[0]+2*n):
-        for j in range (0,array.shape[1]+2*n):
+        for j in range(0, array.shape[1]+2*n):
             out_arr[i][j] = val
 
     for i in range(array.shape[0]):
@@ -51,6 +54,7 @@ def uniform_padding(array, n, val):
             out_arr[i+n][j+n] = array[i][j]
 
     return out_arr
+
 
 def merge_sort(in_array):
     """ 
@@ -91,9 +95,10 @@ def merge_sort(in_array):
             k += 1
     return array
 
+
 def get_median(array):
     """Gets median of array using merge sort.
-    
+
     array: input array
 
     returns median of array
@@ -106,7 +111,7 @@ def get_median(array):
 
     sorted_arr = merge_sort(flat_array)
 
-    mid = 0 # median index
+    mid = 0  # median index
     if len(sorted_arr) % 2 == 0:
         # if even then get avg of 2 middle elements
         mid = len(sorted_arr) // 2
@@ -115,3 +120,13 @@ def get_median(array):
         # if odd then get middle element
         mid = round(len(sorted_arr) / 2) - 1
         return sorted_arr[mid]
+
+
+def round_nearest_odd(value):
+    """Rounds value to nearest odd number.
+
+    value: input value
+
+    returns rounded value
+    """
+    return int(np.ceil(value) // 2 * 2 + 1)

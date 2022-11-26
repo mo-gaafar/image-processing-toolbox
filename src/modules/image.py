@@ -53,6 +53,52 @@ class ImageOperation(ABC):
     def execute(self, image):
         pass
 
+@dataclass(frozen = True)
+class ImageFFT:
+    """Class for storing the FFT of an image"""
+    real: np.ndarray
+    imaginary: np.ndarray
+    magnitude: np.ndarray
+    phase: np.ndarray
+    image_data : np.ndarray = field(default_factory = np.ndarray, init = True)
+    fft_data : np.ndarray = field(default_factory = np.ndarray) 
+
+    def __post_init__(self):
+        self.fft_data = np.fft.fft2(self.image_data)
+        self.real = self.fft_data.real
+        self.imaginary = self.fft_data.imag
+        self.magnitude = np.abs(self.fft_data)
+        self.phase = np.angle(self.fft_data)
+
+    def get_real(self):
+        return self.real
+
+    def get_imaginary(self):
+        return self.imaginary
+
+    def get_magnitude(self):
+        return self.magnitude
+
+    def get_phase(self):
+        return self.phase
+
+    def get_fft(self):
+        return self.real + 1j * self.imaginary
+
+    def get_fft_conj(self):
+        return self.real - 1j * self.imaginary
+
+    def get_fft_magnitude(self):
+        return self.magnitude
+
+    def get_fft_phase(self):
+        return self.phase
+
+    def get_fft_magnitude_conj(self):
+        return self.magnitude
+
+    def get_fft_phase_conj(self):
+        return -self.phase
 
 # frozen = True means that the class cannot be modified
 # kw_only = True means that the class cannot be instantiated with positional arguments
@@ -65,6 +111,7 @@ class Image:
     operations_dict = {}
     image_backup = None
     last_processing_time_ms = 0
+    image_fft = None
     alloc_dtype = None
 
     def clear_operations(self, undo_old=True, clear_backup=False):
@@ -177,5 +224,11 @@ class Image:
         #     return self.alloc_dtype
         return np.uint32
 
+    def get_fft(self):
+        """Returns an fft object of the image"""
+        if self.image_fft is None:
+            self.image_fft = ImageFFT(image_data = self.data)
+        return self.image_fft
+    
     def get_img_format(self):
         return self.path.split('.')[-1]
