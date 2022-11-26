@@ -169,15 +169,9 @@ class ApplyHighboostFilter(ImageOperation):
         # diff = np.array([], dtype=np.int)
         # change datatype to int to avoid overflow
         blurred = self.image2.data.astype(np.int)
-        diff = np.zeros(self.image.data.shape, dtype=np.int)
 
         difference = self.image.data - blurred
-        print("Image2")
-        print(self.image2.data)
-        print("Image1")
-        print(self.image.data)
-        print("Difference")
-        print(difference)
+
         return difference
 
     def execute(self):

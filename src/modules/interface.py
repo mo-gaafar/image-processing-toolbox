@@ -218,8 +218,14 @@ def display_pixmap(self, image, window_index=None):
                     'Error Displaying Image: Unsupported Image Format')
                 return
 
-            data = im.tobytes()
-            qim = QtGui.QImage(data, im.size[0], im.size[1],
+            data = im.tobytes(encoder_name='raw')
+
+            totalbytes = len(data)
+            bytesperline = int(totalbytes / im.size[1])
+
+            # fix skewed image qim
+
+            qim = QtGui.QImage(data, im.size[0], im.size[1], bytesperline,
                                QtGui.QImage.Format_RGB888)
     else:
         image_data = image
