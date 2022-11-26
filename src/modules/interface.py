@@ -39,10 +39,14 @@ def sync_sliders(self, caller=None, name=None):
                 int(self.rotation_angle_spinbox.value()) % 360)
     elif name == 'spfilter kernel size':
         if caller == 'slider':
-            self.sp_kernel_spinbox.setValue(self.sp_kernel_slider.value())
+            self.sp_kernel_spinbox.setValue(
+                round_nearest_odd(self.sp_kernel_slider.value()))
+
         elif caller == 'spinbox':
+            self.sp_kernel_spinbox.setValue(
+                round_nearest_odd(self.sp_kernel_spinbox.value()))
             self.sp_kernel_slider.setValue(
-                int(self.sp_kernel_spinbox.value()))
+                self.sp_kernel_spinbox.value())
     elif name == 'spfilter highboost factor':
         if caller == 'slider':
             self.highboost_factor_spinbox.setValue(
@@ -385,6 +389,8 @@ def init_connectors(self):
     self.highboost_apply.clicked.connect(lambda: tabs.apply_highboost(self))
     self.median_apply.clicked.connect(lambda: tabs.apply_median(self))
     self.saltpepper_apply.clicked.connect(lambda: tabs.apply_saltpepper(self))
+    self.reset_operations_3.clicked.connect(
+        lambda: modules.image.restore_original(self))
 
     # Sync sliders
     self.sp_kernel_slider.sliderReleased.connect(

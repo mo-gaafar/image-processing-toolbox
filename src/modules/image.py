@@ -11,6 +11,26 @@ from modules import image
 from modules.utility import *
 
 
+def restore_original(self):
+    '''Gets the original image'''
+    try:
+        # undo previous operations
+        self.image1 = deepcopy(self.safe_image_backup)
+        selected_window = interface.get_user_input(self)['output window']
+        interface.display_pixmap(self,
+                                 image=self.image1,
+                                 window_index=selected_window)
+        interface.update_img_resize_dimensions(self, 'resized',
+                                               self.image1.get_pixels())
+        interface.print_statusbar(self, 'Restores Original Image')
+
+    except:
+        QMessageBox.critical(self, 'Error',
+                             'Error Running Operation: No Image Loaded')
+        return
+    # refresh the display
+
+
 def reset_image(self):
     '''Resets the image to its original state'''
     try:
@@ -53,15 +73,16 @@ class ImageOperation(ABC):
     def execute(self, image):
         pass
 
-@dataclass(frozen = True)
+
+@dataclass(frozen=True)
 class ImageFFT:
     """Class for storing the FFT of an image"""
     real: np.ndarray
     imaginary: np.ndarray
     magnitude: np.ndarray
     phase: np.ndarray
-    image_data : np.ndarray = field(default_factory = np.ndarray, init = True)
-    fft_data : np.ndarray = field(default_factory = np.ndarray) 
+    image_data: np.ndarray = field(default_factory=np.ndarray, init=True)
+    fft_data: np.ndarray = field(default_factory=np.ndarray)
 
     def __post_init__(self):
         self.fft_data = np.fft.fft2(self.image_data)
@@ -102,6 +123,8 @@ class ImageFFT:
 
 # frozen = True means that the class cannot be modified
 # kw_only = True means that the class cannot be instantiated with positional arguments
+
+
 @dataclass(frozen=False)
 class Image:
 
@@ -116,7 +139,7 @@ class Image:
 
     def clear_operations(self, undo_old=True, clear_backup=False):
         ''' Clears all operations from the image.
-        
+
         undo_old: if True, the image is restored to its original state
         clear_backup: if True, the backup image is cleared
 
@@ -174,7 +197,7 @@ class Image:
 
         Args:
             relative (bool): if True, the histogram is normalized to sum to 1
-        
+
         Returns:
             histogram (np.ndarray): the histogram of the image
             range (tuple): the range of the histogram
@@ -227,8 +250,8 @@ class Image:
     def get_fft(self):
         """Returns an fft object of the image"""
         if self.image_fft is None:
-            self.image_fft = ImageFFT(image_data = self.data)
+            self.image_fft = ImageFFT(image_data=self.data)
         return self.image_fft
-    
+
     def get_img_format(self):
         return self.path.split('.')[-1]

@@ -78,12 +78,14 @@ class AddSaltPepperNoise(ImageOperation):
         # add salt and pepper noise to the image
         # amount is the percentage of pixels to be affected
         # salt_prob is the probability of a pixel to be salted instead of peppered
+
+        L = 2**self.image.get_channel_depth()
+
         for x in range(self.image.data.shape[0]):
             for y in range(self.image.data.shape[1]):
                 if np.random.rand() < self.amount:
                     if np.random.rand() < self.salt_prob:
-                        self.image.data[x,
-                                        y] = 2**self.image.get_channel_depth() - 1
+                        self.image.data[x, y] = L - 1
                     else:
                         self.image.data[x, y] = 0
 
@@ -136,10 +138,8 @@ class ApplyLinearFilter(ImageOperation):
 
 class ApplyHighboostFilter(ImageOperation):
 
-    def __init__(self, name, image):
-        super().__init__(name, image)
+    def __post_init__(self):
         self.image2 = deepcopy(self.image)
-
         #! would cause a considerable amount of errors
         # TODO: fix pipeline in second image?
 
@@ -150,7 +150,7 @@ class ApplyHighboostFilter(ImageOperation):
 
         args:
             size: the size of the filter
-            alpha: the alpha value of the highboost filter
+            boost: the alpha value of the highboost filter
             clip: whether to clip the image to the range of the original image
         """
         self.boost = kwargs['boost']
@@ -160,21 +160,35 @@ class ApplyHighboostFilter(ImageOperation):
     def get_sharp_image(self):
         # blur image2
         linfiltoperation = ApplyLinearFilter()
-        linfiltoperation.configure(size=self.size)
-        self.image2.add_operation(ApplyLinearFilter())
-        self.image2.run_operations()
-        diff = []
-        diff.np.astype(np.int)
-        diff = self.image2.data - self.image.data
-        return diff
+        linfiltoperation.configure(size=self.size, kernel_type='box')
+        self.image2 = deepcopy(self.image)
+        self.image2.clear_operations()
+        self.image2.add_operation(MonochoromeConversion())
+        self.image2.add_operation(linfiltoperation)
+        self.image2.run_processing()
+        # diff = np.array([], dtype=np.int)
+        # change datatype to int to avoid overflow
+        blurred = self.image2.data.astype(np.int)
+        diff = np.zeros(self.image.data.shape, dtype=np.int)
+
+        difference = self.image.data - blurred
+        print("Image2")
+        print(self.image2.data)
+        print("Image1")
+        print(self.image.data)
+        print("Difference")
+        print(difference)
+        return difference
 
     def execute(self):
 
-        # apply a highboost filter to the image
-        self.image.data = self.image.data + self.boost * self.get_sharp_image()
-        # normalize or crop
         L = 2**self.image.get_channel_depth()
 
+        # apply a highboost filter to the image
+        self.image.data = np.round(
+            self.image.data + self.boost * self.get_sharp_image())
+
+        # normalize or crop
         if self.clip:
             # clip values to [0, L]
             for x in range(0, self.image.data.shape[0]):
@@ -187,6 +201,11 @@ class ApplyHighboostFilter(ImageOperation):
             # normalize
             self.image.data = self.image.data - np.min(self.image.data)
             self.image.data = self.image.data / np.max(self.image.data) * (L-1)
+
+        print_log('Highboost filter applied')
+        print_log('Max Level: ' + str(np.max(self.image.data)))
+        print_log('Data Type: ' + str(self.image.data.dtype))
+        print_log('Clipping enable: ' + str(self.clip))
 
         return deepcopy(self.image)
 
@@ -247,7 +266,7 @@ class HistogramEqualization(ImageOperation):
 
         # quantize to previous integer values
         self.image.data = self.image.data.astype(
-            self.image.get_channel_depth())
+            self.image.get_alloc_pixel_dtype())
 
         return deepcopy(self.image)
 

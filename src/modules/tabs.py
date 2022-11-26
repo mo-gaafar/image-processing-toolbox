@@ -216,7 +216,34 @@ def apply_boxblur(self):
 
 
 def apply_highboost(self):
-    pass
+    """Applies the highboost operation to the image"""
+
+    try:
+        # get uset input data
+        size = interface.get_user_input(self)['spfilter kernel size']
+        output_filtered = interface.get_user_input(self)['spfilter output']
+        factor = interface.get_user_input(self)['spfilter highboost factor']
+        clip = interface.get_user_input(self)['spfilter highboost clipping']
+
+        # add the operation to the image
+
+        # configure the highboost operation object
+        highboost_operation = ApplyHighboostFilter()
+        highboost_operation.configure(size=size, clip=clip,
+                                      boost=factor)
+
+        # clear previous operations
+        self.image1.clear_operations(clear_backup=True, undo_old=True)
+
+        # add the operation to the image
+        self.image1.add_operation(MonochoromeConversion())
+        self.image1.add_operation(highboost_operation)
+
+        # run the processing
+        interface.display_run_processing(self, output_filtered)
+
+    except:
+        QMessageBox.critical(self, 'Error', 'Error Running Operation')
 
 
 def apply_median(self):

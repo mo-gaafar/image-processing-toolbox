@@ -51,8 +51,8 @@ def uniform_padding(array, n, val):
         for y in range(0, out_arr.shape[1]):
             if x < n or x >= out_arr.shape[0] - n or y < n or y >= out_arr.shape[1] - n:
                 out_arr[x, y] = val
-            else:
-                out_arr[x, y] = array[x-n, y-n]
+            else:  
+                out_arr[x, y] = array[x-n][y-n]
 
     return out_arr
 
@@ -121,7 +121,7 @@ def get_median(array):
         # if odd then get middle element
         mid = round(len(sorted_arr) / 2) - 1
         return sorted_arr[mid]
-
+        
 
 def round_nearest_odd(value):
     """Rounds value to nearest odd number.
