@@ -82,9 +82,11 @@ class AddSaltPepperNoise(ImageOperation):
             for y in range(self.image.data.shape[1]):
                 if np.random.rand() < self.amount:
                     if np.random.rand() < self.salt_prob:
-                        self.image.data[x, y] = 2**self.get_channel_depth() - 1
+                        self.image.data[x,y] = 2**self.image.get_channel_depth() - 1
                     else:
                         self.image.data[x, y] = 0
+
+        return deepcopy(self.image)
 
 
 class ApplyLinearFilter(ImageOperation):

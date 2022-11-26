@@ -37,7 +37,7 @@ def sync_sliders(self, caller=None, name=None):
         elif caller == 'spinbox':
             self.rotation_slider.setValue(
                 int(self.rotation_angle_spinbox.value()) % 360)
-    elif name == 'spfilter kernel':
+    elif name == 'spfilter kernel size':
         if caller == 'slider':
             self.sp_kernel_spinbox.setValue(self.sp_kernel_slider.value())
         elif caller == 'spinbox':
@@ -46,10 +46,10 @@ def sync_sliders(self, caller=None, name=None):
     elif name == 'spfilter highboost factor':
         if caller == 'slider':
             self.highboost_factor_spinbox.setValue(
-                self.sp_highboost_factor_slider.value()/2)
+                self.highboost_factor_slider.value()/2)
         elif caller == 'spinbox':
             self.highboost_factor_slider.setValue(
-                int(self.sp_highboost_factor_spinbox.value()*2))
+                int(self.highboost_factor_spinbox.value()*2))
     elif name == 'saltpepper noise weight':
         if caller == 'slider':
             self.noise_wt_spinbox.setValue(self.noise_wt_slider.value())
@@ -86,7 +86,28 @@ output_window_dict = {
 
 
 def get_user_input(self):
-    '''Gets the user input from the GUI and returns it as a dictionary'''
+    '''
+    Gets the user input from the GUI and returns it as a dictionary.
+
+    Keys:
+        'interpolation method',
+        'transformation type',
+        'resize factor',
+        'rotation angle',
+        'shearing factor',
+        'output window',
+        'histogram output window',
+        'histogram output equalized',
+        'histogram output original plot',
+        'histogram output equalized plot',
+        'spfilter output',
+        'spfilter kernel size',
+        'spfilter highboost factor',
+        'spfilter highboost clipping',
+        'saltpepper noise weight',
+        'saltpepper salt prob'
+
+    '''
     user_input = {}
 
     # Affine Transformations
@@ -113,9 +134,9 @@ def get_user_input(self):
 
     # Spatial Filtering
     user_input['spfilter output'] = output_window_dict[self.spfilter_output_combobox.currentText()]
-    user_input['spfilter kernel size'] = self.sp_kernel_spinbox.value()
+    user_input['spfilter kernel size'] = int(self.sp_kernel_spinbox.value())
 
-    user_input['spfilter highboost factor'] = self.sp_highboost_factor_spinbox.value()
+    user_input['spfilter highboost factor'] = self.highboost_factor_spinbox.value()
     user_input['spfilter highboost clipping'] = self.clipping_checkbox.isChecked()
 
     user_input['saltpepper noise weight'] = self.noise_wt_spinbox.value()
@@ -382,9 +403,9 @@ def init_connectors(self):
         lambda: sync_sliders(self, 'spinbox', 'saltpepper noise weight'))
 
     self.noise_salt_slider.sliderReleased.connect(
-        lambda: sync_sliders(self, 'slider', 'saltpepper noise salt'))
+        lambda: sync_sliders(self, 'slider', 'saltpepper salt prob'))
     self.noise_salt_spinbox.valueChanged.connect(
-        lambda: sync_sliders(self, 'spinbox', 'saltpepper noise salt'))
+        lambda: sync_sliders(self, 'spinbox', 'saltpepper salt prob'))
 
 
 def about_us(self):

@@ -43,15 +43,16 @@ def uniform_padding(array, n, val):
     n: size of padding in all sides (per side)
     val: value to pad with
     """
+    n = int(n)
+    out_arr = np.zeros((array.shape[0] + 2*n, array.shape[1] + 2*n))
 
-    out_arr = []
-    for i in range(0, array.shape[0]+2*n):
-        for j in range(0, array.shape[1]+2*n):
-            out_arr[i][j] = val
-
-    for i in range(array.shape[0]):
-        for j in range(array.shape[1]):
-            out_arr[i+n][j+n] = array[i][j]
+    # loop on new array and fill with image and padding
+    for x in range(0, out_arr.shape[0]):
+        for y in range(0, out_arr.shape[1]):
+            if x < n or x >= out_arr.shape[0] - n or y < n or y >= out_arr.shape[1] - n:
+                out_arr[x, y] = val
+            else:
+                out_arr[x, y] = array[x-n, y-n]
 
     return out_arr
 
