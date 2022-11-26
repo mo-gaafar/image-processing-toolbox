@@ -11,6 +11,26 @@ from modules import image
 from modules.utility import *
 
 
+def restore_original(self):
+    '''Gets the original image'''
+    try:
+        # undo previous operations
+        self.image1 = deepcopy(self.safe_image_backup)
+        selected_window = interface.get_user_input(self)['output window']
+        interface.display_pixmap(self,
+                                 image=self.image1,
+                                 window_index=selected_window)
+        interface.update_img_resize_dimensions(self, 'resized',
+                                               self.image1.get_pixels())
+        interface.print_statusbar(self, 'Restores Original Image')
+
+    except:
+        QMessageBox.critical(self, 'Error',
+                             'Error Running Operation: No Image Loaded')
+        return
+    # refresh the display
+
+
 def reset_image(self):
     '''Resets the image to its original state'''
     try:
@@ -54,8 +74,57 @@ class ImageOperation(ABC):
         pass
 
 
+@dataclass(frozen=True)
+class ImageFFT:
+    """Class for storing the FFT of an image"""
+    real: np.ndarray
+    imaginary: np.ndarray
+    magnitude: np.ndarray
+    phase: np.ndarray
+    image_data: np.ndarray = field(default_factory=np.ndarray, init=True)
+    fft_data: np.ndarray = field(default_factory=np.ndarray)
+
+    def __post_init__(self):
+        self.fft_data = np.fft.fft2(self.image_data)
+        self.real = self.fft_data.real
+        self.imaginary = self.fft_data.imag
+        self.magnitude = np.abs(self.fft_data)
+        self.phase = np.angle(self.fft_data)
+
+    def get_real(self):
+        return self.real
+
+    def get_imaginary(self):
+        return self.imaginary
+
+    def get_magnitude(self):
+        return self.magnitude
+
+    def get_phase(self):
+        return self.phase
+
+    def get_fft(self):
+        return self.real + 1j * self.imaginary
+
+    def get_fft_conj(self):
+        return self.real - 1j * self.imaginary
+
+    def get_fft_magnitude(self):
+        return self.magnitude
+
+    def get_fft_phase(self):
+        return self.phase
+
+    def get_fft_magnitude_conj(self):
+        return self.magnitude
+
+    def get_fft_phase_conj(self):
+        return -self.phase
+
 # frozen = True means that the class cannot be modified
 # kw_only = True means that the class cannot be instantiated with positional arguments
+
+
 @dataclass(frozen=False)
 class Image:
 
@@ -65,11 +134,12 @@ class Image:
     operations_dict = {}
     image_backup = None
     last_processing_time_ms = 0
+    image_fft = None
     alloc_dtype = None
 
     def clear_operations(self, undo_old=True, clear_backup=False):
         ''' Clears all operations from the image.
-        
+
         undo_old: if True, the image is restored to its original state
         clear_backup: if True, the backup image is cleared
 
@@ -127,7 +197,7 @@ class Image:
 
         Args:
             relative (bool): if True, the histogram is normalized to sum to 1
-        
+
         Returns:
             histogram (np.ndarray): the histogram of the image
             range (tuple): the range of the histogram
@@ -176,6 +246,12 @@ class Image:
         # else:
         #     return self.alloc_dtype
         return np.uint32
+
+    def get_fft(self):
+        """Returns an fft object of the image"""
+        if self.image_fft is None:
+            self.image_fft = ImageFFT(image_data=self.data)
+        return self.image_fft
 
     def get_img_format(self):
         return self.path.split('.')[-1]

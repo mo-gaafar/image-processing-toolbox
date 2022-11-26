@@ -22,6 +22,8 @@ def open_new(self, image_idx=1):
         # import the image into an image object
         self.image1 = importer.import_image(path)
 
+        self.safe_image_backup = deepcopy(self.image1)
+
         # update the image and textbox in the viewer
         interface.display_pixmap(self, image=self.image1)
         interface.display_metatable(self, self.image1.get_metadata())
@@ -40,7 +42,8 @@ def read_importer(path) -> ImageImporter:
         'png': BMPImporter(),
         'jpeg': JPGImporter(),
         'jpg': JPGImporter(),
-        'dcm': DICOMImporter()
+        'dcm': DICOMImporter(),
+        'png': BMPImporter()
     }
     if extension in importers:
         return importers[extension]
