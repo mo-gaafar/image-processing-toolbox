@@ -381,7 +381,7 @@ def init_connectors(self):
 
     """ Spatial Filtering Tab """
     # Spatial Filtering Tab
-    self.boxblurr_apply.clicked.connect(lambda: tabs.apply_boxblurr(self))
+    self.boxblur_apply.clicked.connect(lambda: tabs.apply_boxblur(self))
     self.highboost_apply.clicked.connect(lambda: tabs.apply_highboost(self))
     self.median_apply.clicked.connect(lambda: tabs.apply_median(self))
     self.saltpepper_apply.clicked.connect(lambda: tabs.apply_saltpepper(self))

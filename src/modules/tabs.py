@@ -189,7 +189,30 @@ def apply_histogram(self):
 
 
 def apply_boxblur(self):
-    pass
+    """ Applies the box blur operation to the image """
+    try:
+        # get uset input data
+        size = interface.get_user_input(self)['spfilter kernel size']
+        output_filtered = interface.get_user_input(self)['spfilter output']
+
+        # clear previous operations
+        # self.image1.clear_operations(clear_backup=False, undo_old=False)
+
+        # add the operation to the image
+        self.image1.add_operation(MonochoromeConversion())
+
+        # configure the box blur operation object
+        boxblur_operation = ApplyLinearFilter()
+        boxblur_operation.configure(size=size, kernel_type='box')
+
+        # add the operation to the image
+        self.image1.add_operation(boxblur_operation)
+
+        # run the processing
+        interface.display_run_processing(self, output_filtered)
+
+    except:
+        QMessageBox.critical(self, 'Error', 'Error Running Operation')
 
 
 def apply_highboost(self):

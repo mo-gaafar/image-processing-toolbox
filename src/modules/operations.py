@@ -82,7 +82,8 @@ class AddSaltPepperNoise(ImageOperation):
             for y in range(self.image.data.shape[1]):
                 if np.random.rand() < self.amount:
                     if np.random.rand() < self.salt_prob:
-                        self.image.data[x,y] = 2**self.image.get_channel_depth() - 1
+                        self.image.data[x,
+                                        y] = 2**self.image.get_channel_depth() - 1
                     else:
                         self.image.data[x, y] = 0
 
@@ -93,6 +94,7 @@ class ApplyLinearFilter(ImageOperation):
 
     def configure(self, **kwargs):
         self.size = kwargs['size']
+        self.kernel_type = kwargs['kernel_type']
 
     def create_box_kernel(self):
         # create a kernel of size x size with all values = 1
@@ -113,16 +115,21 @@ class ApplyLinearFilter(ImageOperation):
 
     def execute(self):
         # add padding to image data arr
-        padded_data = util.uniform_padding(image.data, self.size//2, 0)
-        self.kernel = self.create_box_kernel(self.size)
+        padded_data = util.uniform_padding(self.image.data, self.size//2, 0)
+
+        if self.kernel_type == 'box':
+            self.kernel = self.create_box_kernel()
+        else:
+            raise ValueError('Unknown kernel type: ' + self.kernel_type)
+
         # apply a box filter to the image
         # size: size of the filter
-        for x in range(0, self.image.data.shape[0]):
-            for y in range(0, self.image.data.shape[1]):
+        for x in range(self.size, self.image.data.shape[0]+self.size):
+            for y in range(self.size, self.image.data.shape[1]+self.size):
                 img_section = padded_data[x-self.size:x +
                                           self.size, y-self.size:y+self.size]
-                self.image.data[x, y] = self.multiply_sum_kernel(
-                    self.create_kernel(), img_section)
+                self.image.data[x-self.size, y-self.size] = self.multiply_sum_kernel(
+                    self.kernel, img_section)
 
         return deepcopy(self.image)
 
