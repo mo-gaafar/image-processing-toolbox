@@ -1,8 +1,7 @@
 {
-    "python.testing.pytestArgs": [
-        "src"
-    ],
-    "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true,
-    "python.formatting.provider": "autopep8"
+  "python.testing.pytestArgs": ["src"],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true,
+  "python.formatting.provider": "autopep8",
+  "githubPullRequests.ignoredPullRequestBranches": ["master"]
 }

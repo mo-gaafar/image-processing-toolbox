@@ -46,7 +46,7 @@ def sync_sliders(self, caller=None, name=None):
             self.sp_kernel_spinbox.setValue(
                 round_nearest_odd(self.sp_kernel_spinbox.value()))
             self.sp_kernel_slider.setValue(
-                self.sp_kernel_spinbox.value())
+                int(self.sp_kernel_spinbox.value()))
     elif name == 'spfilter highboost factor':
         if caller == 'slider':
             self.highboost_factor_spinbox.setValue(
