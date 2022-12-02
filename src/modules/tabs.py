@@ -2,6 +2,7 @@ from pickle import TRUE
 from PyQt5.QtWidgets import QMessageBox
 from modules import interface
 from modules.operations import *
+from modules.fourier import UpdateFFT
 
 #!Important: missing functionality
 # TODO: fix rotation direction (make it anti-clockwise)
@@ -297,6 +298,63 @@ def apply_saltpepper(self):
 
         # add the noise
         apply_image_operation(self, operation, output_noisy)
+
+    except:
+        QMessageBox.critical(self, 'Error', 'Error Running Operation')
+
+
+def display_fft(self):
+    """ Displays the fft of the image """
+    try:
+        # get user input parameters data
+        fftmagshift_window = interface.get_user_input(
+            self)['fft output magshift']
+        fftmaglog_window = interface.get_user_input(
+            self)['fft output maglog']
+        fftphaseshift_window = interface.get_user_input(
+            self)['fft output phshift']
+        fftphaselog_window = interface.get_user_input(
+            self)['fft output phlog']
+
+        # clear previous operations
+        self.image1.clear_operations(clear_backup=False, undo_old=True)
+
+        # add the operation to the image
+        self.image1.add_operation(MonochoromeConversion())
+
+        # configure operation
+        operation = UpdateFFT()
+
+        # add the operation to the image
+        self.image1.add_operation(operation)
+
+        # run the processing
+        self.image1.run_processing()
+
+        # print procesing time in status bar
+        str_done = "Done processing in " + \
+            str(self.image1.get_processing_time()) + "ms"
+
+        interface.print_statusbar(self, str_done)
+
+        # display the selected outputs
+
+        mag, phase = self.image.get_fft().process_fft_displays()
+
+        magshift = mag[0]
+        maglog = mag[1]
+
+        phshift = phase[0]
+        phlog = phase[1]
+
+        if fftmagshift_window:
+            interface.display_pixmap(self, magshift, fftmagshift_window)
+        if fftmaglog_window:
+            interface.display_pixmap(self, maglog, fftmaglog_window)
+        if fftphaseshift_window:
+            interface.display_pixmap(self, phshift, fftphaseshift_window)
+        if fftphaselog_window:
+            interface.display_pixmap(self, phlog, fftphaselog_window)
 
     except:
         QMessageBox.critical(self, 'Error', 'Error Running Operation')

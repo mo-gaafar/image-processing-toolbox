@@ -146,6 +146,13 @@ def get_user_input(self):
     user_input['saltpepper noise weight'] = self.noise_wt_spinbox.value()
     user_input['saltpepper salt prob'] = self.noise_salt_spinbox.value()
 
+    # FFT Display
+    user_input['fft output magshift'] = output_window_dict[self.fft_output_mag_combobox.currentText()]
+    user_input['fft output maglog'] = output_window_dict[self.fft_output_maglog_combobox.currentText()]
+
+    user_input['fft output phshift'] = output_window_dict[self.fft_output_phase_combobox.currentText()]
+    user_input['fft output phlog'] = output_window_dict[self.fft_output_phase_combobox.currentText()]
+
     return user_input
 
 
@@ -180,7 +187,12 @@ plt.rcParams["figure.autolayout"] = True
 
 
 def display_pixmap(self, image, window_index=None):
-    '''Displays the image data in the image display area'''
+    '''Displays the image data in the image display area.
+
+    Args:
+        image (Image): Image object to be displayed. (or numpy array)
+        window_index (int): Index of the window to be displayed in.
+    '''
 
     if type(image) == modules.image.Image:
         image_data = image.get_pixels()
