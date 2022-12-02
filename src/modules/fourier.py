@@ -11,15 +11,15 @@ from modules.utility import *
 @dataclass(frozen=True)
 class ImageFFT:
     """Class for storing the FFT of an image"""
-    real: np.ndarray
-    imaginary: np.ndarray
-    magnitude: np.ndarray
-    phase: np.ndarray
-    image_ref: Image() = field(repr=False)
-    fft_data: np.ndarray = field(default_factory=np.ndarray)
+    real: np.ndarray = None
+    imaginary: np.ndarray = None
+    magnitude: np.ndarray = None
+    phase: np.ndarray = None
+    fft_data: np.ndarray = None
+    image_ref: Image = field(default_factory=np.ndarray)
 
     def __post_init__(self):
-        self.fft_data = np.fft.fft2(self.image_data)
+        self.fft_data = np.fft.fft2(self.image_ref.data)
         self.real = self.fft_data.real
         self.imaginary = self.fft_data.imag
         self.magnitude = np.abs(self.fft_data)
@@ -39,7 +39,7 @@ class ImageFFT:
 
     def get_fft(self):
         if self.fft_data is None:
-            self.fft_data = np.fft.fft2(self.image)
+            self.fft_data = self.update_fft()
         return self.fft_data
 
     def update_fft(self):
@@ -66,7 +66,7 @@ class ImageFFT:
         # get the phase plots
         fft_data_phase = np.angle(fft_data)
         fft_phase_shifted = np.fft.fftshift(fft_data_phase)
-        fft_phase_shifted_logged = np.log(fft_phase_shifted + np.pi)
+        fft_phase_shifted_logged = np.log(fft_phase_shifted + 2*np.pi)
 
         fft_mag_displays = (fft_mag_shifted_logged,
                             fft_mag_shifted, fft_data_mag)
@@ -87,10 +87,10 @@ class UpdateFFT(ImageOperation):
         If the image has been fft transformed, the saved object is returned.
         However, if the image has been transformed and then modified, the fft is recalculated.'''
         if self.image.image_fft is None:
-            self.image.image_fft = ImageFFT(image_ref=self)
+            self.image.image_fft = ImageFFT(image_ref=self.image)
         else:
             if self.image.image_fft.image_ref is not self:
-                self.image.image_fft = ImageFFT(image_ref=self)
+                self.image.image_fft = ImageFFT(image_ref=self.image)
 
         return deepcopy(self.image)
 

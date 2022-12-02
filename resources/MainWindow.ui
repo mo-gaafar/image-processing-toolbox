@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1170</width>
-    <height>637</height>
+    <height>638</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -192,7 +192,7 @@ QGroupBox::title  {
                <x>0</x>
                <y>0</y>
                <width>380</width>
-               <height>241</height>
+               <height>242</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -277,7 +277,7 @@ QGroupBox::title  {
                <x>0</x>
                <y>0</y>
                <width>380</width>
-               <height>241</height>
+               <height>242</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -607,8 +607,8 @@ rgb(163, 162, 165);
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>282</width>
-                   <height>197</height>
+                   <width>219</width>
+                   <height>180</height>
                   </rect>
                  </property>
                  <attribute name="label">
@@ -1564,7 +1564,7 @@ QPushButton:pressed {
                    <x>0</x>
                    <y>0</y>
                    <width>282</width>
-                   <height>209</height>
+                   <height>210</height>
                   </rect>
                  </property>
                  <attribute name="label">
@@ -1663,8 +1663,8 @@ QPushButton:pressed {
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>282</width>
-                   <height>212</height>
+                   <width>199</width>
+                   <height>200</height>
                   </rect>
                  </property>
                  <attribute name="label">
@@ -1824,8 +1824,8 @@ QPushButton:pressed {
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>282</width>
-                   <height>212</height>
+                   <width>170</width>
+                   <height>82</height>
                   </rect>
                  </property>
                  <attribute name="label">
@@ -1908,7 +1908,7 @@ QPushButton:pressed {
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>282</width>
+                   <width>222</width>
                    <height>212</height>
                   </rect>
                  </property>

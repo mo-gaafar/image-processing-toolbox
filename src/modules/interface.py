@@ -147,11 +147,11 @@ def get_user_input(self):
     user_input['saltpepper salt prob'] = self.noise_salt_spinbox.value()
 
     # FFT Display
-    user_input['fft output magshift'] = output_window_dict[self.fft_output_mag_combobox.currentText()]
+    user_input['fft output magshift'] = output_window_dict[self.fft_output_magshift_combobox.currentText()]
     user_input['fft output maglog'] = output_window_dict[self.fft_output_maglog_combobox.currentText()]
 
-    user_input['fft output phshift'] = output_window_dict[self.fft_output_phase_combobox.currentText()]
-    user_input['fft output phlog'] = output_window_dict[self.fft_output_phase_combobox.currentText()]
+    user_input['fft output phshift'] = output_window_dict[self.fft_output_phshift_combobox.currentText()]
+    user_input['fft output phlog'] = output_window_dict[self.fft_output_phlog_combobox.currentText()]
 
     return user_input
 
@@ -430,6 +430,10 @@ def init_connectors(self):
         lambda: sync_sliders(self, 'slider', 'saltpepper salt prob'))
     self.noise_salt_spinbox.valueChanged.connect(
         lambda: sync_sliders(self, 'spinbox', 'saltpepper salt prob'))
+
+    """FFT Display Tab"""
+
+    self.disp_fft_apply.clicked.connect(lambda: tabs.display_fft(self))
 
 
 def about_us(self):

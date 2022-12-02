@@ -87,7 +87,7 @@ class Image:
     operations_dict = {}
     image_backup = None
     last_processing_time_ms = 0
-    fft = None
+    image_fft = None
     alloc_dtype = None
 
     def clear_operations(self, undo_old=True, clear_backup=False):
@@ -225,7 +225,7 @@ class ImageFFT:
     imaginary: np.ndarray
     magnitude: np.ndarray
     phase: np.ndarray
-    image_ref: Image() = field(repr=False)
+    image_ref: Image = None
     fft_data: np.ndarray = field(default_factory=np.ndarray)
 
     def __post_init__(self):

@@ -341,11 +341,11 @@ def display_fft(self):
 
         mag, phase = self.image.get_fft().process_fft_displays()
 
-        magshift = mag[0]
-        maglog = mag[1]
+        magshift = mag[1]
+        maglog = mag[0]
 
-        phshift = phase[0]
-        phlog = phase[1]
+        phshift = phase[1]
+        phlog = phase[0]
 
         if fftmagshift_window:
             interface.display_pixmap(self, magshift, fftmagshift_window)
