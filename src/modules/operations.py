@@ -27,11 +27,6 @@ from modules.interpolators import *
 #     def execute(self):
 #         self.image = self.function(self.image, *self.args, **self.kwargs)
 
-class FFTMagnitude(ImageOperation):
-
-    def execute(self):
-        # TODO: implement shifting and log scaling manually
-        self.image = np.absolute(np.fft.fftshift(np.fft.fft2(self.image)))
 
 
 class MonochoromeConversion(ImageOperation):
