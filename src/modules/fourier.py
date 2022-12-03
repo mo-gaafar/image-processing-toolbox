@@ -8,7 +8,7 @@ from modules import image
 from modules.utility import *
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=False)
 class ImageFFT:
     """Class for storing the FFT of an image"""
     real: np.ndarray = None
@@ -17,13 +17,15 @@ class ImageFFT:
     phase: np.ndarray = None
     fft_data: np.ndarray = None
     image_ref: Image = field(default_factory=np.ndarray)
+    image_curr_data = None
 
     def __post_init__(self):
         self.fft_data = np.fft.fft2(self.image_ref.data)
+        self.image_curr_data = self.image_ref.data
         self.real = self.fft_data.real
         self.imaginary = self.fft_data.imag
-        self.magnitude = np.abs(self.fft_data)
-        self.phase = np.angle(self.fft_data)
+        self.magnitude = complex_abs(self.fft_data)
+        self.phase = complex_angle(self.fft_data)
 
     def get_real(self):
         return self.real
@@ -38,13 +40,11 @@ class ImageFFT:
         return self.phase
 
     def get_fft(self):
-        if self.fft_data is None:
-            self.fft_data = self.update_fft()
-        return self.fft_data
+        """gets or updates the fft of the image"""
+        if self.image_curr_data is not self.image_ref.data or self.fft_data is None:
+            self.__post_init__()  # calls __post_init__ again to update the fft data
 
-    def update_fft(self):
-        """Updates the fft data"""
-        self.fft_data = np.fft.fft2(self.image_ref.data)
+        return self.fft_data
 
     def process_fft_displays(self):
         """
@@ -91,8 +91,10 @@ class UpdateFFT(ImageOperation):
         else:
             if self.image.image_fft.image_ref is not self:
                 self.image.image_fft = ImageFFT(image_ref=self.image)
+            else:
+                self.image.image_fft.get_fft()
 
-        return deepcopy(self.image)
+        return self.image
 
     def __str__(self):
         return "Update FFT"

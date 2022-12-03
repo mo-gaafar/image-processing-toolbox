@@ -193,54 +193,53 @@ def display_pixmap(self, image, window_index=None):
         image (Image): Image object to be displayed. (or numpy array)
         window_index (int): Index of the window to be displayed in.
     '''
+    qim = None
 
     if type(image) == modules.image.Image:
         image_data = image.get_pixels()
-
-        # quantize the image data to 8 bit for display
-        image_data = np.interp(image_data,
-                               (image_data.min(), image_data.max()), (0, 255))
-        image_data = np.array(image_data, dtype=np.uint8)
-
-        print_debug("Displaying Image")
-        print_debug(np.shape(image_data))
-
-        qim = None
-
-        if len(np.shape(image_data)) == 2:
-            im = PILImage.fromarray(image_data)
-            if im.mode != 'L':
-                im = im.convert('L')
-
-            qim = im.toqimage()
-
-        elif len(np.shape(image_data)) == 3:
-            try:
-                im = PILImage.fromarray(image_data)
-                if im.mode != 'RGB':
-                    im = im.convert('RGB')
-            except TypeError:
-                image_data = image_data.astype(np.uint8)
-                image_data = np.mean(image_data, axis=2)
-                im = PILImage.fromarray(image_data, 'L')
-            except:
-                # error message pyqt
-                QMessageBox.critical(
-                    self, 'Error',
-                    'Error Displaying Image: Unsupported Image Format')
-                return
-
-            data = im.tobytes(encoder_name='raw')
-
-            totalbytes = len(data)
-            bytesperline = int(totalbytes / im.size[1])
-
-            # fix skewed image qim
-
-            qim = QtGui.QImage(data, im.size[0], im.size[1], bytesperline,
-                               QtGui.QImage.Format_RGB888)
     else:
         image_data = image
+    # quantize the image data to 8 bit for display
+    image_data = np.interp(image_data,
+                        (image_data.min(), image_data.max()), (0, 255))
+    image_data = np.array(image_data, dtype=np.uint8)
+
+    print_debug("Displaying Image")
+    print_debug(np.shape(image_data))
+
+    if len(np.shape(image_data)) == 2:
+        im = PILImage.fromarray(image_data)
+        if im.mode != 'L':
+            im = im.convert('L')
+
+        qim = im.toqimage()
+
+    elif len(np.shape(image_data)) == 3:
+        try:
+            im = PILImage.fromarray(image_data)
+            if im.mode != 'RGB':
+                im = im.convert('RGB')
+        except TypeError:
+            image_data = image_data.astype(np.uint8)
+            image_data = np.mean(image_data, axis=2)
+            im = PILImage.fromarray(image_data, 'L')
+        except:
+            # error message pyqt
+            QMessageBox.critical(
+                self, 'Error',
+                'Error Displaying Image: Unsupported Image Format')
+            return
+
+        data = im.tobytes(encoder_name='raw')
+
+        totalbytes = len(data)
+        bytesperline = int(totalbytes / im.size[1])
+
+        # fix skewed image qim
+
+        qim = QtGui.QImage(data, im.size[0], im.size[1], bytesperline,
+                        QtGui.QImage.Format_RGB888)
+
 
     # convert the image to binary in RGB format
 

@@ -317,7 +317,7 @@ def display_fft(self):
             self)['fft output phlog']
 
         # clear previous operations
-        self.image1.clear_operations(clear_backup=False, undo_old=True)
+        self.image1.clear_operations(clear_backup=True, undo_old=True)
 
         # add the operation to the image
         self.image1.add_operation(MonochoromeConversion())
@@ -339,7 +339,7 @@ def display_fft(self):
 
         # display the selected outputs
 
-        mag, phase = self.image.get_fft().process_fft_displays()
+        mag, phase = self.image1.get_fft().process_fft_displays()
 
         magshift = mag[1]
         maglog = mag[0]
@@ -347,13 +347,13 @@ def display_fft(self):
         phshift = phase[1]
         phlog = phase[0]
 
-        if fftmagshift_window:
+        if fftmagshift_window != None:
             interface.display_pixmap(self, magshift, fftmagshift_window)
-        if fftmaglog_window:
+        if fftmaglog_window != None:
             interface.display_pixmap(self, maglog, fftmaglog_window)
-        if fftphaseshift_window:
+        if fftphaseshift_window != None:
             interface.display_pixmap(self, phshift, fftphaseshift_window)
-        if fftphaselog_window:
+        if fftphaselog_window != None:
             interface.display_pixmap(self, phlog, fftphaselog_window)
 
     except:
