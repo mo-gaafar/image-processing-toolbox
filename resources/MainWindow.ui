@@ -550,7 +550,7 @@ rgb(163, 162, 165);
              <attribute name="title">
               <string>Transform</string>
              </attribute>
-             <layout class="QFormLayout" name="formLayout">
+             <layout class="QGridLayout" name="gridLayout_19">
               <item row="0" column="0">
                <widget class="Line" name="line_11">
                 <property name="maximumSize">
@@ -590,7 +590,7 @@ rgb(163, 162, 165);
                 </property>
                </widget>
               </item>
-              <item row="3" column="0" colspan="2">
+              <item row="3" column="0">
                <widget class="QToolBox" name="toolbox_transform">
                 <property name="font">
                  <font>
@@ -600,15 +600,15 @@ rgb(163, 162, 165);
                  </font>
                 </property>
                 <property name="currentIndex">
-                 <number>0</number>
+                 <number>2</number>
                 </property>
                 <widget class="QWidget" name="page">
                  <property name="geometry">
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>219</width>
-                   <height>180</height>
+                   <width>282</width>
+                   <height>213</height>
                   </rect>
                  </property>
                  <attribute name="label">
@@ -772,8 +772,8 @@ QPushButton:pressed {
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>212</width>
-                   <height>146</height>
+                   <width>282</width>
+                   <height>213</height>
                   </rect>
                  </property>
                  <attribute name="label">
@@ -879,7 +879,7 @@ QPushButton:pressed {
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>199</width>
+                   <width>265</width>
                    <height>219</height>
                   </rect>
                  </property>
@@ -1064,37 +1064,31 @@ QPushButton:pressed {
                 </property>
                </widget>
               </item>
-              <item row="10" column="0" colspan="2">
-               <widget class="QPushButton" name="reset_operations">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>20</height>
-                 </size>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QPushButton {
-    border-radius: 5px;
-    border-style: outset;
-    background: rgb(12, 17, 24);
-	padding: 3;
-    }
-
-QPushButton:hover {
-    background: rgb(63, 95, 127)
-    }
-
-QPushButton:pressed {
-    border-style: inset;
-    background:rgb(20, 20, 20)
-    }</string>
-                </property>
-                <property name="text">
-                 <string>Reset to Default</string>
-                </property>
+              <item row="7" column="0">
+               <widget class="QComboBox" name="output_window_combobox">
+                <item>
+                 <property name="text">
+                  <string>Image1</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Image2</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Plot1</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Plot2</string>
+                 </property>
+                </item>
                </widget>
               </item>
-              <item row="9" column="0" colspan="2">
+              <item row="8" column="0">
                <widget class="QPushButton" name="gen_test_image">
                 <property name="minimumSize">
                  <size>
@@ -1124,28 +1118,34 @@ QPushButton:pressed {
                 </property>
                </widget>
               </item>
-              <item row="8" column="0">
-               <widget class="QComboBox" name="output_window_combobox">
-                <item>
-                 <property name="text">
-                  <string>Image1</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Image2</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Plot1</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Plot2</string>
-                 </property>
-                </item>
+              <item row="9" column="0">
+               <widget class="QPushButton" name="reset_operations">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>20</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QPushButton {
+    border-radius: 5px;
+    border-style: outset;
+    background: rgb(12, 17, 24);
+	padding: 3;
+    }
+
+QPushButton:hover {
+    background: rgb(63, 95, 127)
+    }
+
+QPushButton:pressed {
+    border-style: inset;
+    background:rgb(20, 20, 20)
+    }</string>
+                </property>
+                <property name="text">
+                 <string>Reset to Default</string>
+                </property>
                </widget>
               </item>
              </layout>
@@ -1426,7 +1426,53 @@ QPushButton:pressed {
               <string>Spatial Filter</string>
              </attribute>
              <layout class="QGridLayout" name="gridLayout_12">
+              <item row="0" column="0" colspan="2">
+               <widget class="Line" name="line_22">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>1</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color: rgba(255, 255, 255,100);</string>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_9">
+                <property name="text">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Spatial Filters&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0" colspan="2">
+               <widget class="Line" name="line_16">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>1</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color: rgba(255, 255, 255,100);</string>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
               <item row="3" column="0">
+               <widget class="QLabel" name="label_29">
+                <property name="text">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Filter Kernel Size&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="0">
                <widget class="QSlider" name="sp_kernel_slider">
                 <property name="minimumSize">
                  <size>
@@ -1466,7 +1512,7 @@ QPushButton:pressed {
                 </property>
                </widget>
               </item>
-              <item row="3" column="1">
+              <item row="4" column="1">
                <widget class="QDoubleSpinBox" name="sp_kernel_spinbox">
                 <property name="decimals">
                  <number>0</number>
@@ -1485,37 +1531,7 @@ QPushButton:pressed {
                 </property>
                </widget>
               </item>
-              <item row="1" column="0" colspan="2">
-               <widget class="Line" name="line_16">
-                <property name="maximumSize">
-                 <size>
-                  <width>16777215</width>
-                  <height>1</height>
-                 </size>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">background-color: rgba(255, 255, 255,100);</string>
-                </property>
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-               </widget>
-              </item>
-              <item row="5" column="0">
-               <widget class="QLabel" name="label_28">
-                <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Output To&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="label_29">
-                <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Filter Kernel Size&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-               </widget>
-              </item>
-              <item row="6" column="0">
+              <item row="7" column="0">
                <widget class="QComboBox" name="spfilter_output_combobox">
                 <item>
                  <property name="text">
@@ -1539,14 +1555,7 @@ QPushButton:pressed {
                 </item>
                </widget>
               </item>
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_9">
-                <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Spatial Filters&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="0" colspan="2">
+              <item row="5" column="0" colspan="2">
                <widget class="QToolBox" name="toolbox_spfilt">
                 <property name="font">
                  <font>
@@ -1556,7 +1565,7 @@ QPushButton:pressed {
                  </font>
                 </property>
                 <property name="currentIndex">
-                 <number>0</number>
+                 <number>3</number>
                 </property>
                 <widget class="QWidget" name="page_4">
                  <property name="geometry">
@@ -1564,7 +1573,7 @@ QPushButton:pressed {
                    <x>0</x>
                    <y>0</y>
                    <width>282</width>
-                   <height>210</height>
+                   <height>203</height>
                   </rect>
                  </property>
                  <attribute name="label">
@@ -1663,8 +1672,8 @@ QPushButton:pressed {
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>199</width>
-                   <height>200</height>
+                   <width>282</width>
+                   <height>203</height>
                   </rect>
                  </property>
                  <attribute name="label">
@@ -1824,8 +1833,8 @@ QPushButton:pressed {
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>170</width>
-                   <height>82</height>
+                   <width>282</width>
+                   <height>203</height>
                   </rect>
                  </property>
                  <attribute name="label">
@@ -1908,7 +1917,7 @@ QPushButton:pressed {
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>222</width>
+                   <width>265</width>
                    <height>212</height>
                   </rect>
                  </property>
@@ -2088,7 +2097,14 @@ QPushButton:pressed {
                 </widget>
                </widget>
               </item>
-              <item row="7" column="0" colspan="2">
+              <item row="6" column="0" colspan="2">
+               <widget class="QLabel" name="label_28">
+                <property name="text">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Output To&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+              <item row="8" column="0" colspan="2">
                <widget class="QPushButton" name="reset_operations_3">
                 <property name="minimumSize">
                  <size>
@@ -2120,12 +2136,12 @@ QPushButton:pressed {
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="tab">
+            <widget class="QWidget" name="tab_fftdisp">
              <attribute name="title">
               <string>FFT Display</string>
              </attribute>
              <layout class="QGridLayout" name="gridLayout_18">
-              <item row="0" column="0">
+              <item row="0" column="0" colspan="3">
                <widget class="Line" name="line_18">
                 <property name="maximumSize">
                  <size>
@@ -2141,14 +2157,44 @@ QPushButton:pressed {
                 </property>
                </widget>
               </item>
-              <item row="1" column="0">
+              <item row="1" column="0" colspan="2">
                <widget class="QLabel" name="label_10">
                 <property name="text">
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Image FFT Display&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
               </item>
-              <item row="2" column="0">
+              <item row="1" column="2">
+               <widget class="QPushButton" name="disp_fft_allnone">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QPushButton {
+    border-radius: 5px;
+    border-style: outset;
+    background: rgb(12, 17, 24);
+	padding: 3;
+    }
+
+QPushButton:hover {
+    background: rgb(63, 95, 127)
+    }
+
+QPushButton:pressed {
+    border-style: inset;
+    background:rgb(20, 20, 20)
+    }</string>
+                </property>
+                <property name="text">
+                 <string>Set All None</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0" colspan="3">
                <widget class="Line" name="line_20">
                 <property name="maximumSize">
                  <size>
@@ -2164,7 +2210,7 @@ QPushButton:pressed {
                 </property>
                </widget>
               </item>
-              <item row="3" column="0">
+              <item row="3" column="0" colspan="2">
                <widget class="QLabel" name="label_33">
                 <property name="text">
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;FFT Magnitude (After Shift)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -2203,7 +2249,7 @@ QPushButton:pressed {
                 </item>
                </widget>
               </item>
-              <item row="5" column="0">
+              <item row="5" column="0" colspan="3">
                <widget class="QLabel" name="label_34">
                 <property name="text">
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;FFT Magnitude (After Shift and Log)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -2212,6 +2258,19 @@ QPushButton:pressed {
               </item>
               <item row="6" column="0">
                <widget class="QComboBox" name="fft_output_maglog_combobox">
+                <property name="currentIndex">
+                 <number>2</number>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>Image1</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Image2</string>
+                 </property>
+                </item>
                 <item>
                  <property name="text">
                   <string>Plot1</string>
@@ -2229,15 +2288,8 @@ QPushButton:pressed {
                 </item>
                </widget>
               </item>
-              <item row="7" column="0">
-               <widget class="QLabel" name="label_22">
-                <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;FFT Phase (After Shift)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-               </widget>
-              </item>
-              <item row="8" column="0">
-               <widget class="Line" name="line_19">
+              <item row="7" column="0" colspan="3">
+               <widget class="Line" name="line_21">
                 <property name="maximumSize">
                  <size>
                   <width>16777215</width>
@@ -2249,6 +2301,13 @@ QPushButton:pressed {
                 </property>
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="8" column="0" colspan="2">
+               <widget class="QLabel" name="label_22">
+                <property name="text">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;FFT Phase (After Shift)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
               </item>
@@ -2284,7 +2343,7 @@ QPushButton:pressed {
                 </item>
                </widget>
               </item>
-              <item row="10" column="0">
+              <item row="10" column="0" colspan="3">
                <widget class="QLabel" name="label_25">
                 <property name="text">
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;FFT Phase (After Shift and Log)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -2294,8 +2353,18 @@ QPushButton:pressed {
               <item row="11" column="0">
                <widget class="QComboBox" name="fft_output_phlog_combobox">
                 <property name="currentIndex">
-                 <number>1</number>
+                 <number>3</number>
                 </property>
+                <item>
+                 <property name="text">
+                  <string>Image1</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Image2</string>
+                 </property>
+                </item>
                 <item>
                  <property name="text">
                   <string>Plot1</string>
@@ -2313,7 +2382,23 @@ QPushButton:pressed {
                 </item>
                </widget>
               </item>
-              <item row="12" column="0">
+              <item row="12" column="0" colspan="3">
+               <widget class="Line" name="line_19">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>1</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color: rgba(255, 255, 255,100);</string>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="13" column="1">
                <spacer name="verticalSpacer_11">
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -2329,7 +2414,7 @@ QPushButton:pressed {
                 </property>
                </spacer>
               </item>
-              <item row="13" column="0">
+              <item row="14" column="0" colspan="3">
                <widget class="QPushButton" name="disp_fft_apply">
                 <property name="minimumSize">
                  <size>
@@ -2360,28 +2445,6 @@ QPushButton:pressed {
                </widget>
               </item>
              </layout>
-             <widget class="Line" name="line_21">
-              <property name="geometry">
-               <rect>
-                <x>30</x>
-                <y>100</y>
-                <width>282</width>
-                <height>1</height>
-               </rect>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>16777215</width>
-                <height>1</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgba(255, 255, 255,100);</string>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
             </widget>
            </widget>
           </item>
@@ -2419,15 +2482,24 @@ QPushButton:pressed {
       <string>Tools</string>
      </property>
      <addaction name="actionMetadata"/>
-     <addaction name="actionResizer"/>
+     <addaction name="actionTransform"/>
+     <addaction name="actionHistogramEQ"/>
+     <addaction name="actionSpatial_Filter"/>
+     <addaction name="actionFFT_Display"/>
     </widget>
-    <addaction name="actionImage1"/>
-    <addaction name="actionImage2"/>
-    <addaction name="actionPlot1"/>
-    <addaction name="actionPlot2"/>
+    <widget class="QMenu" name="menuViewBoxes">
+     <property name="title">
+      <string>Viewers</string>
+     </property>
+     <addaction name="actionImage1"/>
+     <addaction name="actionImage2"/>
+     <addaction name="actionPlot1"/>
+     <addaction name="actionPlot2"/>
+    </widget>
     <addaction name="separator"/>
     <addaction name="menuTools"/>
     <addaction name="separator"/>
+    <addaction name="menuViewBoxes"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -2456,13 +2528,13 @@ QPushButton:pressed {
     <bool>true</bool>
    </property>
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Metadata</string>
    </property>
   </action>
-  <action name="actionResizer">
+  <action name="actionTransform">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -2470,10 +2542,10 @@ QPushButton:pressed {
     <bool>true</bool>
    </property>
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
-    <string>Resizer</string>
+    <string>Transform</string>
    </property>
   </action>
   <action name="actionAbout">
@@ -2545,6 +2617,44 @@ QPushButton:pressed {
    </property>
    <property name="text">
     <string>Plot 2 (Axes)</string>
+   </property>
+  </action>
+  <action name="actionHistogramEQ">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>HistogramEQ</string>
+   </property>
+  </action>
+  <action name="actionSpatial_Filter">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Spatial Filter</string>
+   </property>
+  </action>
+  <action name="actionFFT_Display">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>FFT Display</string>
+   </property>
+  </action>
+  <action name="actiontest">
+   <property name="text">
+    <string>test</string>
    </property>
   </action>
  </widget>

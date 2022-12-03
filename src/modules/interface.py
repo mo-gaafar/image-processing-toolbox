@@ -1,6 +1,6 @@
 import numpy as np
 from PIL import Image as PILImage
-from PyQt5.QtWidgets import QTableWidgetItem, QMessageBox, QToolBox
+from PyQt5.QtWidgets import QTableWidgetItem, QMessageBox, QToolBox, QWidget, QTabWidget
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pylab as plt
 from PyQt5.QtGui import *
@@ -201,7 +201,7 @@ def display_pixmap(self, image, window_index=None):
         image_data = image
     # quantize the image data to 8 bit for display
     image_data = np.interp(image_data,
-                        (image_data.min(), image_data.max()), (0, 255))
+                           (image_data.min(), image_data.max()), (0, 255))
     image_data = np.array(image_data, dtype=np.uint8)
 
     print_debug("Displaying Image")
@@ -238,8 +238,7 @@ def display_pixmap(self, image, window_index=None):
         # fix skewed image qim
 
         qim = QtGui.QImage(data, im.size[0], im.size[1], bytesperline,
-                        QtGui.QImage.Format_RGB888)
-
+                           QtGui.QImage.Format_RGB888)
 
     # convert the image to binary in RGB format
 
@@ -335,6 +334,51 @@ def toggle_image_window(self, window_index):
         raise ValueError("Invalid window index")
 
 
+toolbox_tab_dict = {
+    'Metadata': 'tab_meta',
+    'Transform': 'tab_transform',
+    'Histogram': 'tab_histogram',
+    'Spatial Filter': 'tab_spfilt',
+    'FFT Display': 'tab_fftdisp',
+    'Frequency Filter': 'tab_freqfilt',
+}
+
+
+def save_tab_references(self):
+    self.tab_meta = self.tabWidget.findChild(QWidget, 'tab_meta')
+    self.tab_transform = self.tabWidget.findChild(QWidget, 'tab_transform')
+    self.tab_histogram = self.tabWidget.findChild(QWidget, 'tab_histogram')
+    self.tab_spfilt = self.tabWidget.findChild(QWidget, 'tab_spfilt')
+    self.tab_fftdisp = self.tabWidget.findChild(QWidget, 'tab_fftdisp')
+    self.tab_freqfilt = self.tabWidget.findChild(QWidget, 'tab_freqfilt')
+
+    self.toolbox_tab_ref = {
+        'Metadata': self.tab_meta,
+        'Transform': self.tab_transform,
+        'Histogram': self.tab_histogram,
+        'Spatial Filter': self.tab_spfilt,
+        'FFT Display': self.tab_fftdisp,
+        'Frequency Filter': self.tab_freqfilt,
+    }
+
+
+def toggle_toolbox_tabs(self, tab_name):
+    tab = self.findChild(QWidget, toolbox_tab_dict[tab_name])
+
+    if tab.isEnabled() == False:
+        # tab is hidden
+        # get last tab index
+        last_tab_index = int(self.tabWidget.count() - 1)
+        self.tabWidget.insertTab(
+            last_tab_index, self.toolbox_tab_ref[tab_name], tab_name)
+        tab.setEnabled(True)
+    else:
+        # tab is visible
+        # disable tab
+        tab.setEnabled(False)
+        self.tabWidget.removeTab(self.tabWidget.indexOf(tab))
+
+
 def display_metatable(self, f_metadata=None):
     '''Displays the metadata in QTableWidget'''
     # f_metadata = self.image1.get_metadata()
@@ -345,6 +389,14 @@ def display_metatable(self, f_metadata=None):
     for i, (key, value) in enumerate(f_metadata.items()):
         self.metadata_tablewidget.setItem(i, 0, QTableWidgetItem(str(key)))
         self.metadata_tablewidget.setItem(i, 1, QTableWidgetItem(str(value)))
+
+
+def disp_fft_all_none(self):
+    ''' Sets all display comboboxes to none'''
+    self.fft_output_magshift_combobox.setCurrentIndex(4)
+    self.fft_output_maglog_combobox.setCurrentIndex(4)
+    self.fft_output_phshift_combobox.setCurrentIndex(4)
+    self.fft_output_phlog_combobox.setCurrentIndex(4)
 
 
 def init_connectors(self):
@@ -364,6 +416,19 @@ def init_connectors(self):
     self.actionImage2.triggered.connect(lambda: toggle_image_window(self, 1))
     self.actionPlot1.triggered.connect(lambda: toggle_image_window(self, 2))
     self.actionPlot2.triggered.connect(lambda: toggle_image_window(self, 3))
+
+    save_tab_references(self)
+    self.actionMetadata.triggered.connect(
+        lambda: toggle_toolbox_tabs(self, 'Metadata'))
+    self.actionTransform.triggered.connect(
+        lambda: toggle_toolbox_tabs(self, 'Transform'))
+    self.actionHistogramEQ.triggered.connect(
+        lambda: toggle_toolbox_tabs(self, 'Histogram'))
+    self.actionSpatial_Filter.triggered.connect(
+        lambda: toggle_toolbox_tabs(self, 'Spatial Filter'))
+    self.actionFFT_Display.triggered.connect(
+        lambda: toggle_toolbox_tabs(self, 'FFT Display'))
+    # self.actionFrequency_Filter.triggered.connect(lambda: toggle_toolbox_tabs(self, 'Frequency Filter'))
 
     # Help Menu
     self.actionAbout.triggered.connect(lambda: about_us(self))
@@ -433,6 +498,7 @@ def init_connectors(self):
     """FFT Display Tab"""
 
     self.disp_fft_apply.clicked.connect(lambda: tabs.display_fft(self))
+    self.disp_fft_allnone.clicked.connect(lambda: disp_fft_all_none(self))
 
 
 def about_us(self):
