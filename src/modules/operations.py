@@ -130,11 +130,39 @@ class ApplyLinearFilter(ImageOperation):
 
         return deepcopy(self.image)
 
+class ApplyLinearFilterFreq(ImageOperation):
+    '''
+    Filters an image in the frequency domain using a linear filter kernel
+    '''
+    
+    def configure(self, **kwargs):
+        self.size = kwargs['size']
+        self.kernel_type = kwargs['kernel_type']
+    
+    def create_box_kernel(self):
+        # create a kernel of size x size with all values = 1
+        kernel = np.ones((self.size, self.size), dtype=np.float32)
+        # normalize the kernel
+        kernel = kernel / np.sum(kernel)
+        return kernel
+    
+    def execute(self):
+        # apply a box filter to the image
+        # size: size of the filter
+        pass
+        
 
 class ApplyHighboostFilter(ImageOperation):
+    '''
+    The highboost filter is a linear filter that enhances the edges of an image by subtracting a blurred version of the image from the original image.
+
+    Note: optional argument blur_in_freq changes the blur operation to a frequency domain operation
+
+    '''
 
     def __post_init__(self):
         self.image2 = deepcopy(self.image)
+        self.blur_in_freq = False
         #! would cause a considerable amount of errors
         # TODO: fix pipeline in second image?
 
@@ -151,10 +179,15 @@ class ApplyHighboostFilter(ImageOperation):
         self.boost = kwargs['boost']
         self.clip = kwargs['clip']
         self.size = kwargs['size']
+        self.blur_in_freq = kwargs['blur_in_freq']
 
     def get_sharp_image(self):
         # blur image2
-        linfiltoperation = ApplyLinearFilter()
+        if self.blur_in_freq:
+            linfiltoperation = ApplyLinearFilterFreq()
+        else:
+            linfiltoperation = ApplyLinearFilter()
+
         linfiltoperation.configure(size=self.size, kernel_type='box')
         self.image2 = deepcopy(self.image)
         self.image2.clear_operations()
