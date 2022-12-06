@@ -358,3 +358,59 @@ def display_fft(self):
 
     except:
         QMessageBox.critical(self, 'Error', 'Error Running Operation')
+
+def apply_ft_blur(self):
+    """Applies the fourier blur operation to the image"""
+
+    try:
+        # get user input parameters data
+        size = interface.get_user_input(self)['ftfilter kernel size']
+        output_filtered = interface.get_user_input(self)['ftfilter output']
+
+        # clear previous operations
+        self.image1.clear_operations(clear_backup=True, undo_old=True)
+
+        # add the operation to the image
+        self.image1.add_operation(MonochoromeConversion())
+
+        # configure the fourier blur operation object
+        fourier_blur = ApplyLinearFilterFreq()
+        fourier_blur.configure(size=size)
+
+        # add the operation to the image
+        self.image1.add_operation(fourier_blur)
+
+        # run the processing
+        interface.display_run_processing(self, output_filtered)
+
+    except:
+        QMessageBox.critical(self, 'Error', 'Error Running Operation')
+
+def apply_ft_highboost(self):
+
+    try:
+        # get user input parameters data
+        size = interface.get_user_input(self)['ftfilter kernel size']
+        output_filtered = interface.get_user_input(self)['ftfilter output']
+        factor = interface.get_user_input(self)['ftfilter highboost factor']
+        clip = interface.get_user_input(self)['ftfilter highboost clipping']
+
+        # add the operation to the image
+
+        # configure the highboost operation object
+        highboost_operation = ApplyHighboostFilter()
+        highboost_operation.configure(size=size, clip=clip,
+                                      boost=factor, blur_in_freq=True)
+
+        # clear previous operations
+        self.image1.clear_operations(clear_backup=True, undo_old=True)
+
+        # add the operation to the image
+        self.image1.add_operation(MonochoromeConversion())
+        self.image1.add_operation(highboost_operation)
+
+        # run the processing
+        interface.display_run_processing(self, output_filtered)
+
+    except:
+        QMessageBox.critical(self, 'Error', 'Error Running Operation')
