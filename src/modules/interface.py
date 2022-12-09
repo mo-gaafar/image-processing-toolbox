@@ -153,6 +153,19 @@ def get_user_input(self):
     user_input['fft output phshift'] = output_window_dict[self.fft_output_phshift_combobox.currentText()]
     user_input['fft output phlog'] = output_window_dict[self.fft_output_phlog_combobox.currentText()]
 
+    # FT Filtering 
+
+    user_input['ftfilter output'] = output_window_dict[self.ftfilter_output_combobox.currentText()]
+    user_input['ftfilter kernel size'] = int(self.ft_kernel_spinbox.value())
+    user_input['ftfilter compare'] = self.ftfilter_compare_checkbox.isChecked()
+    user_input['ftfilter spfilter output'] = output_window_dict[self.ftfilter_spfilter_output_combobox.currentText()]
+    user_input['ftfilter diff output'] = output_window_dict[self.ftfilter_diff_output_combobox.currentText()]
+
+    # user_input['bandstop output'] = output_window_dict[self.bandstop_output_combobox.currentText()]
+
+    user_input['bandstop low'] = int(self.bandstop_low_spinbox.value())
+    user_input['bandstop high'] = int(self.bandstop_high_spinbox.value())
+
     return user_input
 
 
@@ -499,6 +512,11 @@ def init_connectors(self):
 
     self.disp_fft_apply.clicked.connect(lambda: tabs.display_fft(self))
     self.disp_fft_allnone.clicked.connect(lambda: disp_fft_all_none(self))
+
+
+    """ FFT Filtering Tab"""
+    self.boxblur_ft_apply.clicked.connect(lambda: tabs.apply_ft_blur(self))
+    self.bandstop_ft_apply.clicked.connect(lambda: tabs.apply_bandstop(self))
 
 
 def about_us(self):

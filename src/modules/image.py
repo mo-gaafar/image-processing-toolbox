@@ -117,7 +117,7 @@ class Image:
 
     def run_processing(self):
         tic = time.perf_counter()
-
+        print_log('Processing image started')
         # processing pipeline
         self.image_backup = deepcopy(self)
         self.image_out = None
@@ -191,13 +191,21 @@ class Image:
         print_log('Calculating channel depth' + str(depth))
         return depth
 
-    def get_alloc_pixel_dtype(self):
+    def get_alloc_pixel_dtype(self, fromdepth = True, update = False):
         # saved only once
-        # if self.alloc_dtype is None:
-        #     self.alloc_dtype = self.data.dtype
-        #     return self.data.dtype
-        # else:
-        #     return self.alloc_dtype
+        if self.alloc_dtype is None or update == True:
+            self.alloc_dtype = self.data.dtype
+            if fromdepth == True:
+                self.alloc_dtype = np.uint8
+                depth = self.get_channel_depth()
+                if depth > 8:
+                    self.alloc_dtype = np.uint16
+                    if depth > 16:
+                        self.alloc_dtype = np.uint32
+            print_log('Found allocated dtype: ' + str(self.alloc_dtype))
+            return self.alloc_dtype
+        else:
+            return self.alloc_dtype
         return np.uint32
 
     def get_fft(self):
@@ -218,13 +226,13 @@ class Image:
         return self.path.split('.')[-1]
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=False)
 class ImageFFT:
     """Class for storing the FFT of an image"""
-    real: np.ndarray
-    imaginary: np.ndarray
-    magnitude: np.ndarray
-    phase: np.ndarray
+    real: np.ndarray = None
+    imaginary: np.ndarray = None
+    magnitude: np.ndarray = None
+    phase: np.ndarray = None
     image_ref: Image = None
     fft_data: np.ndarray = field(default_factory=np.ndarray)
 

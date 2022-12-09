@@ -16,7 +16,7 @@ class ImageFFT:
     magnitude: np.ndarray = None
     phase: np.ndarray = None
     fft_data: np.ndarray = None
-    image_ref: Image = field(default_factory=np.ndarray)
+    image_ref: Image = field(default_factory=Image)
     image_curr_data = None
 
     def __post_init__(self):
