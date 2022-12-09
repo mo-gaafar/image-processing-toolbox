@@ -32,6 +32,13 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # initialize ui connectors
         interface.init_connectors(self)
+    def output_click_statusbar(self, event):
+
+        x = event.xdata
+        y = event.ydata
+        str = f"Point clicked at {x}, {y} on plot "
+        interface.print_statusbar(self,str)
+
 
 
 def main():

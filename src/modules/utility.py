@@ -151,3 +151,13 @@ def complex_angle(array):
     returns angle of array
     """
     return np.arctan2(np.imag(array), np.real(array))
+
+# def rescale_intensity(arr, depth = 1, shift_min = False):
+#     """ Intensity scaling.
+#     Params:
+#         depth: channel depth
+#         shift_min: whether to shift by minimum value or truncate negatives
+#     """
+
+#     if shift_min:
+#         pass

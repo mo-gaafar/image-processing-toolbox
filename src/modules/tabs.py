@@ -2,7 +2,7 @@ from pickle import TRUE
 from PyQt5.QtWidgets import QMessageBox
 from modules import interface
 from modules.operations import *
-from modules.fourier import UpdateFFT
+from modules.image import UpdateFFT
 
 #!Important: missing functionality
 # TODO: fix rotation direction (make it anti-clockwise)
@@ -399,7 +399,7 @@ def apply_ft_blur(self):
 
             # configure the spatial blur operation object
             spfilter = ApplyLinearFilter()
-            spfilter.configure(size=size)
+            spfilter.configure(size=size, kernel_type = 'box')
 
             # add the operation to the image
             self.image1.add_operation(spfilter)

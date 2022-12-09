@@ -66,6 +66,18 @@ def sync_sliders(self, caller=None, name=None):
         elif caller == 'spinbox':
             self.noise_salt_slider.setValue(
                 int(self.noise_salt_spinbox.value()))
+    elif name == 'ftfilter kernel size':
+        if caller == 'slider':
+            self.ft_kernel_spinbox.setValue(
+                round_nearest_odd(self.ft_kernel_slider.value()))
+
+        elif caller == 'spinbox':
+            self.ft_kernel_spinbox.setValue(
+                round_nearest_odd(self.ft_kernel_spinbox.value()))
+            self.ft_kernel_slider.setValue(
+                int(self.ft_kernel_spinbox.value()))
+    else:
+        raise ValueError("Incorrect spinbox or slider name")
 
 
 def update_img_resize_dimensions(self, selector, data_arr):
@@ -273,17 +285,18 @@ def display_pixmap(self, image, window_index=None):
 
         self.figure = plt.figure(figsize=(15, 5), facecolor='black')
         self.canvas = FigureCanvas(self.figure)
+        self.canvas.mpl_connect('button_press_event', self.output_click_statusbar)
         self.gridLayout_11.addWidget(self.canvas, 0, 0, 1, 1)
         plt.axis('on')
         plt.imshow(image_data, cmap='gray', interpolation=None)
         self.canvas.draw()
     elif window_index == 3:
         self.figure = plt.figure(figsize=(15, 5), facecolor='black')
-        self.canvas = FigureCanvas(self.figure)
-        self.gridLayout_15.addWidget(self.canvas, 0, 0, 1, 1)
+        self.canvas2 = FigureCanvas(self.figure)
+        self.gridLayout_15.addWidget(self.canvas2, 0, 0, 1, 1)
         plt.axis('on')
         plt.imshow(image_data, cmap='gray', interpolation=None)
-        self.canvas.draw()
+        self.canvas2.draw()
     else:
         raise ValueError("Invalid window index")
 
@@ -412,6 +425,8 @@ def disp_fft_all_none(self):
     self.fft_output_phlog_combobox.setCurrentIndex(4)
 
 
+
+
 def init_connectors(self):
     '''Initializes all event connectors and triggers'''
 
@@ -508,6 +523,11 @@ def init_connectors(self):
     self.noise_salt_spinbox.valueChanged.connect(
         lambda: sync_sliders(self, 'spinbox', 'saltpepper salt prob'))
 
+    self.ft_kernel_slider.sliderReleased.connect(
+        lambda: sync_sliders(self, 'slider', 'ftfilter kernel size'))
+    self.ft_kernel_spinbox.valueChanged.connect(
+        lambda: sync_sliders(self, 'spinbox', 'ftfilter kernel size'))
+
     """FFT Display Tab"""
 
     self.disp_fft_apply.clicked.connect(lambda: tabs.display_fft(self))
@@ -517,6 +537,7 @@ def init_connectors(self):
     """ FFT Filtering Tab"""
     self.boxblur_ft_apply.clicked.connect(lambda: tabs.apply_ft_blur(self))
     self.bandstop_ft_apply.clicked.connect(lambda: tabs.apply_bandstop(self))
+    self.reset_operations_ftfilt.clicked.connect(lambda: modules.image.restore_original(self))
 
 
 def about_us(self):
