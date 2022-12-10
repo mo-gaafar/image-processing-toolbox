@@ -2489,6 +2489,36 @@ QPushButton:pressed {
                 </item>
                </widget>
               </item>
+              <item row="8" column="0" colspan="2">
+               <widget class="QPushButton" name="reset_operations_ftfilt">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>20</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QPushButton {
+    border-radius: 5px;
+    border-style: outset;
+    background: rgb(12, 17, 24);
+	padding: 3;
+    }
+
+QPushButton:hover {
+    background: rgb(63, 95, 127)
+    }
+
+QPushButton:pressed {
+    border-style: inset;
+    background:rgb(20, 20, 20)
+    }</string>
+                </property>
+                <property name="text">
+                 <string>Reset to Default</string>
+                </property>
+               </widget>
+              </item>
               <item row="2" column="0" colspan="2">
                <widget class="Line" name="line_23">
                 <property name="maximumSize">
@@ -2521,36 +2551,6 @@ QPushButton:pressed {
                 </property>
                </widget>
               </item>
-              <item row="8" column="0" colspan="2">
-               <widget class="QPushButton" name="reset_operations_ftfilt">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>20</height>
-                 </size>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QPushButton {
-    border-radius: 5px;
-    border-style: outset;
-    background: rgb(12, 17, 24);
-	padding: 3;
-    }
-
-QPushButton:hover {
-    background: rgb(63, 95, 127)
-    }
-
-QPushButton:pressed {
-    border-style: inset;
-    background:rgb(20, 20, 20)
-    }</string>
-                </property>
-                <property name="text">
-                 <string>Reset to Default</string>
-                </property>
-               </widget>
-              </item>
               <item row="5" column="0" colspan="2">
                <widget class="QToolBox" name="toolbox_ftfilt">
                 <property name="font">
@@ -2561,7 +2561,7 @@ QPushButton:pressed {
                  </font>
                 </property>
                 <property name="currentIndex">
-                 <number>0</number>
+                 <number>1</number>
                 </property>
                 <widget class="QWidget" name="page_8">
                  <property name="geometry">
@@ -2823,30 +2823,14 @@ QPushButton:pressed {
                   <string>Band Stop Filter</string>
                  </attribute>
                  <layout class="QGridLayout" name="gridLayout_20">
-                  <item row="4" column="0">
-                   <spacer name="verticalSpacer_13">
-                    <property name="orientation">
-                     <enum>Qt::Vertical</enum>
-                    </property>
-                    <property name="sizeType">
-                     <enum>QSizePolicy::MinimumExpanding</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>20</width>
-                      <height>50</height>
-                     </size>
-                    </property>
-                   </spacer>
-                  </item>
-                  <item row="2" column="0">
-                   <widget class="QLabel" name="label_40">
+                  <item row="0" column="0" rowspan="2" colspan="2">
+                   <widget class="QLabel" name="label_39">
                     <property name="text">
-                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Low Cutoff (Radius 0)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Band Stop Filter&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                     </property>
                    </widget>
                   </item>
-                  <item row="1" column="0" colspan="2">
+                  <item row="2" column="0" colspan="3">
                    <widget class="Line" name="line_26">
                     <property name="maximumSize">
                      <size>
@@ -2862,40 +2846,7 @@ QPushButton:pressed {
                     </property>
                    </widget>
                   </item>
-                  <item row="3" column="1">
-                   <widget class="QDoubleSpinBox" name="bandstop_high_spinbox">
-                    <property name="decimals">
-                     <number>0</number>
-                    </property>
-                    <property name="minimum">
-                     <double>0.000000000000000</double>
-                    </property>
-                    <property name="maximum">
-                     <double>1000.000000000000000</double>
-                    </property>
-                    <property name="singleStep">
-                     <double>1.000000000000000</double>
-                    </property>
-                    <property name="value">
-                     <double>1.000000000000000</double>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="3" column="0">
-                   <widget class="QLabel" name="label_41">
-                    <property name="text">
-                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;High Cutoff (Radius 1)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="0">
-                   <widget class="QLabel" name="label_39">
-                    <property name="text">
-                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Band Stop Filter&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="5" column="0" colspan="2">
+                  <item row="8" column="0" colspan="3">
                    <widget class="QPushButton" name="bandstop_ft_apply">
                     <property name="minimumSize">
                      <size>
@@ -2925,7 +2876,49 @@ QPushButton:pressed {
                     </property>
                    </widget>
                   </item>
-                  <item row="2" column="1">
+                  <item row="5" column="2">
+                   <widget class="QDoubleSpinBox" name="bandstop_high_spinbox">
+                    <property name="decimals">
+                     <number>0</number>
+                    </property>
+                    <property name="minimum">
+                     <double>0.000000000000000</double>
+                    </property>
+                    <property name="maximum">
+                     <double>1000.000000000000000</double>
+                    </property>
+                    <property name="singleStep">
+                     <double>1.000000000000000</double>
+                    </property>
+                    <property name="value">
+                     <double>1.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="7" column="0">
+                   <spacer name="verticalSpacer_13">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                    <property name="sizeType">
+                     <enum>QSizePolicy::MinimumExpanding</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>50</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item row="4" column="0" colspan="2">
+                   <widget class="QLabel" name="label_40">
+                    <property name="text">
+                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Low Cutoff (Radius 0)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="4" column="2">
                    <widget class="QDoubleSpinBox" name="bandstop_low_spinbox">
                     <property name="decimals">
                      <number>0</number>
@@ -2941,6 +2934,23 @@ QPushButton:pressed {
                     </property>
                     <property name="value">
                      <double>0.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="5" column="0" colspan="2">
+                   <widget class="QLabel" name="label_41">
+                    <property name="text">
+                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;High Cutoff (Radius 1)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="6" column="0" colspan="3">
+                   <widget class="QLabel" name="label_45">
+                    <property name="text">
+                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Hint: click on plots to get coordinates which willl help in calculating the radius.&lt;/p&gt;&lt;p&gt;Hint2: Setting low cutoff higher than high cutoff will have the same effect as bandpass filter&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                    </property>
+                    <property name="wordWrap">
+                     <bool>true</bool>
                     </property>
                    </widget>
                   </item>

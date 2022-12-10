@@ -409,7 +409,14 @@ def apply_ft_blur(self):
 
             temp_spfiltered = deepcopy(self.image1)
 
-            diff = temp_ftfiltered.data - temp_spfiltered.data
+            diff = np.abs(temp_ftfiltered.data - temp_spfiltered.data)
+
+            print("spfiltered")
+            print(temp_spfiltered.data)
+            print("ftfilered")
+            print(temp_ftfiltered.data)
+            print("diff")
+            print(diff)
 
             interface.display_pixmap(self, diff, diff_window)
 

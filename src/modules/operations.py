@@ -127,6 +127,11 @@ class ApplyLinearFilter(ImageOperation):
                                           self.size, y-self.size:y+self.size]
                 self.image.data[x-self.size, y-self.size] = self.multiply_sum_kernel(
                     self.kernel, img_section)
+        print(f"image data before {self.image.data}")
+        data = self.image.data.astype(np.float32)
+        print(f"channel depth {self.image.get_channel_depth()}")
+        print(f"image data {data}")
+        self.image.data = np.round(data * ((2**self.image.get_channel_depth())-1)/(2**np.log2(np.amax(data))-1))
 
         return deepcopy(self.image)
 class BandStopFilter(ImageOperation):
@@ -202,7 +207,7 @@ class ApplyLinearFilterFreq(ImageOperation):
     
     def create_box_kernel(self):
         # create a kernel of size x size with all values = 1 and pad it with image size
-        kernel = np.ones((self.size, self.size), dtype=self.image.get_alloc_pixel_dtype(fromdepth = True, update = True))
+        kernel = np.ones((self.size, self.size), dtype=np.float32)/self.size**2
         # normalize the kernel
         kernel = kernel / np.sum(kernel)
         # create zero padding
@@ -275,7 +280,10 @@ class ApplyHighboostFilter(ImageOperation):
         self.boost = kwargs['boost']
         self.clip = kwargs['clip']
         self.size = kwargs['size']
-        self.blur_in_freq = kwargs['blur_in_freq']
+        if 'blur_in_freq' in kwargs:
+            self.blur_in_freq = kwargs['blur_in_freq']
+        else:
+            self.blur_in_freq = False
 
     def get_sharp_image(self):
         # blur image2
