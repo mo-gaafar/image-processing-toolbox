@@ -367,7 +367,8 @@ def apply_ft_blur(self):
         # get user input parameters data
         size = interface.get_user_input(self)['ftfilter kernel size']
         output_filtered = interface.get_user_input(self)['ftfilter output']
-        output_spfiltered = interface.get_user_input(self)['ftfilter spfilter output']
+        output_spfiltered = interface.get_user_input(
+            self)['ftfilter spfilter output']
         comparison_enabled = interface.get_user_input(self)['ftfilter compare']
         diff_window = interface.get_user_input(self)['ftfilter diff output']
 
@@ -386,7 +387,8 @@ def apply_ft_blur(self):
         self.image1.add_operation(fourier_blur)
 
         # run the processing
-        interface.display_run_processing(self, output_filtered)
+        interface.display_run_processing(
+            self, output_filtered, force_normalize=False)
 
         if comparison_enabled == True:
             self.image1.clear_operations(clear_backup=True, undo_old=True)
@@ -399,13 +401,14 @@ def apply_ft_blur(self):
 
             # configure the spatial blur operation object
             spfilter = ApplyLinearFilter()
-            spfilter.configure(size=size, kernel_type = 'box')
+            spfilter.configure(size=size, kernel_type='box')
 
             # add the operation to the image
             self.image1.add_operation(spfilter)
 
             # run the processing
-            interface.display_run_processing(self, output_spfiltered)
+            interface.display_run_processing(
+                self, output_spfiltered, force_normalize=False)
 
             temp_spfiltered = deepcopy(self.image1)
 
@@ -418,13 +421,12 @@ def apply_ft_blur(self):
             print("diff")
             print(diff)
 
-            interface.display_pixmap(self, diff, diff_window)
-
-
-
+            interface.display_pixmap(
+                self, diff, diff_window, force_normalize=False)
 
     except:
         QMessageBox.critical(self, 'Error', 'Error Running Operation')
+
 
 def apply_bandstop(self):
     """Applies the bandstop filter to the image"""
@@ -435,7 +437,6 @@ def apply_bandstop(self):
         low = interface.get_user_input(self)['bandstop low']
         high = interface.get_user_input(self)['bandstop high']
 
-
         # clear previous operations
         self.image1.clear_operations(clear_backup=True, undo_old=True)
 
@@ -444,7 +445,7 @@ def apply_bandstop(self):
 
         # configure the bandstop operation object
         bandstop_operation = BandStopFilter()
-        bandstop_operation.configure(high = high, low = low, mode = 'sharp')
+        bandstop_operation.configure(high=high, low=low, mode='sharp')
 
         # add the operation to the image
         self.image1.add_operation(bandstop_operation)

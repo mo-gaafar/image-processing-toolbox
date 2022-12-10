@@ -165,7 +165,7 @@ def get_user_input(self):
     user_input['fft output phshift'] = output_window_dict[self.fft_output_phshift_combobox.currentText()]
     user_input['fft output phlog'] = output_window_dict[self.fft_output_phlog_combobox.currentText()]
 
-    # FT Filtering 
+    # FT Filtering
 
     user_input['ftfilter output'] = output_window_dict[self.ftfilter_output_combobox.currentText()]
     user_input['ftfilter kernel size'] = int(self.ft_kernel_spinbox.value())
@@ -185,7 +185,7 @@ def print_statusbar(self, message):
     self.statusbar.showMessage(message)
 
 
-def display_run_processing(self, selected_window_idx=None):
+def display_run_processing(self, selected_window_idx=None, **kwargs):
 
     print_statusbar(self, 'Processing Image..')
     # run the processing
@@ -201,7 +201,8 @@ def display_run_processing(self, selected_window_idx=None):
     update_img_resize_dimensions(self, 'resized', self.image1.get_pixels())
 
     # refresh the display
-    display_pixmap(self, image=self.image1, window_index=selected_window_idx)
+    display_pixmap(self, image=self.image1,
+                   window_index=selected_window_idx, **kwargs)
 
 
 plt.rcParams['axes.facecolor'] = 'black'
@@ -211,7 +212,7 @@ plt.rc('ytick', color='white')
 plt.rcParams["figure.autolayout"] = True
 
 
-def display_pixmap(self, image, window_index=None):
+def display_pixmap(self, image, window_index=None, force_normalize=True):
     '''Displays the image data in the image display area.
 
     Args:
@@ -225,8 +226,9 @@ def display_pixmap(self, image, window_index=None):
     else:
         image_data = image
     # quantize the image data to 8 bit for display
-    image_data = np.interp(image_data,
-                           (image_data.min(), image_data.max()), (0, 255))
+    if force_normalize or image_data.min() < 0 or image_data.max() > 255:
+        image_data = np.interp(image_data,
+                               (image_data.min(), image_data.max()), (0, 255))
     image_data = np.array(image_data, dtype=np.uint8)
 
     print_debug("Displaying Image")
@@ -285,7 +287,8 @@ def display_pixmap(self, image, window_index=None):
 
         self.figure = plt.figure(figsize=(15, 5), facecolor='black')
         self.canvas = FigureCanvas(self.figure)
-        self.canvas.mpl_connect('button_press_event', self.output_click_statusbar)
+        self.canvas.mpl_connect('button_press_event',
+                                self.output_click_statusbar)
         self.gridLayout_11.addWidget(self.canvas, 0, 0, 1, 1)
         plt.axis('on')
         plt.imshow(image_data, cmap='gray', interpolation=None)
@@ -293,6 +296,8 @@ def display_pixmap(self, image, window_index=None):
     elif window_index == 3:
         self.figure = plt.figure(figsize=(15, 5), facecolor='black')
         self.canvas2 = FigureCanvas(self.figure)
+        self.canvas2.mpl_connect('button_press_event',
+                                 self.output_click_statusbar)
         self.gridLayout_15.addWidget(self.canvas2, 0, 0, 1, 1)
         plt.axis('on')
         plt.imshow(image_data, cmap='gray', interpolation=None)
@@ -425,8 +430,6 @@ def disp_fft_all_none(self):
     self.fft_output_phlog_combobox.setCurrentIndex(4)
 
 
-
-
 def init_connectors(self):
     '''Initializes all event connectors and triggers'''
 
@@ -533,11 +536,11 @@ def init_connectors(self):
     self.disp_fft_apply.clicked.connect(lambda: tabs.display_fft(self))
     self.disp_fft_allnone.clicked.connect(lambda: disp_fft_all_none(self))
 
-
     """ FFT Filtering Tab"""
     self.boxblur_ft_apply.clicked.connect(lambda: tabs.apply_ft_blur(self))
     self.bandstop_ft_apply.clicked.connect(lambda: tabs.apply_bandstop(self))
-    self.reset_operations_ftfilt.clicked.connect(lambda: modules.image.restore_original(self))
+    self.reset_operations_ftfilt.clicked.connect(
+        lambda: modules.image.restore_original(self))
 
 
 def about_us(self):
