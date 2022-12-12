@@ -52,6 +52,8 @@ from modules.interpolators import *
 #     def execute(self):
 #         self.image = self.function(self.image, *self.args, **self.kwargs)
 
+class Filter
+
 
 class MonochoromeConversion(ImageOperation):
 
@@ -719,3 +721,5 @@ class NNHorizontalShearing(ImageOperation):
                 new_image[x, y] = nn_interp_pixel(x1, y1, image_data)
 
         return new_image
+
+
