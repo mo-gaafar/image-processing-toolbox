@@ -1,3 +1,24 @@
+"""This module contains the functions that are used to interact with the GUI.
+Created on 2022/11
+Author: M. Nasser Gaafar
+
+Functions:
+    init_sync_sliders(self): initializes the dictionary that contains the sliders and spinboxes that are synced
+    sync_slider(self, slider, spinbox): syncs the slider and spinbox
+    sync_spinbox(self, slider, spinbox): syncs the spinbox and slider
+    update_img_resize_dimensions(self): updates the image resize dimensions
+    get_user_input(self): gets the user input from the GUI
+    print_statusbar(self,message): prints a message in the statusbar
+    display_run_processing(self, selected_window, kwargs): runs the processing function and displays the result
+    display_pixmap(self, image, window, force_normalize): displays an image in a window
+    display_histogram(self, histogram, range, window): displays a histogram in a window
+    toggle_image_window(self, windowindex): toggles the image window hide/show
+    save_tab_references(self, tab): saves the references to the tabs
+    toggle_toolbox_tabs(self, tab): toggles the toolbox tabs hide/show
+    display_metatable(self, f_metadata): displays the metadata table
+
+"""
+
 import numpy as np
 from PIL import Image as PILImage
 from PyQt5.QtWidgets import QTableWidgetItem, QMessageBox, QToolBox, QWidget, QTabWidget
@@ -66,6 +87,18 @@ def sync_sliders(self, caller=None, name=None):
         elif caller == 'spinbox':
             self.noise_salt_slider.setValue(
                 int(self.noise_salt_spinbox.value()))
+    elif name == 'ftfilter kernel size':
+        if caller == 'slider':
+            self.ft_kernel_spinbox.setValue(
+                round_nearest_odd(self.ft_kernel_slider.value()))
+
+        elif caller == 'spinbox':
+            self.ft_kernel_spinbox.setValue(
+                round_nearest_odd(self.ft_kernel_spinbox.value()))
+            self.ft_kernel_slider.setValue(
+                int(self.ft_kernel_spinbox.value()))
+    else:
+        raise ValueError("Incorrect spinbox or slider name")
 
 
 def update_img_resize_dimensions(self, selector, data_arr):
@@ -153,6 +186,19 @@ def get_user_input(self):
     user_input['fft output phshift'] = output_window_dict[self.fft_output_phshift_combobox.currentText()]
     user_input['fft output phlog'] = output_window_dict[self.fft_output_phlog_combobox.currentText()]
 
+    # FT Filtering
+
+    user_input['ftfilter output'] = output_window_dict[self.ftfilter_output_combobox.currentText()]
+    user_input['ftfilter kernel size'] = int(self.ft_kernel_spinbox.value())
+    user_input['ftfilter compare'] = self.ftfilter_compare_checkbox.isChecked()
+    user_input['ftfilter spfilter output'] = output_window_dict[self.ftfilter_spfilter_output_combobox.currentText()]
+    user_input['ftfilter diff output'] = output_window_dict[self.ftfilter_diff_output_combobox.currentText()]
+
+    # user_input['bandstop output'] = output_window_dict[self.bandstop_output_combobox.currentText()]
+
+    user_input['bandstop low'] = int(self.bandstop_low_spinbox.value())
+    user_input['bandstop high'] = int(self.bandstop_high_spinbox.value())
+
     return user_input
 
 
@@ -160,7 +206,7 @@ def print_statusbar(self, message):
     self.statusbar.showMessage(message)
 
 
-def display_run_processing(self, selected_window_idx=None):
+def display_run_processing(self, selected_window_idx=None, **kwargs):
 
     print_statusbar(self, 'Processing Image..')
     # run the processing
@@ -176,7 +222,8 @@ def display_run_processing(self, selected_window_idx=None):
     update_img_resize_dimensions(self, 'resized', self.image1.get_pixels())
 
     # refresh the display
-    display_pixmap(self, image=self.image1, window_index=selected_window_idx)
+    display_pixmap(self, image=self.image1,
+                   window_index=selected_window_idx, **kwargs)
 
 
 plt.rcParams['axes.facecolor'] = 'black'
@@ -186,7 +233,7 @@ plt.rc('ytick', color='white')
 plt.rcParams["figure.autolayout"] = True
 
 
-def display_pixmap(self, image, window_index=None):
+def display_pixmap(self, image, window_index=None, force_normalize=True):
     '''Displays the image data in the image display area.
 
     Args:
@@ -200,8 +247,9 @@ def display_pixmap(self, image, window_index=None):
     else:
         image_data = image
     # quantize the image data to 8 bit for display
-    image_data = np.interp(image_data,
-                           (image_data.min(), image_data.max()), (0, 255))
+    if force_normalize or image_data.min() < 0 or image_data.max() > 255:
+        image_data = np.interp(image_data,
+                               (image_data.min(), image_data.max()), (0, 255))
     image_data = np.array(image_data, dtype=np.uint8)
 
     print_debug("Displaying Image")
@@ -260,17 +308,21 @@ def display_pixmap(self, image, window_index=None):
 
         self.figure = plt.figure(figsize=(15, 5), facecolor='black')
         self.canvas = FigureCanvas(self.figure)
+        self.canvas.mpl_connect('button_press_event',
+                                self.output_click_statusbar)
         self.gridLayout_11.addWidget(self.canvas, 0, 0, 1, 1)
         plt.axis('on')
         plt.imshow(image_data, cmap='gray', interpolation=None)
         self.canvas.draw()
     elif window_index == 3:
         self.figure = plt.figure(figsize=(15, 5), facecolor='black')
-        self.canvas = FigureCanvas(self.figure)
-        self.gridLayout_15.addWidget(self.canvas, 0, 0, 1, 1)
+        self.canvas2 = FigureCanvas(self.figure)
+        self.canvas2.mpl_connect('button_press_event',
+                                 self.output_click_statusbar)
+        self.gridLayout_15.addWidget(self.canvas2, 0, 0, 1, 1)
         plt.axis('on')
         plt.imshow(image_data, cmap='gray', interpolation=None)
-        self.canvas.draw()
+        self.canvas2.draw()
     else:
         raise ValueError("Invalid window index")
 
@@ -495,10 +547,21 @@ def init_connectors(self):
     self.noise_salt_spinbox.valueChanged.connect(
         lambda: sync_sliders(self, 'spinbox', 'saltpepper salt prob'))
 
+    self.ft_kernel_slider.sliderReleased.connect(
+        lambda: sync_sliders(self, 'slider', 'ftfilter kernel size'))
+    self.ft_kernel_spinbox.valueChanged.connect(
+        lambda: sync_sliders(self, 'spinbox', 'ftfilter kernel size'))
+
     """FFT Display Tab"""
 
     self.disp_fft_apply.clicked.connect(lambda: tabs.display_fft(self))
     self.disp_fft_allnone.clicked.connect(lambda: disp_fft_all_none(self))
+
+    """ FFT Filtering Tab"""
+    self.boxblur_ft_apply.clicked.connect(lambda: tabs.apply_ft_blur(self))
+    self.bandstop_ft_apply.clicked.connect(lambda: tabs.apply_bandstop(self))
+    self.reset_operations_ftfilt.clicked.connect(
+        lambda: modules.image.restore_original(self))
 
 
 def about_us(self):

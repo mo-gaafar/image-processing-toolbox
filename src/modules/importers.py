@@ -1,3 +1,14 @@
+"""This module contains the file importers for the program.
+Created on 2022/11
+Author: M. Nasser Gaafar
+
+Classes:
+    ImageImporter(ABC): abstract class for importing images
+    BMPImporter(ImageImporter): imports bmp images
+    JPGImporter(ImageImporter): imports jpg images
+    DICOMImporter(ImageImporter): imports dicom images
+"""
+
 import os
 import numpy as np
 import pydicom
@@ -8,8 +19,6 @@ import pydicom.encoders.gdcm
 from abc import ABC, abstractmethod
 from modules import interface
 from modules.image import *
-
-# abstract class for image importers using ABC module
 
 
 class ImageImporter(ABC):

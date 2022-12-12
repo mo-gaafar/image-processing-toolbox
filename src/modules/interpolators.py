@@ -1,3 +1,15 @@
+"""Interpolation functions for image scaling and rotation opeartions
+Created on 2022/11
+Author: M. Nasser Gaafar
+
+Functions:
+    linear_interp(p1, p2, px): linear interpolation of two points
+    bilinear_interp_pixel(x, y, img): bilinear interpolation of a pixel
+    special_round(x): rounds x to the nearest integer, but if x is between two integers, it rounds to the nearest even integer
+    nn_interp_pixel(x, y, img): nearest neighbor interpolation of a pixel
+
+"""
+
 import numpy as np
 from modules.image import *
 

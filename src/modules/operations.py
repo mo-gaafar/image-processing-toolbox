@@ -1,3 +1,28 @@
+"""Image operations module.
+Created on 2022/11
+Author: M. Nasser Gaafar
+
+This module contains the operations that can be applied to an image.
+Operations are applied to an image by creating an instance of the operation 
+configuring that operation instance and then executing it.
+
+Operations are implemented as classes that inherit from the ImageOperation
+class. The ImageOperation class is an abstract class that defines the
+interface for all operations. The ImageOperation class defines the following
+methods:
+    configure: configure the operation with the given parameters.
+    execute: execute the operation on the image.
+
+Classes:
+    ImageOperation: abstract class that defines the interface for all operations.
+    MonochoromeConversion: convert the image to monochorome.
+    CreateTestImage: create a test image.
+    AddSaltPepperNoise: add salt and pepper noise to the image.
+    ApplyLinearFilter: apply a linear filter to the image.
+    ApplyMedianFilter: apply a median filter to the image.
+    HistogramEqualization: apply histogram equalization to the image.
+"""
+
 import numpy as np
 from modules import utility as util
 import threading
@@ -26,7 +51,6 @@ from modules.interpolators import *
 
 #     def execute(self):
 #         self.image = self.function(self.image, *self.args, **self.kwargs)
-
 
 
 class MonochoromeConversion(ImageOperation):
@@ -127,30 +151,137 @@ class ApplyLinearFilter(ImageOperation):
                                           self.size, y-self.size:y+self.size]
                 self.image.data[x-self.size, y-self.size] = self.multiply_sum_kernel(
                     self.kernel, img_section)
+        # print(f"image data before {self.image.data}")
+        data = self.image.data.astype(np.float32)
+        # print(f"channel depth {self.image.get_channel_depth()}")
+        # print(f"image data {data}")
+        self.image.data = np.round(
+            data * ((2**self.image.get_channel_depth())-1)/(2**np.log2(np.amax(data))-1))
 
         return deepcopy(self.image)
+
+
+class BandStopFilter(ImageOperation):
+    '''Filters an image by overlaying a radial mask with specified frequency coordinate ranges, has 3 modes:
+    Sharp mask: the mask is a sharp edge between the two frequency ranges
+    Gaussian mask: the mask is a gaussian function between the two frequency ranges
+    Butterworth mask: the mask is a butterworth function between the two frequency ranges
+    '''
+
+    def configure(self, **kwargs):
+        self.mode = kwargs['mode']
+        self.low = kwargs['low']
+        self.high = kwargs['high']
+        if 'order' in kwargs:
+            self.order = kwargs['order']
+
+        if self.mode != 'sharp':
+            raise ValueError('Mode is not supported yet')
+
+    def create_sharp_circle_mask(self, low, high):
+        # create a mask of circle with raidus low and high and center at the center of the image
+        # the mask is 1 inside the circle and 0 outside
+
+        # if low is more than high then swap them and set the mask to 1 outside the circle
+        center = (self.image.data.shape[0]//2, self.image.data.shape[1]//2)
+        circle_mask = np.ones(self.image.data.shape)
+        mask_value = 0
+        if low > high:
+            low, high = high, low
+            circle_mask = np.zeros(self.image.data.shape)
+            mask_value = 1
+        for x in range(self.image.data.shape[0]):
+            for y in range(self.image.data.shape[1]):
+                # check if within specified radii
+                if (x-center[0])**2 + (y-center[1])**2 <= high**2 and (x-center[0])**2 + (y-center[1])**2 >= low**2:
+                    circle_mask[x, y] = mask_value
+        return circle_mask
+
+    def execute(self):
+        # apply a band stop filter to the image
+        # low: low frequency range
+        # high: high frequency range
+        # mode: sharp, gaussian, butterworth
+
+        if self.low >= self.image.data.shape[0]//2 or self.low >= self.image.data.shape[1]//2:
+            raise ValueError('Low frequency range is out of bounds')
+        if self.high >= self.image.data.shape[0]//2 or self.high >= self.image.data.shape[1]//2:
+            raise ValueError('High frequency range is out of bounds')
+
+        # create mask
+        if self.mode == 'sharp':
+            mask = self.create_sharp_circle_mask(self.low, self.high)
+
+        # apply mask to image in frequency domain
+        image_fft = self.image.get_fft().fft_data
+        # shift mask to uncenter it
+        mask = np.fft.ifftshift(mask)
+        # apply mask
+        image_fft = image_fft * mask
+        # return image
+        self.image.data = np.fft.ifft2(image_fft).real
+
+        return deepcopy(self.image)
+
 
 class ApplyLinearFilterFreq(ImageOperation):
     '''
     Filters an image in the frequency domain using a linear filter kernel
     '''
-    
+
     def configure(self, **kwargs):
         self.size = kwargs['size']
         self.kernel_type = kwargs['kernel_type']
-    
+
     def create_box_kernel(self):
-        # create a kernel of size x size with all values = 1
-        kernel = np.ones((self.size, self.size), dtype=np.float32)
+        # create a kernel of size x size with all values = 1 and pad it with image size
+        kernel = np.ones((self.size, self.size), dtype=np.float32)/self.size**2
         # normalize the kernel
         kernel = kernel / np.sum(kernel)
+        # create zero padding
+        kernel = np.zeros(self.image.data.shape)
+        # embed the kernel in the center of the padding
+        height = self.image.data.shape[0]
+        width = self.image.data.shape[1]
+
+        x_offset = (height - self.size) // 2
+        y_offset = (width - self.size) // 2
+
+        kernel[x_offset:x_offset + self.size,
+               y_offset:y_offset + self.size] = 1
+
         return kernel
-    
+
+    def apply_kernel_freq(self, kernel):
+        # apply the kernel in the frequency domain
+        # kernel: the kernel to be applied (padded with image size)
+
+        # get the fourier transform of the image
+        img_fft = self.image.get_fft().fft_data
+
+        # inverse shift the fft of the kernel to decenter it
+        kernel = np.fft.ifftshift(kernel)
+        # get the fourier transform of the kernel
+        kernel_fft = np.fft.fft2(kernel)
+        # multiply the two fourier transforms
+        img_fft = img_fft * kernel_fft
+        # get the inverse fourier transform of the result
+        img_filtered = np.fft.ifft2(img_fft).real
+        return img_filtered
+
     def execute(self):
-        # apply a box filter to the image
-        # size: size of the filter
-        pass
-        
+
+        kernel = self.create_box_kernel()
+
+        data = self.apply_kernel_freq(kernel)
+
+        data = np.round(
+            data * ((2**self.image.get_channel_depth())-1)/(2**np.log2(np.amax(data))-1))
+
+        self.image.data = data
+
+        return self.image
+
 
 class ApplyHighboostFilter(ImageOperation):
     '''
@@ -179,7 +310,10 @@ class ApplyHighboostFilter(ImageOperation):
         self.boost = kwargs['boost']
         self.clip = kwargs['clip']
         self.size = kwargs['size']
-        self.blur_in_freq = kwargs['blur_in_freq']
+        if 'blur_in_freq' in kwargs:
+            self.blur_in_freq = kwargs['blur_in_freq']
+        else:
+            self.blur_in_freq = False
 
     def get_sharp_image(self):
         # blur image2

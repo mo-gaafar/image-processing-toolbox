@@ -1,3 +1,12 @@
+"""This module contains the functions to browse and open a new image file.
+Created on 2022/11
+Author: M. Nasser Gaafar
+
+Functions:
+    open_new(self, image_idx=1): opens a new image file
+    read_importer(path): selects an image importer class based on the file extension
+"""
+
 from PyQt5.QtWidgets import QFileDialog
 import numpy as np
 from modules import interface

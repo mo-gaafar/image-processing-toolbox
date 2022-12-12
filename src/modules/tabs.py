@@ -1,8 +1,29 @@
-from pickle import TRUE
+"""This module contains the code that manages the tabs in the main window
+Created on 2022/11
+Author: M. Nasser Gaafar
+
+Functions:
+    generate_test_image(self): Generates a test image
+    apply_resize(self): Applies the resize operation to the image
+    apply_rotate(self): Applies the rotation operation to the image
+    apply_shear(self): Applies the shear operation to the image
+    apply_image_operation(self, operation): Applies the given operation to the image
+    read_transformation(transformation_type, interpolation_method): Reads the transformation type and interpolation method and returns the corresponding class
+    apply_histogram(self): Applies the histogram operation to the image
+    apply_boxblur(self): Applies the box blur operation to the image
+    apply_highboost(self): Applies the high boost operation to the image
+    apply_median(self): Applies the order statistic median filter operation to the image
+    apply_saltpepper(self): Applies the salt and pepper noise operation to the image
+    display_fft(self): Displays the FFT of the image
+    apply_ft_blur(self): Applies the frequency domain blur operation to the image
+    apply_bandstop(self): Applies the bandstop filter operation to the image
+
+"""
+
 from PyQt5.QtWidgets import QMessageBox
 from modules import interface
 from modules.operations import *
-from modules.fourier import UpdateFFT
+from modules.image import UpdateFFT
 
 #!Important: missing functionality
 # TODO: fix rotation direction (make it anti-clockwise)
@@ -359,6 +380,7 @@ def display_fft(self):
     except:
         QMessageBox.critical(self, 'Error', 'Error Running Operation')
 
+
 def apply_ft_blur(self):
     """Applies the fourier blur operation to the image"""
 
@@ -366,48 +388,88 @@ def apply_ft_blur(self):
         # get user input parameters data
         size = interface.get_user_input(self)['ftfilter kernel size']
         output_filtered = interface.get_user_input(self)['ftfilter output']
+        output_spfiltered = interface.get_user_input(
+            self)['ftfilter spfilter output']
+        comparison_enabled = interface.get_user_input(self)['ftfilter compare']
+        diff_window = interface.get_user_input(self)['ftfilter diff output']
 
         # clear previous operations
         self.image1.clear_operations(clear_backup=True, undo_old=True)
+        temp_backup = deepcopy(self.image1)
 
         # add the operation to the image
         self.image1.add_operation(MonochoromeConversion())
 
         # configure the fourier blur operation object
         fourier_blur = ApplyLinearFilterFreq()
-        fourier_blur.configure(size=size)
+        fourier_blur.configure(size=size, kernel_type='box')
 
         # add the operation to the image
         self.image1.add_operation(fourier_blur)
 
         # run the processing
-        interface.display_run_processing(self, output_filtered)
+        interface.display_run_processing(
+            self, output_filtered, force_normalize=False)
+
+        if comparison_enabled == True:
+            self.image1.clear_operations(clear_backup=True, undo_old=True)
+
+            temp_ftfiltered = deepcopy(self.image1)
+
+            self.image1 = deepcopy(temp_backup)
+
+            self.image1.add_operation(MonochoromeConversion())
+
+            # configure the spatial blur operation object
+            spfilter = ApplyLinearFilter()
+            spfilter.configure(size=size, kernel_type='box')
+
+            # add the operation to the image
+            self.image1.add_operation(spfilter)
+
+            # run the processing
+            interface.display_run_processing(
+                self, output_spfiltered, force_normalize=False)
+
+            temp_spfiltered = deepcopy(self.image1)
+
+            diff = np.abs(temp_ftfiltered.data - temp_spfiltered.data)
+
+            print("spfiltered")
+            print(temp_spfiltered.data)
+            print("ftfilered")
+            print(temp_ftfiltered.data)
+            print("diff")
+            print(diff)
+
+            interface.display_pixmap(
+                self, diff, diff_window, force_normalize=False)
 
     except:
         QMessageBox.critical(self, 'Error', 'Error Running Operation')
 
-def apply_ft_highboost(self):
+
+def apply_bandstop(self):
+    """Applies the bandstop filter to the image"""
 
     try:
         # get user input parameters data
-        size = interface.get_user_input(self)['ftfilter kernel size']
         output_filtered = interface.get_user_input(self)['ftfilter output']
-        factor = interface.get_user_input(self)['ftfilter highboost factor']
-        clip = interface.get_user_input(self)['ftfilter highboost clipping']
-
-        # add the operation to the image
-
-        # configure the highboost operation object
-        highboost_operation = ApplyHighboostFilter()
-        highboost_operation.configure(size=size, clip=clip,
-                                      boost=factor, blur_in_freq=True)
+        low = interface.get_user_input(self)['bandstop low']
+        high = interface.get_user_input(self)['bandstop high']
 
         # clear previous operations
         self.image1.clear_operations(clear_backup=True, undo_old=True)
 
         # add the operation to the image
         self.image1.add_operation(MonochoromeConversion())
-        self.image1.add_operation(highboost_operation)
+
+        # configure the bandstop operation object
+        bandstop_operation = BandStopFilter()
+        bandstop_operation.configure(high=high, low=low, mode='sharp')
+
+        # add the operation to the image
+        self.image1.add_operation(bandstop_operation)
 
         # run the processing
         interface.display_run_processing(self, output_filtered)
