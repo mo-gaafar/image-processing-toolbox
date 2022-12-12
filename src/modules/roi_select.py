@@ -74,3 +74,6 @@ def show_roi_window(self):
     plt.connect('key_press_event', self.toggle_selector)
     # show the figure
     plt.show()
+
+def display_roi_preview(self):
+    pass
