@@ -476,3 +476,4 @@ def apply_bandstop(self):
 
     except:
         QMessageBox.critical(self, 'Error', 'Error Running Operation')
+
