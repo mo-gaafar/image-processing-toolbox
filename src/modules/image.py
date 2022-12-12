@@ -1,4 +1,20 @@
-# define class and related functions
+"""Image class and operations module
+Created by: M. Nasser Gaafar, 2022 for the course Digital Image Processing (DIP) at Cairo Univesrity
+
+This module contains the Image class and the ImageOperation class.
+
+Classes:
+    Image: stores the image data and its metadata
+    ImageOperation: stores the image operations and their parameters
+    ImageFFT: stores the image FFT data
+    UpdateFFT: Operation object to update the FFT data
+
+Functions:
+    restore_original: restores the original image
+    reset_image: resets the image to its original state
+
+"""
+
 from copy import copy, deepcopy
 from dataclasses import dataclass, field
 import numpy as np

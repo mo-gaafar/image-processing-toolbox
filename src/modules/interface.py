@@ -1,3 +1,24 @@
+"""This module contains the functions that are used to interact with the GUI.
+Created on 2022/11
+Author: M. Nasser Gaafar
+
+Functions:
+    init_sync_sliders(self): initializes the dictionary that contains the sliders and spinboxes that are synced
+    sync_slider(self, slider, spinbox): syncs the slider and spinbox
+    sync_spinbox(self, slider, spinbox): syncs the spinbox and slider
+    update_img_resize_dimensions(self): updates the image resize dimensions
+    get_user_input(self): gets the user input from the GUI
+    print_statusbar(self,message): prints a message in the statusbar
+    display_run_processing(self, selected_window, kwargs): runs the processing function and displays the result
+    display_pixmap(self, image, window, force_normalize): displays an image in a window
+    display_histogram(self, histogram, range, window): displays a histogram in a window
+    toggle_image_window(self, windowindex): toggles the image window hide/show
+    save_tab_references(self, tab): saves the references to the tabs
+    toggle_toolbox_tabs(self, tab): toggles the toolbox tabs hide/show
+    display_metatable(self, f_metadata): displays the metadata table
+
+"""
+
 import numpy as np
 from PIL import Image as PILImage
 from PyQt5.QtWidgets import QTableWidgetItem, QMessageBox, QToolBox, QWidget, QTabWidget

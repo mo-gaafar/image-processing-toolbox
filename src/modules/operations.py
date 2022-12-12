@@ -1,3 +1,28 @@
+"""Image operations module.
+Created on 2022/11
+Author: M. Nasser Gaafar
+
+This module contains the operations that can be applied to an image.
+Operations are applied to an image by creating an instance of the operation 
+configuring that operation instance and then executing it.
+
+Operations are implemented as classes that inherit from the ImageOperation
+class. The ImageOperation class is an abstract class that defines the
+interface for all operations. The ImageOperation class defines the following
+methods:
+    configure: configure the operation with the given parameters.
+    execute: execute the operation on the image.
+
+Classes:
+    ImageOperation: abstract class that defines the interface for all operations.
+    MonochoromeConversion: convert the image to monochorome.
+    CreateTestImage: create a test image.
+    AddSaltPepperNoise: add salt and pepper noise to the image.
+    ApplyLinearFilter: apply a linear filter to the image.
+    ApplyMedianFilter: apply a median filter to the image.
+    HistogramEqualization: apply histogram equalization to the image.
+"""
+
 import numpy as np
 from modules import utility as util
 import threading

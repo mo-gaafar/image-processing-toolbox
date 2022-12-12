@@ -1,4 +1,20 @@
-'''Should contain printdebug and logging functionality '''
+""" Contains utility functions for image processing.
+Created on 2022/11
+Author: M. Nasser Gaafar
+
+Functions:
+    print_debug(string): prints and logs based on preset variables in util
+    print_log(string): logs based on preset variables in util
+    map_range(value, in_min, in_max, out_min, out_max): maps a value from one range to another
+    uniform_padding(array, n, val): pads array with val, n times on 4 sides
+    merge_sort(in_array): merge sort algorithm
+
+Globals:
+    DEBUG_MODE: if True, prints debug messages in terminal and also logs them
+    LOGGING_MODE: if True, logs messages in file only
+    
+"""
+
 import logging
 import numpy as np
 
@@ -31,8 +47,8 @@ def print_log(string):
         logger.info(string)
 
 
-def mapRange(value, inMin, inMax, outMin, outMax):
-    return outMin + (((value - inMin) / (inMax - inMin)) * (outMax - outMin))
+def map_range(value, in_min, in_max, out_min, out_max):
+    return out_min + (((value - in_min) / (in_max - in_min)) * (out_max - out_min))
 
 
 def uniform_padding(array, n, val):

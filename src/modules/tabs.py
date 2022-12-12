@@ -1,4 +1,25 @@
-from pickle import TRUE
+"""This module contains the code that manages the tabs in the main window
+Created on 2022/11
+Author: M. Nasser Gaafar
+
+Functions:
+    generate_test_image(self): Generates a test image
+    apply_resize(self): Applies the resize operation to the image
+    apply_rotate(self): Applies the rotation operation to the image
+    apply_shear(self): Applies the shear operation to the image
+    apply_image_operation(self, operation): Applies the given operation to the image
+    read_transformation(transformation_type, interpolation_method): Reads the transformation type and interpolation method and returns the corresponding class
+    apply_histogram(self): Applies the histogram operation to the image
+    apply_boxblur(self): Applies the box blur operation to the image
+    apply_highboost(self): Applies the high boost operation to the image
+    apply_median(self): Applies the order statistic median filter operation to the image
+    apply_saltpepper(self): Applies the salt and pepper noise operation to the image
+    display_fft(self): Displays the FFT of the image
+    apply_ft_blur(self): Applies the frequency domain blur operation to the image
+    apply_bandstop(self): Applies the bandstop filter operation to the image
+
+"""
+
 from PyQt5.QtWidgets import QMessageBox
 from modules import interface
 from modules.operations import *
