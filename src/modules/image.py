@@ -294,12 +294,12 @@ class ImageFFT:
         fft_data = self.get_fft()
 
         # get the magnitude plots
-        fft_data_mag = np.abs(fft_data)
+        fft_data_mag = complex_abs(fft_data)
         fft_mag_shifted = np.fft.fftshift(fft_data_mag)
         fft_mag_shifted_logged = np.log(fft_mag_shifted + 1)
 
         # get the phase plots
-        fft_data_phase = np.angle(fft_data)
+        fft_data_phase = complex_angle(fft_data)
         fft_phase_shifted = np.fft.fftshift(fft_data_phase)
         fft_phase_shifted_logged = np.log(fft_phase_shifted + 2*np.pi)
 
