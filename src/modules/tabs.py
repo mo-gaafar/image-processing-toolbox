@@ -297,25 +297,38 @@ def apply_median(self):
         QMessageBox.critical(self, 'Error', 'Error Running Operation')
 
 
-def apply_saltpepper(self):
+def apply_noise(self):
     '''Applies the salt and pepper noise operation to the image'''
     try:
         # get user input parameters data
-        output_noisy = interface.get_user_input(self)['spfilter output']
-
-        salt_noise = interface.get_user_input(self)['saltpepper salt prob']
-        salt_noise = salt_noise / 100
-
-        noise_weight = interface.get_user_input(
-            self)['saltpepper noise weight']
-        noise_weight = noise_weight / 100
-
+        output_noisy = interface.get_user_input(self)['noise output']
+        noise_type = interface.get_user_input(self)['noise type']
+        operation = NoiseGenerator()
         # clear previous operations
         self.image1.clear_operations(clear_backup=False, undo_old=True)
 
-        # configure operation
-        operation = AddSaltPepperNoise()
-        operation.configure(amount=noise_weight, salt_prob=salt_noise)
+        if noise_type == "salt_pepper":
+            salt_noise = interface.get_user_input(self)['saltpepper salt prob']
+            salt_noise = salt_noise / 100
+
+            noise_weight = interface.get_user_input(
+                self)['saltpepper noise weight']
+            noise_weight = noise_weight / 100
+
+            # configure operation
+            operation.configure(amount=noise_weight, salt_prob=salt_noise, type = 'salt_pepper')
+        
+        elif noise_type == "gaussian":
+            mean = interface.get_user_input(self)['noise gaussian mean']
+            sigma = interface.get_user_input(self)['noise gaussian sigma']
+
+            operation.configure(mean = mean , sigma = sigma , type = 'gaussian')
+
+        elif noise_type == "uniform":
+            a = interface.get_user_input(self)['noise uniform a']
+            b = interface.get_user_input(self)['noise uniform b']
+
+            operation.configure(a = a , b = b ,  type = 'uniform')
 
         # add the noise
         apply_image_operation(self, operation, output_noisy)

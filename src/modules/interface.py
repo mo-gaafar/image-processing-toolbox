@@ -26,8 +26,9 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pylab as plt
 from PyQt5.QtGui import *
 from PyQt5 import QtGui
+from modules.operations import operations
 from modules.utility import print_debug, round_nearest_odd
-from modules import openfile, operations, tabs
+from modules import openfile, tabs
 import modules.image
 
 

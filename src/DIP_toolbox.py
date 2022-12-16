@@ -60,7 +60,22 @@ class MainWindow(QtWidgets.QMainWindow):
         interface.print_statusbar(self, str)
     
     
-
+    def line_select_callback(self, eclick, erelease):
+        'eclick and erelease are the press and release events'
+        x1, y1 = eclick.xdata, eclick.ydata
+        x2, y2 = erelease.xdata, erelease.ydata
+        print("(%3.2f, %3.2f) --> (%3.2f, %3.2f)" % (x1, y1, x2, y2))
+        print(" The button you used were: %s %s" %
+            (eclick.button, erelease.button))
+    
+    def toggle_selector(self, event):
+        print(' Key pressed.')
+        if event.key in ['Q', 'q'] and self.toggle_selector.RS.active:
+            print(' RectangleSelector deactivated.')
+            self.toggle_selector.RS.set_active(False)
+        if event.key in ['A', 'a'] and not self.toggle_selector.RS.active:
+            print(' RectangleSelector activated.')
+            self.toggle_selector.RS.set_active(True)
 
 def main():
 

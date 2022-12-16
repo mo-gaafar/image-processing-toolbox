@@ -168,6 +168,12 @@ def complex_angle(array):
     """
     return np.arctan2(np.imag(array), np.real(array))
 
+def histo_std_dev(image_arr):
+    pass
+
+def histo_mean(image_arr):
+    pass
+
 # def rescale_intensity(arr, depth = 1, shift_min = False):
 #     """ Intensity scaling.
 #     Params:
