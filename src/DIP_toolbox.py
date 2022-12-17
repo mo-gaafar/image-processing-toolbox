@@ -55,8 +55,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def output_click_statusbar(self, event):
 
-        x = event.xdata
-        y = event.ydata
+        x = np.round(event.xdata,2)
+        y = np.round(event.ydata,2)
         str = f"Point clicked at {x}, {y} on plot "
         interface.print_statusbar(self, str)
     

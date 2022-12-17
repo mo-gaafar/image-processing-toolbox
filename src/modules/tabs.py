@@ -44,6 +44,7 @@ def generate_test_image(self, name='t_phantom'):
     # run the processing and display the result
     interface.display_run_processing(self)
 
+    self.safe_image_backup = deepcopy(self.image1)
     # clear the operations
     self.image1.clear_operations(clear_backup=True)
 
@@ -502,26 +503,29 @@ def roi_select(self):
     
 
 def analyze_roi(self):
-    # get user input parameters data
-    roi_coordinates = self.selected_roi_coords
-    analysis_window = interface.get_user_input(self)['roi analysis output']
+    try:
+        # get user input parameters data
+        roi_coordinates = self.selected_roi_coords
+        analysis_window = interface.get_user_input(self)['roi analysis output']
 
-    # get a sub region using the roi coordinates
-    roi = self.image1.get_region(roi_coordinates)
+        # get a sub region using the roi coordinates
+        roi = self.image1.get_region(roi_coordinates)
 
-    # get and display histogram of roi
-    histogram = get_histogram(roi)
-    histo_range = None
-    interface.display_histogram(self, histogram, histo_range, analysis_window)
+        # get and display histogram of roi
+        histogram = get_histogram(roi)
+        histo_range = None
+        interface.display_histogram(self, histogram, histo_range, analysis_window)
 
-    # get and display mean of roi
-    mean = histo_mean(histogram=histogram)
-    outstr = ""
-    outstr = "Mean: " + str(round(mean, 2))
-    interface.display_text(self, outstr, 'noise mean')
+        # get and display mean of roi
+        mean = histo_mean(histogram=histogram)
+        outstr = ""
+        outstr = "Mean: " + str(round(mean, 2))
+        interface.display_text(self, outstr, 'noise mean')
 
-    # get and display standard deviation of roi
-    std = histo_std_dev(histogram=histogram)
-    outstr = ""
-    outstr += "Standard Deviation: " + str(round(std, 2))
-    interface.display_text(self, outstr, 'noise std dev')
+        # get and display standard deviation of roi
+        std = histo_std_dev(histogram=histogram)
+        outstr = ""
+        outstr += "Standard Deviation: " + str(round(std, 2))
+        interface.display_text(self, outstr, 'noise std dev')
+    except:
+        QMessageBox.critical(self, 'Error', 'Error Running Operation')

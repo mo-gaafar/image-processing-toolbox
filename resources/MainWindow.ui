@@ -2319,7 +2319,7 @@ QPushButton:pressed {
     }</string>
                 </property>
                 <property name="text">
-                 <string>Reset to Default</string>
+                 <string>Restore Original Image</string>
                 </property>
                </widget>
               </item>
@@ -2769,7 +2769,30 @@ QPushButton:pressed {
               <string>Noise</string>
              </attribute>
              <layout class="QGridLayout" name="gridLayout_23">
-              <item row="6" column="0">
+              <item row="0" column="0">
+               <widget class="Line" name="line_30">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>1</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color: rgba(255, 255, 255,100);</string>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_53">
+                <property name="text">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Noise Generation and Analysis&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="0">
                <widget class="QPushButton" name="gen_test_image_2">
                 <property name="minimumSize">
                  <size>
@@ -2799,14 +2822,37 @@ QPushButton:pressed {
                 </property>
                </widget>
               </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="label_53">
+              <item row="5" column="0">
+               <widget class="QPushButton" name="reset_operations_4">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>20</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QPushButton {
+    border-radius: 5px;
+    border-style: outset;
+    background: rgb(12, 17, 24);
+	padding: 3;
+    }
+
+QPushButton:hover {
+    background: rgb(63, 95, 127)
+    }
+
+QPushButton:pressed {
+    border-style: inset;
+    background:rgb(20, 20, 20)
+    }</string>
+                </property>
                 <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Noise Generation and Analysis&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string>Restore Original Image</string>
                 </property>
                </widget>
               </item>
-              <item row="4" column="0">
+              <item row="2" column="0">
                <widget class="Line" name="line_29">
                 <property name="maximumSize">
                  <size>
@@ -2822,23 +2868,7 @@ QPushButton:pressed {
                 </property>
                </widget>
               </item>
-              <item row="0" column="0">
-               <widget class="Line" name="line_30">
-                <property name="maximumSize">
-                 <size>
-                  <width>16777215</width>
-                  <height>1</height>
-                 </size>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">background-color: rgba(255, 255, 255,100);</string>
-                </property>
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-               </widget>
-              </item>
-              <item row="5" column="0">
+              <item row="3" column="0">
                <widget class="QToolBox" name="toolbox_ftfilt_2">
                 <property name="font">
                  <font>
@@ -2848,7 +2878,7 @@ QPushButton:pressed {
                  </font>
                 </property>
                 <property name="currentIndex">
-                 <number>0</number>
+                 <number>1</number>
                 </property>
                 <widget class="QWidget" name="page_10">
                  <property name="geometry">
@@ -2856,7 +2886,7 @@ QPushButton:pressed {
                    <x>0</x>
                    <y>0</y>
                    <width>282</width>
-                   <height>391</height>
+                   <height>365</height>
                   </rect>
                  </property>
                  <attribute name="label">
@@ -2950,7 +2980,7 @@ QPushButton:pressed {
                   <item row="2" column="0" colspan="2">
                    <widget class="QToolBox" name="noise_gen_toolbox">
                     <property name="currentIndex">
-                     <number>1</number>
+                     <number>2</number>
                     </property>
                     <widget class="QWidget" name="page_12">
                      <property name="geometry">
@@ -2978,7 +3008,7 @@ QPushButton:pressed {
                          <number>2</number>
                         </property>
                         <property name="minimum">
-                         <double>0.000000000000000</double>
+                         <double>-10000.000000000000000</double>
                         </property>
                         <property name="maximum">
                          <double>10000.000000000000000</double>
@@ -3013,7 +3043,7 @@ QPushButton:pressed {
                          <double>2.000000000000000</double>
                         </property>
                         <property name="value">
-                         <double>1.000000000000000</double>
+                         <double>0.000000000000000</double>
                         </property>
                        </widget>
                       </item>
@@ -3041,7 +3071,7 @@ QPushButton:pressed {
                        <x>0</x>
                        <y>0</y>
                        <width>264</width>
-                       <height>192</height>
+                       <height>166</height>
                       </rect>
                      </property>
                      <attribute name="label">
@@ -3061,16 +3091,16 @@ QPushButton:pressed {
                          <number>2</number>
                         </property>
                         <property name="minimum">
-                         <double>-1000.000000000000000</double>
+                         <double>-10000.000000000000000</double>
                         </property>
                         <property name="maximum">
-                         <double>1000.000000000000000</double>
+                         <double>10000.000000000000000</double>
                         </property>
                         <property name="singleStep">
                          <double>2.000000000000000</double>
                         </property>
                         <property name="value">
-                         <double>0.000000000000000</double>
+                         <double>-1.000000000000000</double>
                         </property>
                        </widget>
                       </item>
@@ -3087,10 +3117,10 @@ QPushButton:pressed {
                          <number>2</number>
                         </property>
                         <property name="minimum">
-                         <double>1.000000000000000</double>
+                         <double>-10000.000000000000000</double>
                         </property>
                         <property name="maximum">
-                         <double>101.000000000000000</double>
+                         <double>10000.000000000000000</double>
                         </property>
                         <property name="singleStep">
                          <double>2.000000000000000</double>
@@ -3272,14 +3302,14 @@ QPushButton:pressed {
                   <string>Noise Analyser</string>
                  </attribute>
                  <layout class="QGridLayout" name="gridLayout_24">
-                  <item row="0" column="0">
+                  <item row="0" column="0" colspan="2">
                    <widget class="QLabel" name="label_49">
                     <property name="text">
                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Noise Analyser&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                     </property>
                    </widget>
                   </item>
-                  <item row="1" column="0">
+                  <item row="1" column="0" colspan="3">
                    <widget class="Line" name="line_28">
                     <property name="maximumSize">
                      <size>
@@ -3295,43 +3325,21 @@ QPushButton:pressed {
                     </property>
                    </widget>
                   </item>
-                  <item row="2" column="0">
+                  <item row="2" column="0" colspan="3">
                    <widget class="QLabel" name="label_51">
                     <property name="text">
                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Choose a region to analyze&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                     </property>
                    </widget>
                   </item>
-                  <item row="3" column="0">
+                  <item row="3" column="0" colspan="3">
                    <widget class="QLabel" name="label_57">
                     <property name="text">
                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Region selection display:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                     </property>
                    </widget>
                   </item>
-                  <item row="4" column="0">
-                   <widget class="QComboBox" name="roi_select_output_combobox">
-                    <property name="currentIndex">
-                     <number>1</number>
-                    </property>
-                    <item>
-                     <property name="text">
-                      <string>None</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Plot1</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Plot2</string>
-                     </property>
-                    </item>
-                   </widget>
-                  </item>
-                  <item row="5" column="0">
+                  <item row="5" column="0" colspan="3">
                    <widget class="QPushButton" name="select_roi">
                     <property name="minimumSize">
                      <size>
@@ -3361,7 +3369,7 @@ QPushButton:pressed {
                     </property>
                    </widget>
                   </item>
-                  <item row="6" column="0">
+                  <item row="6" column="0" colspan="3">
                    <widget class="Line" name="line_31">
                     <property name="maximumSize">
                      <size>
@@ -3377,7 +3385,7 @@ QPushButton:pressed {
                     </property>
                    </widget>
                   </item>
-                  <item row="7" column="0">
+                  <item row="7" column="0" colspan="3">
                    <widget class="QLabel" name="label_52">
                     <property name="text">
                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Region histogram display:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -3406,14 +3414,14 @@ QPushButton:pressed {
                     </item>
                    </widget>
                   </item>
-                  <item row="9" column="0">
+                  <item row="9" column="0" colspan="2">
                    <widget class="QLabel" name="label_47">
                     <property name="text">
                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Noise Statistics&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                     </property>
                    </widget>
                   </item>
-                  <item row="10" column="0">
+                  <item row="10" column="0" colspan="3">
                    <widget class="QLabel" name="noise_std_textbox">
                     <property name="text">
                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Standard deviation: ...&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -3427,7 +3435,23 @@ QPushButton:pressed {
                     </property>
                    </widget>
                   </item>
-                  <item row="12" column="0">
+                  <item row="13" column="0" colspan="3">
+                   <widget class="Line" name="line_32">
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>1</height>
+                     </size>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">background-color: rgba(255, 255, 255,100);</string>
+                    </property>
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="14" column="1">
                    <spacer name="verticalSpacer_15">
                     <property name="orientation">
                      <enum>Qt::Vertical</enum>
@@ -3443,7 +3467,29 @@ QPushButton:pressed {
                     </property>
                    </spacer>
                   </item>
-                  <item row="13" column="0">
+                  <item row="4" column="0">
+                   <widget class="QComboBox" name="roi_select_output_combobox">
+                    <property name="currentIndex">
+                     <number>1</number>
+                    </property>
+                    <item>
+                     <property name="text">
+                      <string>None</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Plot1</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Plot2</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                  <item row="12" column="0" colspan="3">
                    <widget class="QPushButton" name="analyze_roi">
                     <property name="minimumSize">
                      <size>

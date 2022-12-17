@@ -177,6 +177,8 @@ def get_histogram(image_arr):
     Returns:
         histogram: image histogram
     """
+    if image_arr.ndim == 3:
+        image_arr = np.mean(image_arr, axis=2)
     # get image levels using log2
     L = int(2 ** np.ceil(np.log2(np.max(image_arr))))
 

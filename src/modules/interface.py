@@ -643,8 +643,9 @@ def init_connectors(self):
     self.analyze_roi.clicked.connect(lambda: tabs.analyze_roi(self))
     self.gen_test_image_2.clicked.connect(
         lambda: tabs.generate_test_image(self, name='circle_square'))
-    # self.reset_operations_noise.clicked.connect(
-    #     lambda: modules.image.restore_original(self))
+    self.reset_operations_4.clicked.connect(
+        lambda: modules.image.restore_original(self))
+
 
 
 def about_us(self):
