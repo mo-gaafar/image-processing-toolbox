@@ -48,6 +48,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # initialize global variables
         self.image1 = None
+        self.selected_roi = None
 
         # initialize ui connectors
         interface.init_connectors(self)
@@ -64,18 +65,22 @@ class MainWindow(QtWidgets.QMainWindow):
         'eclick and erelease are the press and release events'
         x1, y1 = eclick.xdata, eclick.ydata
         x2, y2 = erelease.xdata, erelease.ydata
-        print("(%3.2f, %3.2f) --> (%3.2f, %3.2f)" % (x1, y1, x2, y2))
-        print(" The button you used were: %s %s" %
+        print_log("(%3.2f, %3.2f) --> (%3.2f, %3.2f)" % (x1, y1, x2, y2))
+        print_log(" The button you used were : %s %s" %
             (eclick.button, erelease.button))
+        
+        self.selected_roi_coords = (int(x1), int(x2), int(y1),int(y2))
     
     def toggle_selector(self, event):
-        print(' Key pressed.')
+        print_log(' Key pressed.')
         if event.key in ['Q', 'q'] and self.toggle_selector.RS.active:
-            print(' RectangleSelector deactivated.')
+            print_log(' RectangleSelector deactivated.')
             self.toggle_selector.RS.set_active(False)
         if event.key in ['A', 'a'] and not self.toggle_selector.RS.active:
-            print(' RectangleSelector activated.')
+            print_log(' RectangleSelector activated.')
             self.toggle_selector.RS.set_active(True)
+        
+        # self.selected_roi
 
 def main():
 

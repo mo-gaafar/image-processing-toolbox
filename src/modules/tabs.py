@@ -496,16 +496,15 @@ def roi_select(self):
     """ Displays the roi selection window """
 
     # get user input parameters data
-    roi_window = interface.get_user_input(self)['roi window']
+    roi_window = interface.get_user_input(self)['roi select output']
     # display the roi selection window
-    self.roi_window = interface.show_roi_window(self, roi_window)
-    pass
-
+    interface.show_roi_window(self, roi_window)
+    
 
 def analyze_roi(self):
     # get user input parameters data
-    # roi_coordinates = interface.get_user_input(self)['roi coordinates']
-    roi_coordinates = (50, 90, 50, 80)  # TODO: remove this (testing)
+    roi_coordinates = self.selected_roi_coords
+    # roi_coordinates = (50, 90, 50, 80)  # TODO: remove this (testing)
     analysis_window = interface.get_user_input(self)['roi analysis output']
 
     # get a sub region using the roi coordinates

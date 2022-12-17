@@ -229,7 +229,7 @@ def get_user_input(self):
 
     user_input['roi analysis output'] = output_window_dict[self.roi_analysis_output_combobox.currentText()]
     user_input['roi select output'] = output_window_dict[self.roi_select_output_combobox.currentText()]
-
+    
     return user_input
 
 
@@ -499,12 +499,17 @@ def show_roi_window(self, roi_window):
     self.roi_ax = self.roi_fig.add_subplot(111)
 
     # plot the image
-    self.roi_ax.imshow(self.image1.get_image())
+    self.roi_ax.imshow(self.image1.data, cmap ='gray' )
 
     # create a new rectangle selector
     self.roi_selector = RectangleSelector(
         self.roi_ax, self.select_roi, drawtype='box', useblit=True, button=[1, 3], minspanx=5, minspany=5, spancoords='pixels', interactive=True)
-
+    self.toggle_selector_rs = RectangleSelector(self.roi_ax, self.line_select_callback,
+                                        drawtype='box', useblit=True,
+                                        button=[1, 3],  # don't use middle button
+                                        minspanx=5, minspany=5,
+                                        spancoords='pixels',
+                                        interactive=True)
     plt.connect('key_press_event', self.toggle_selector)
     # show the figure
     plt.show()
