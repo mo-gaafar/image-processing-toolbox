@@ -70,17 +70,50 @@ class MonochoromeConversion(ImageOperation):
 
 class CreateTestImage(ImageOperation):
 
-    def execute(self):
+    def configure(self, name="t_phantom"):
+        self.name = name
+
+    def shepp_logan(self):
+        """Create a Schepp-Logan phantom image of size 256 x 256."""
+        # create a test image of size 256 x 256
+        self.image.data = np.zeros((256, 256), dtype=np.uint8)
+        from skimage.data import shepp_logan_phantom
+        self.image.data = shepp_logan_phantom()
+        self.image.data = (self.image.data * 255).astype(np.uint8)
+
+    def circle_square(self):
+        """Create a circle-square phantom image of size 256 x 256."""
+        # create a test image of size 256 x 256 with a circle and a square in the center
+        self.image.data = np.ones(
+            (256, 256), dtype=np.uint8) * 50  # background
+        self.image.data[0, 0] = 0  # ground reference point
+        # the circle is of radius 50, intensity 50 and the square is of side 160 intensity 150
+        self.image.data[48:208, 48:208] = 150  # square
+        for x in range(128-50, 128+50):
+            for y in range(128-50, 128+50):
+                if (x-128)**2 + (y-128)**2 <= 50**2:
+                    self.image.data[x, y] = 250  # circle
+
+    def t_phantom(self):
         # create a test image of size 128 x 128
         self.image.data = np.zeros((128, 128), dtype=np.uint8)
         # create a 70 x 70 letter T in the center of the image
         self.image.data[28:49, 28:99] = 255  # top
         self.image.data[48:99, 53:74] = 255  # leg
 
+    def execute(self):
+
+        if self.name == "t_phantom":
+            self.t_phantom()
+        elif self.name == "shepp_logan":
+            self.shepp_logan()
+        elif self.name == "circle_square":
+            self.circle_square()
+
         return deepcopy(self.image)
 
 
-class AddSaltPepperNoise(ImageOperation):
+class NoiseGenerator(ImageOperation):
 
     def configure(self, **kwargs):
         """
@@ -90,10 +123,22 @@ class AddSaltPepperNoise(ImageOperation):
             salt_prob: the probability of a pixel to be salted instead of peppered
 
         """
-        self.amount = kwargs['amount']
-        self.salt_prob = kwargs['salt_prob']
+        if 'type' in kwargs:
+            self.type = kwargs['type']
+        else:
+            raise Exception('Noise type is not specified')
 
-    def execute(self):
+        if self.type == 'salt_pepper':
+            self.amount = kwargs['amount']
+            self.salt_prob = kwargs['salt_prob']
+        elif self.type == 'gaussian':
+            self.mean = kwargs['mean']
+            self.sigma = kwargs['sigma']
+        elif self.type == 'uniform':
+            self.a = kwargs['a']
+            self.b = kwargs['b']
+
+    def salt_pepper(self):
         # add salt and pepper noise to the image
         # amount is the percentage of pixels to be affected
         # salt_prob is the probability of a pixel to be salted instead of peppered
@@ -109,6 +154,36 @@ class AddSaltPepperNoise(ImageOperation):
                         self.image.data[x, y] = 0
 
         return deepcopy(self.image)
+
+    def gaussian(self):
+        """ Add gaussian noise to the image """
+        L = 2**self.image.get_channel_depth()
+        noise = np.random.normal(self.mean, self.sigma, self.image.data.shape)
+        self.image.data = self.image.data + noise
+        self.image.data = clip(self.image.data, 0, L - 1)
+        self.image.data = self.image.data.astype(
+            self.image.get_alloc_pixel_dtype())
+        return deepcopy(self.image)
+
+    def uniform(self):
+        """Add uniform noise to the image"""
+        L = 2**self.image.get_channel_depth()
+        noise = np.random.uniform(self.a, self.b, self.image.data.shape)
+        self.image.data = self.image.data + noise
+        self.image.data = clip(self.image.data, 0, L - 1)
+        self.image.data = self.image.data.astype(
+            self.image.get_alloc_pixel_dtype())
+        return deepcopy(self.image)
+
+    def execute(self):
+        if self.type == "salt_pepper":
+            return self.salt_pepper()
+        elif self.type == "gaussian":
+            return self.gaussian()
+        elif self.type == "uniform":
+            return self.uniform()
+        else:
+            print_debug("Noise error")
 
 
 class ApplyLinearFilter(ImageOperation):
@@ -428,7 +503,6 @@ class HistogramEqualization(ImageOperation):
 
 
 # TODO: refactor affine or pixelwise transformations
-
 
 class BilinearScaling(ImageOperation):
     '''

@@ -168,6 +168,110 @@ def complex_angle(array):
     """
     return np.arctan2(np.imag(array), np.real(array))
 
+
+def get_histogram(image_arr):
+    """Gets histogram of image.
+
+    Params:
+        image_arr: image array
+    Returns:
+        histogram: image histogram
+    """
+    if image_arr.ndim == 3:
+        image_arr = np.mean(image_arr, axis=2)
+    # get image levels using log2
+    L = int(2 ** np.ceil(np.log2(np.max(image_arr))))
+
+    # get image histogram
+    histogram = np.zeros(L)
+    for i in range(image_arr.shape[0]):
+        for j in range(image_arr.shape[1]):
+            histogram[image_arr[i][j]] += 1
+
+    return histogram
+
+
+def histo_mean(image_arr=None, histogram=None):
+    """Gets mean of image histogram.
+
+    Params:
+        image_arr: image array
+        OR 
+        histogram: image histogram
+    Returns:
+        mean: mean of image histogram
+    """
+
+    # get image histogram
+    if histogram is None and image_arr is not None:
+        histogram = get_histogram(image_arr)
+
+    if histogram is None:
+        raise Exception("No histogram or image array provided")
+
+    # get mean of histogram
+    mean = 0
+    for i in range(len(histogram)):
+        mean += i * histogram[i]
+    mean = mean / np.sum(histogram)
+
+    return mean
+
+
+def histo_std_dev(image_arr=None, histogram=None):
+    """Gets standard deviation of image histogram.
+
+    Params:
+        image_arr: image array
+        OR 
+        histogram: image histogram
+    Returns:
+        std_dev: standard deviation of image histogram
+    """
+
+    # get image histogram
+    if histogram is None and image_arr is not None:
+        histogram = get_histogram(image_arr)
+
+    if histogram is None:
+        raise Exception("No histogram or image array provided")
+
+    # get mean of histogram
+    mean = histo_mean(histogram=histogram)
+
+    # get standard deviation
+    std_dev = 0
+    for i in range(len(histogram)):
+        std_dev += (i - mean)**2 * histogram[i]
+    std_dev = std_dev / np.sum(histogram)
+    std_dev = np.sqrt(std_dev)
+
+    return std_dev
+
+
+def clip(arr, min_val, max_val):
+    """ Clips array values between min_val and max_val.
+
+    Params:
+        arr: input array
+        min_val: minimum value
+        max_val: maximum value
+    Returns:
+        clipped array
+
+    """
+
+    # loop on array and clip values
+    for i in range(arr.shape[0]):
+        for j in range(arr.shape[1]):
+            if arr[i][j] < min_val:
+                arr[i][j] = min_val
+            elif arr[i][j] > max_val:
+                arr[i][j] = max_val
+
+    return arr
+
+
 # def rescale_intensity(arr, depth = 1, shift_min = False):
 #     """ Intensity scaling.
 #     Params:

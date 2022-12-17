@@ -27,7 +27,7 @@ import matplotlib.pylab as plt
 from PyQt5.QtGui import *
 from PyQt5 import QtGui
 from modules.utility import print_debug, round_nearest_odd
-from modules import openfile, operations, tabs
+from modules import openfile, tabs
 import modules.image
 
 
@@ -112,6 +112,16 @@ def update_img_resize_dimensions(self, selector, data_arr):
         self.resize_modified_dim_textbox.setText(dimensions_string)
 
 
+def display_text(self, text, name):
+    """ Outputs text to the specified textbox """
+    if name == 'noise std dev':
+        self.noise_std_textbox.setText(text)
+    elif name == 'noise mean':
+        self.noise_mean_textbox.setText(text)
+    else:
+        raise ValueError("Incorrect textbox name")
+
+
 # global dictionary for output window selection
 output_window_dict = {
     'Image1': 0,
@@ -119,6 +129,13 @@ output_window_dict = {
     'Plot1': 2,
     'Plot2': 3,
     'None': None
+}
+
+# global dict for noise type selection
+noise_type_dict = {
+    'Gaussian': "gaussian",
+    'Salt and Pepper': "salt_pepper",
+    'Uniform': "uniform"
 }
 
 
@@ -176,9 +193,6 @@ def get_user_input(self):
     user_input['spfilter highboost factor'] = self.highboost_factor_spinbox.value()
     user_input['spfilter highboost clipping'] = self.clipping_checkbox.isChecked()
 
-    user_input['saltpepper noise weight'] = self.noise_wt_spinbox.value()
-    user_input['saltpepper salt prob'] = self.noise_salt_spinbox.value()
-
     # FFT Display
     user_input['fft output magshift'] = output_window_dict[self.fft_output_magshift_combobox.currentText()]
     user_input['fft output maglog'] = output_window_dict[self.fft_output_maglog_combobox.currentText()]
@@ -199,6 +213,23 @@ def get_user_input(self):
     user_input['bandstop low'] = int(self.bandstop_low_spinbox.value())
     user_input['bandstop high'] = int(self.bandstop_high_spinbox.value())
 
+    # Noise Generation
+    user_input['noise type'] = noise_type_dict[self.noise_gen_toolbox.itemText(
+        self.noise_gen_toolbox.currentIndex())]
+    user_input['noise output'] = output_window_dict[self.noise_gen_output_combobox.currentText()]
+
+    user_input['saltpepper noise weight'] = self.noise_wt_spinbox.value()
+    user_input['saltpepper salt prob'] = self.noise_salt_spinbox.value()
+
+    user_input['noise uniform a'] = self.noise_auniform_spinbox.value()
+    user_input['noise uniform b'] = self.noise_buniform_spinbox.value()
+
+    user_input['noise gaussian mean'] = self.noise_gmean_spinbox.value()
+    user_input['noise gaussian sigma'] = self.noise_gsigma_spinbox.value()
+
+    user_input['roi analysis output'] = output_window_dict[self.roi_analysis_output_combobox.currentText()]
+    user_input['roi select output'] = output_window_dict[self.roi_select_output_combobox.currentText()]
+    
     return user_input
 
 
@@ -316,13 +347,13 @@ def display_pixmap(self, image, window_index=None, force_normalize=True):
         self.canvas.draw()
     elif window_index == 3:
         self.figure = plt.figure(figsize=(15, 5), facecolor='black')
-        self.canvas2 = FigureCanvas(self.figure)
-        self.canvas2.mpl_connect('button_press_event',
+        self.canvas = FigureCanvas(self.figure)
+        self.canvas.mpl_connect('button_press_event',
                                  self.output_click_statusbar)
-        self.gridLayout_15.addWidget(self.canvas2, 0, 0, 1, 1)
+        self.gridLayout_15.addWidget(self.canvas, 0, 0, 1, 1)
         plt.axis('on')
         plt.imshow(image_data, cmap='gray', interpolation=None)
-        self.canvas2.draw()
+        self.canvas.draw()
     else:
         raise ValueError("Invalid window index")
 
@@ -332,6 +363,9 @@ def display_histogram(self, histogram, range_hist, window_index=None):
 
     if window_index == None:
         return
+
+    if range_hist == None:
+        range_hist = [0, int(len(histogram)-1)]
 
     if window_index == output_window_dict['Plot1']:
         self.figure = plt.figure(figsize=(15, 5), facecolor='black')
@@ -393,6 +427,8 @@ toolbox_tab_dict = {
     'Spatial Filter': 'tab_spfilt',
     'FFT Display': 'tab_fftdisp',
     'Frequency Filter': 'tab_freqfilt',
+
+
 }
 
 
@@ -449,6 +485,44 @@ def disp_fft_all_none(self):
     self.fft_output_maglog_combobox.setCurrentIndex(4)
     self.fft_output_phshift_combobox.setCurrentIndex(4)
     self.fft_output_phlog_combobox.setCurrentIndex(4)
+
+
+def show_roi_window(self, roi_window):
+    """ Shows the ROI selection matplot window
+    """
+    from matplotlib.widgets import RectangleSelector
+
+    # create a new figure
+    self.roi_fig = plt.figure(facecolor= 'black')
+
+    self.canvas = FigureCanvas(self.roi_fig)
+    self.canvas.mpl_connect('button_press_event',
+                                self.output_click_statusbar)
+    if roi_window ==2:
+        self.gridLayout_11.addWidget(self.canvas, 0, 0, 1, 1)
+    elif roi_window == 3:
+        self.gridLayout_15.addWidget(self.canvas, 0, 0, 1, 1)
+
+    # create a new axis
+    self.roi_ax = self.roi_fig.add_subplot(111)
+
+    # plot the image
+    self.roi_ax.imshow(self.image1.data, cmap ='gray' , interpolation=None)
+
+    # create a new rectangle selector
+    self.toggle_selector_rs = RectangleSelector(self.roi_ax, self.line_select_callback,
+                                        drawtype='box', useblit=True,
+                                        button=[1, 3],  # don't use middle button
+                                        minspanx=5, minspany=5,
+                                        spancoords='pixels',
+                                        interactive=True)
+    plt.connect('key_press_event', self.toggle_selector)
+    # show the figure
+    # plt.show()
+    # self.figure = plt.figure(figsize=(15, 5), facecolor='black')
+    plt.axis('on')
+    
+    self.canvas.draw()
 
 
 def init_connectors(self):
@@ -522,7 +596,7 @@ def init_connectors(self):
     self.boxblur_apply.clicked.connect(lambda: tabs.apply_boxblur(self))
     self.highboost_apply.clicked.connect(lambda: tabs.apply_highboost(self))
     self.median_apply.clicked.connect(lambda: tabs.apply_median(self))
-    self.saltpepper_apply.clicked.connect(lambda: tabs.apply_saltpepper(self))
+    # self.saltpepper_apply.clicked.connect(lambda: tabs.apply_saltpepper(self))
     self.reset_operations_3.clicked.connect(
         lambda: modules.image.restore_original(self))
 
@@ -562,6 +636,16 @@ def init_connectors(self):
     self.bandstop_ft_apply.clicked.connect(lambda: tabs.apply_bandstop(self))
     self.reset_operations_ftfilt.clicked.connect(
         lambda: modules.image.restore_original(self))
+
+    """Noise Tab"""
+    self.noise_apply.clicked.connect(lambda: tabs.apply_noise(self))
+    self.select_roi.clicked.connect(lambda: tabs.roi_select(self))
+    self.analyze_roi.clicked.connect(lambda: tabs.analyze_roi(self))
+    self.gen_test_image_2.clicked.connect(
+        lambda: tabs.generate_test_image(self, name='circle_square'))
+    self.reset_operations_4.clicked.connect(
+        lambda: modules.image.restore_original(self))
+
 
 
 def about_us(self):
