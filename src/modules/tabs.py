@@ -504,7 +504,6 @@ def roi_select(self):
 def analyze_roi(self):
     # get user input parameters data
     roi_coordinates = self.selected_roi_coords
-    # roi_coordinates = (50, 90, 50, 80)  # TODO: remove this (testing)
     analysis_window = interface.get_user_input(self)['roi analysis output']
 
     # get a sub region using the roi coordinates
