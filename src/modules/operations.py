@@ -84,13 +84,15 @@ class CreateTestImage(ImageOperation):
     def circle_square(self):
         """Create a circle-square phantom image of size 256 x 256."""
         # create a test image of size 256 x 256 with a circle and a square in the center
-        self.image.data = np.zeros((256, 256), dtype=np.uint8)
+        self.image.data = np.ones(
+            (256, 256), dtype=np.uint8) * 50  # background
+        self.image.data[0, 0] = 0  # ground reference point
         # the circle is of radius 50, intensity 50 and the square is of side 160 intensity 150
         self.image.data[48:208, 48:208] = 150  # square
         for x in range(128-50, 128+50):
             for y in range(128-50, 128+50):
                 if (x-128)**2 + (y-128)**2 <= 50**2:
-                    self.image.data[x, y] = 50  # circle
+                    self.image.data[x, y] = 250  # circle
 
     def t_phantom(self):
         # create a test image of size 128 x 128
