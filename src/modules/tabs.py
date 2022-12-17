@@ -25,14 +25,10 @@ from modules import interface
 from modules.operations import *
 from modules.image import UpdateFFT
 
-#!Important: missing functionality
-# TODO: fix rotation direction (make it anti-clockwise)
-# TODO: make sure shearing is correct
-# TODO: add axes option to the output image
-
-
 # TODO: make the functions more generic and reduce code repetiton
-def generate_test_image(self):
+
+
+def generate_test_image(self, name='t_phantom'):
     '''Generates a test image'''
 
     if self.image1 == None:
@@ -40,7 +36,10 @@ def generate_test_image(self):
 
     self.image1.clear_image_data()
 
-    self.image1.add_operation(CreateTestImage())
+    operation = CreateTestImage()
+    operation.configure(name=name)
+
+    self.image1.add_operation(operation)
 
     # run the processing and display the result
     interface.display_run_processing(self)
@@ -297,47 +296,7 @@ def apply_median(self):
         QMessageBox.critical(self, 'Error', 'Error Running Operation')
 
 
-def apply_noise(self):
-    '''Applies the salt and pepper noise operation to the image'''
-    try:
-        # get user input parameters data
-        output_noisy = interface.get_user_input(self)['noise output']
-        noise_type = interface.get_user_input(self)['noise type']
-        operation = NoiseGenerator()
-        # clear previous operations
-        self.image1.clear_operations(clear_backup=False, undo_old=True)
-
-        if noise_type == "salt_pepper":
-            salt_noise = interface.get_user_input(self)['saltpepper salt prob']
-            salt_noise = salt_noise / 100
-
-            noise_weight = interface.get_user_input(
-                self)['saltpepper noise weight']
-            noise_weight = noise_weight / 100
-
-            # configure operation
-            operation.configure(amount=noise_weight, salt_prob=salt_noise, type = 'salt_pepper')
-        
-        elif noise_type == "gaussian":
-            mean = interface.get_user_input(self)['noise gaussian mean']
-            sigma = interface.get_user_input(self)['noise gaussian sigma']
-
-            operation.configure(mean = mean , sigma = sigma , type = 'gaussian')
-
-        elif noise_type == "uniform":
-            a = interface.get_user_input(self)['noise uniform a']
-            b = interface.get_user_input(self)['noise uniform b']
-
-            operation.configure(a = a , b = b ,  type = 'uniform')
-
-        # add the noise
-        apply_image_operation(self, operation, output_noisy)
-
-    except:
-        QMessageBox.critical(self, 'Error', 'Error Running Operation')
-
-
-def display_fft(self):
+def display_fft(self): 
     """ Displays the fft of the image """
     try:
         # get user input parameters data
@@ -490,3 +449,81 @@ def apply_bandstop(self):
     except:
         QMessageBox.critical(self, 'Error', 'Error Running Operation')
 
+
+def apply_noise(self):
+    '''Applies the salt and pepper noise operation to the image'''
+    try:
+        # get user input parameters data
+        output_noisy = interface.get_user_input(self)['noise output']
+        noise_type = interface.get_user_input(self)['noise type']
+        
+        operation = NoiseGenerator()
+        # clear previous operations
+        self.image1.clear_operations(clear_backup=True, undo_old=False)
+
+        if noise_type == "salt_pepper":
+            salt_noise = interface.get_user_input(self)['saltpepper salt prob']
+            salt_noise = salt_noise / 100
+
+            noise_weight = interface.get_user_input(
+                self)['saltpepper noise weight']
+            noise_weight = noise_weight / 100
+
+            # configure operation
+            operation.configure(amount=noise_weight,
+                                salt_prob=salt_noise, type=noise_type)
+
+        elif noise_type == "gaussian":
+            mean = interface.get_user_input(self)['noise gaussian mean']
+            sigma = interface.get_user_input(self)['noise gaussian sigma']
+
+            operation.configure(mean=mean, sigma=sigma, type=noise_type)
+
+        elif noise_type == "uniform":
+            a = interface.get_user_input(self)['noise uniform a']
+            b = interface.get_user_input(self)['noise uniform b']
+
+            operation.configure(a=a, b=b,  type=noise_type)
+
+        # add the noise
+        apply_image_operation(self, operation, output_noisy)
+
+    except:
+        QMessageBox.critical(self, 'Error', 'Error Running Operation')
+
+
+def roi_select(self):
+    """ Displays the roi selection window """
+
+    # get user input parameters data
+    roi_window = interface.get_user_input(self)['roi window']
+    # display the roi selection window
+    self.roi_window = interface.show_roi_window(self, roi_window)
+    pass
+
+
+def analyze_roi(self):
+    # get user input parameters data
+    # roi_coordinates = interface.get_user_input(self)['roi coordinates']
+    roi_coordinates = (50, 90, 50, 80)  # TODO: remove this (testing)
+    analysis_window = interface.get_user_input(self)['roi analysis output']
+
+    # get a sub region using the roi coordinates
+    roi = self.image1.get_region(roi_coordinates)
+
+    # get and display histogram of roi
+    histogram = get_histogram(roi)
+    histo_range = None
+    interface.display_histogram(self, histogram, histo_range, analysis_window)
+
+    # get and display mean of roi
+    mean = histo_mean(histogram=histogram)
+    outstr = ""
+    outstr = "Mean: " + str(round(mean, 2))
+    interface.display_text(self, outstr, 'noise mean')
+
+    # get and display standard deviation of roi
+    std = histo_std_dev(histogram=histogram)
+    outstr = ""
+    outstr += "Standard Deviation: " + str(round(std, 2))
+    interface.display_text(self, outstr, 'noise std dev')

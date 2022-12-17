@@ -191,6 +191,21 @@ class Image:
 
         return histogram, range_histo
 
+    def get_region(self, coordinates):
+        """
+        Returns the region of the image defined by the coordinates.
+
+        Args:
+            coordinates (tuple): the coordinates of the region
+
+        Returns:
+            region (np.ndarray): the region of the image
+
+        """
+        region = self.data[coordinates[0]:coordinates[1],
+                           coordinates[2]:coordinates[3]]
+        return region
+
     def get_formatted_metadata(self):
         f_metadata = ''
         for key, value in self.metadata.items():
