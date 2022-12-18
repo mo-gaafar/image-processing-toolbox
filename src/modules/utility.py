@@ -272,12 +272,54 @@ def clip(arr, min_val, max_val):
     return arr
 
 
-# def rescale_intensity(arr, depth = 1, shift_min = False):
-#     """ Intensity scaling.
-#     Params:
-#         depth: channel depth
-#         shift_min: whether to shift by minimum value or truncate negatives
-#     """
+def sinogram(image_arr):
+    """Gets sinogram of image.
 
-#     if shift_min:
-#         pass
+    Params:
+        image_arr: image array
+    Returns:
+        sinogram: sinogram of image
+    """
+    from skimage.transform import radon
+
+    # get image dimensions
+    height, width = image_arr.shape
+
+    # get number of angles
+    angles = np.arange(0, 180)
+
+    # get number of projections
+    projections = np.arange(0, width)
+
+    # get sinogram
+    sinogram = np.zeros((len(angles), len(projections)))
+    for i in range(len(angles)):
+        for j in range(len(projections)):
+            # get projection
+            projection = radon(image_arr, theta=[angles[i]], circle=False)
+            sinogram[i][j] = projection[0][j]
+
+    return sinogram
+
+
+def rescale_intensity(arr, depth=1, shift_min=False):
+    """ Intensity scaling.
+    Params:
+        depth: channel depth
+        shift_min: whether to shift by minimum value or truncate negatives
+    """
+
+    if shift_min:
+        # shift by minimum value
+        arr = arr - np.min(arr)
+    else:
+        # truncate negatives
+        arr[arr < 0] = 0
+
+    # scale to 0-1
+    arr = arr / np.max(arr)
+
+    # scale to 0-2^depth-1
+    arr = arr * (2**depth - 1)
+
+    return arr
