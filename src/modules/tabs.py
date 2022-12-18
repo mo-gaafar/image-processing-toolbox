@@ -495,11 +495,13 @@ def apply_noise(self):
 
 def roi_select(self):
     """ Displays the roi selection window """
-
-    # get user input parameters data
-    roi_window = interface.get_user_input(self)['roi select output']
-    # display the roi selection window
-    interface.show_roi_window(self, roi_window)
+    try:
+        # get user input parameters data
+        roi_window = interface.get_user_input(self)['roi select output']
+        # display the roi selection window
+        interface.show_roi_window(self, roi_window)
+    except:
+        QMessageBox.critical(self, 'Error', 'No Image Loaded or RGB Image')
     
 
 def analyze_roi(self):
