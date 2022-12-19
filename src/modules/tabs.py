@@ -297,7 +297,7 @@ def apply_median(self):
         QMessageBox.critical(self, 'Error', 'Error Running Operation')
 
 
-def display_fft(self): 
+def display_fft(self):
     """ Displays the fft of the image """
     try:
         # get user input parameters data
@@ -457,7 +457,7 @@ def apply_noise(self):
         # get user input parameters data
         output_noisy = interface.get_user_input(self)['noise output']
         noise_type = interface.get_user_input(self)['noise type']
-        
+
         operation = NoiseGenerator()
         # clear previous operations
         self.image1.clear_operations(clear_backup=True, undo_old=False)
@@ -502,7 +502,7 @@ def roi_select(self):
         interface.show_roi_window(self, roi_window)
     except:
         QMessageBox.critical(self, 'Error', 'No Image Loaded or RGB Image')
-    
+
 
 def analyze_roi(self):
     try:
@@ -516,7 +516,8 @@ def analyze_roi(self):
         # get and display histogram of roi
         histogram = get_histogram(roi)
         histo_range = None
-        interface.display_histogram(self, histogram, histo_range, analysis_window)
+        interface.display_histogram(
+            self, histogram, histo_range, analysis_window)
 
         # get and display mean of roi
         mean = histo_mean(histogram=histogram)
@@ -531,3 +532,26 @@ def analyze_roi(self):
         interface.display_text(self, outstr, 'noise std dev')
     except:
         QMessageBox.critical(self, 'Error', 'Error Running Operation')
+
+
+def display_sinogram(self):
+    # get range array from user input
+
+    # get display window
+
+    # process sinogram here
+
+    # display sinogram
+    pass
+
+
+def display_laminogram(self):
+    # get filter type
+
+    # get display window
+
+    # process laminogram
+
+    # display laminogram
+
+    pass

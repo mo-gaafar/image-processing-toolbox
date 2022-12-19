@@ -229,7 +229,19 @@ def get_user_input(self):
 
     user_input['roi analysis output'] = output_window_dict[self.roi_analysis_output_combobox.currentText()]
     user_input['roi select output'] = output_window_dict[self.roi_select_output_combobox.currentText()]
-    
+
+    # Radon (backrprojection)
+
+    user_input['laminogram filter'] = self.radon_laminofilter_combobox.itemText(
+        self.radon_laminofilter_combobox.currentIndex())
+
+    user_input['sinogram angle start'] = self.radon_sino_start_spinbox.value()
+    user_input['sinogram angle end'] = self.radon_sino_end_spinbox.value()
+    user_input['sinogram angle step'] = self.radon_sino_step_spinbox.value()
+
+    user_input['radon output'] = output_window_dict[self.radon_output_combobox.currentText()]
+    user_input['sinogram output'] = output_window_dict[self.radon_sino_combobox.currentText()]
+
     return user_input
 
 
@@ -349,7 +361,7 @@ def display_pixmap(self, image, window_index=None, force_normalize=True):
         self.figure = plt.figure(figsize=(15, 5), facecolor='black')
         self.canvas = FigureCanvas(self.figure)
         self.canvas.mpl_connect('button_press_event',
-                                 self.output_click_statusbar)
+                                self.output_click_statusbar)
         self.gridLayout_15.addWidget(self.canvas, 0, 0, 1, 1)
         plt.axis('on')
         plt.imshow(image_data, cmap='gray', interpolation=None)
@@ -493,12 +505,12 @@ def show_roi_window(self, roi_window):
     from matplotlib.widgets import RectangleSelector
 
     # create a new figure
-    self.roi_fig = plt.figure(facecolor= 'black')
+    self.roi_fig = plt.figure(facecolor='black')
 
     self.canvas = FigureCanvas(self.roi_fig)
     self.canvas.mpl_connect('button_press_event',
-                                self.output_click_statusbar)
-    if roi_window ==2:
+                            self.output_click_statusbar)
+    if roi_window == 2:
         self.gridLayout_11.addWidget(self.canvas, 0, 0, 1, 1)
     elif roi_window == 3:
         self.gridLayout_15.addWidget(self.canvas, 0, 0, 1, 1)
@@ -507,21 +519,22 @@ def show_roi_window(self, roi_window):
     self.roi_ax = self.roi_fig.add_subplot(111)
 
     # plot the image
-    self.roi_ax.imshow(self.image1.data, cmap ='gray' , interpolation=None)
+    self.roi_ax.imshow(self.image1.data, cmap='gray', interpolation=None)
 
     # create a new rectangle selector
     self.toggle_selector_rs = RectangleSelector(self.roi_ax, self.line_select_callback,
-                                        drawtype='box', useblit=True,
-                                        button=[1, 3],  # don't use middle button
-                                        minspanx=5, minspany=5,
-                                        spancoords='pixels',
-                                        interactive=True)
+                                                drawtype='box', useblit=True,
+                                                # don't use middle button
+                                                button=[1, 3],
+                                                minspanx=5, minspany=5,
+                                                spancoords='pixels',
+                                                interactive=True)
     plt.connect('key_press_event', self.toggle_selector)
     # show the figure
     # plt.show()
     # self.figure = plt.figure(figsize=(15, 5), facecolor='black')
     plt.axis('on')
-    
+
     self.canvas.draw()
 
 
@@ -646,6 +659,14 @@ def init_connectors(self):
     self.reset_operations_4.clicked.connect(
         lambda: modules.image.restore_original(self))
 
+    """Radon backrpojection tab"""
+    self.laminogram_apply.clicked.connect(
+        lambda: tabs.display_laminogram(self))
+    self.sinogram_apply.clicked.connect(lambda: tabs.display_sinogram(self))
+    self.reset_operations_5.clicked.connect(
+        lambda: modules.image.restore_original(self))
+    self.gen_test_image_3.clicked.connect(
+        lambda: tabs.generate_test_image(self, name='shepp_logan'))
 
 
 def about_us(self):
