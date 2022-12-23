@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1170</width>
-    <height>673</height>
+    <height>697</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -85,7 +85,7 @@ QGroupBox::title  {
                <x>0</x>
                <y>0</y>
                <width>380</width>
-               <height>260</height>
+               <height>272</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -179,7 +179,7 @@ QGroupBox::title  {
                <x>0</x>
                <y>0</y>
                <width>380</width>
-               <height>259</height>
+               <height>271</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -264,7 +264,7 @@ QGroupBox::title  {
                <x>0</x>
                <y>0</y>
                <width>380</width>
-               <height>259</height>
+               <height>271</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -324,7 +324,7 @@ QGroupBox::title  {
                <x>0</x>
                <y>0</y>
                <width>380</width>
-               <height>260</height>
+               <height>272</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -364,7 +364,7 @@ QGroupBox::title  {
           <string>Tools</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_8">
-          <item row="0" column="1">
+          <item row="0" column="0">
            <widget class="QTabWidget" name="tabWidget">
             <property name="enabled">
              <bool>true</bool>
@@ -867,7 +867,7 @@ QPushButton:pressed {
                    <x>0</x>
                    <y>0</y>
                    <width>282</width>
-                   <height>248</height>
+                   <height>272</height>
                   </rect>
                  </property>
                  <attribute name="label">
@@ -1730,7 +1730,7 @@ QPushButton:pressed {
                    <x>0</x>
                    <y>0</y>
                    <width>282</width>
-                   <height>265</height>
+                   <height>289</height>
                   </rect>
                  </property>
                  <attribute name="label">
@@ -2620,7 +2620,7 @@ QPushButton:pressed {
                    <x>0</x>
                    <y>0</y>
                    <width>282</width>
-                   <height>347</height>
+                   <height>371</height>
                   </rect>
                  </property>
                  <attribute name="label">
@@ -2886,7 +2886,7 @@ QPushButton:pressed {
                    <x>0</x>
                    <y>0</y>
                    <width>282</width>
-                   <height>367</height>
+                   <height>391</height>
                   </rect>
                  </property>
                  <attribute name="label">
@@ -3154,7 +3154,7 @@ QPushButton:pressed {
                        <x>0</x>
                        <y>0</y>
                        <width>264</width>
-                       <height>168</height>
+                       <height>192</height>
                       </rect>
                      </property>
                      <attribute name="label">
@@ -3562,7 +3562,7 @@ QPushButton:pressed {
                 </property>
                </widget>
               </item>
-              <item row="1" column="0" colspan="5">
+              <item row="1" column="0" colspan="4">
                <widget class="QLabel" name="label_61">
                 <property name="text">
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Radon Backprojection&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -3585,265 +3585,47 @@ QPushButton:pressed {
                 </property>
                </widget>
               </item>
-              <item row="3" column="0" colspan="4">
-               <widget class="QLabel" name="label_60">
-                <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Laminogram Image Output&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="0" colspan="2">
-               <widget class="QComboBox" name="radon_output_combobox">
-                <property name="currentIndex">
-                 <number>0</number>
-                </property>
-                <item>
-                 <property name="text">
-                  <string>Image1</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Image2</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Plot1</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Plot2</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>None</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item row="5" column="0" colspan="2">
-               <widget class="QLabel" name="label_50">
-                <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Filter Type&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-               </widget>
-              </item>
-              <item row="6" column="0" colspan="2">
-               <widget class="QComboBox" name="radon_laminofilter_combobox">
-                <item>
-                 <property name="text">
-                  <string>None</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Ram-Lak</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Hamming</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item row="7" column="0" colspan="7">
-               <widget class="QPushButton" name="laminogram_apply">
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QPushButton {
-    border-radius: 5px;
-    border-style: outset;
-    background: rgb(12, 17, 24);
-	padding: 3;
-    }
-
-QPushButton:hover {
-    background: rgb(63, 95, 127)
-    }
-
-QPushButton:pressed {
-    border-style: inset;
-    background:rgb(20, 20, 20)
-    }</string>
-                </property>
-                <property name="text">
-                 <string>Display Laminogram</string>
-                </property>
-               </widget>
-              </item>
-              <item row="8" column="0" colspan="7">
-               <widget class="Line" name="line_35">
-                <property name="maximumSize">
-                 <size>
-                  <width>16777215</width>
-                  <height>1</height>
-                 </size>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">background-color: rgba(255, 255, 255,100);</string>
-                </property>
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-               </widget>
-              </item>
-              <item row="9" column="0" colspan="3">
-               <widget class="QLabel" name="label_48">
-                <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Sinogram Output&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-               </widget>
-              </item>
-              <item row="10" column="0" colspan="2">
-               <widget class="QComboBox" name="radon_sino_combobox">
-                <property name="currentIndex">
-                 <number>0</number>
-                </property>
-                <item>
-                 <property name="text">
-                  <string>Plot1</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Plot2</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>None</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item row="11" column="0" colspan="2">
+              <item row="3" column="0" colspan="2">
                <widget class="QLabel" name="label_62">
                 <property name="text">
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Angle Range&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
               </item>
-              <item row="12" column="0">
+              <item row="4" column="0">
                <widget class="QLabel" name="label_46">
                 <property name="text">
                  <string>Start</string>
                 </property>
                </widget>
               </item>
-              <item row="12" column="1">
-               <widget class="QSpinBox" name="radon_sino_start_spinbox">
-                <property name="maximum">
-                 <number>179</number>
-                </property>
-               </widget>
-              </item>
-              <item row="12" column="2">
+              <item row="4" column="2">
                <widget class="QLabel" name="label_63">
                 <property name="text">
                  <string>End</string>
                 </property>
                </widget>
               </item>
-              <item row="12" column="3">
-               <widget class="QSpinBox" name="radon_sino_end_spinbox">
-                <property name="maximum">
-                 <number>360</number>
-                </property>
-               </widget>
-              </item>
-              <item row="12" column="4">
-               <spacer name="horizontalSpacer">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>28</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item row="12" column="5">
+              <item row="4" column="5">
                <widget class="QLabel" name="label_64">
                 <property name="text">
                  <string>Step</string>
                 </property>
                </widget>
               </item>
-              <item row="12" column="6">
-               <widget class="QDoubleSpinBox" name="radon_sino_step_spinbox">
-                <property name="toolTip">
-                 <string/>
-                </property>
-                <property name="statusTip">
-                 <string/>
-                </property>
-                <property name="prefix">
-                 <string/>
-                </property>
-                <property name="maximum">
-                 <double>179.900000000000006</double>
-                </property>
-                <property name="value">
-                 <double>1.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="13" column="0" colspan="7">
-               <widget class="QPushButton" name="sinogram_apply">
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QPushButton {
-    border-radius: 5px;
-    border-style: outset;
-    background: rgb(12, 17, 24);
-	padding: 3;
-    }
-
-QPushButton:hover {
-    background: rgb(63, 95, 127)
-    }
-
-QPushButton:pressed {
-    border-style: inset;
-    background:rgb(20, 20, 20)
-    }</string>
-                </property>
+              <item row="5" column="0" colspan="4">
+               <widget class="QLabel" name="label_60">
                 <property name="text">
-                 <string>Display Sinogram</string>
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Laminogram Image Output&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
               </item>
-              <item row="14" column="0" colspan="7">
-               <spacer name="verticalSpacer_10">
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
+              <item row="4" column="3">
+               <widget class="QSpinBox" name="radon_sino_end_spinbox">
+                <property name="maximum">
+                 <number>180</number>
                 </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::MinimumExpanding</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>279</width>
-                  <height>198</height>
-                 </size>
-                </property>
-               </spacer>
+               </widget>
               </item>
               <item row="15" column="0" colspan="7">
                <widget class="QPushButton" name="gen_test_image_3">
@@ -3871,7 +3653,7 @@ QPushButton:pressed {
     }</string>
                 </property>
                 <property name="text">
-                 <string>Generate Test Image</string>
+                 <string>Generate Test Phantom</string>
                 </property>
                </widget>
               </item>
@@ -3903,6 +3685,185 @@ QPushButton:pressed {
                 <property name="text">
                  <string>Reset to Default</string>
                 </property>
+               </widget>
+              </item>
+              <item row="12" column="0" colspan="7">
+               <widget class="QPushButton" name="laminogram_apply">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QPushButton {
+    border-radius: 5px;
+    border-style: outset;
+    background: rgb(12, 17, 24);
+	padding: 3;
+    }
+
+QPushButton:hover {
+    background: rgb(63, 95, 127)
+    }
+
+QPushButton:pressed {
+    border-style: inset;
+    background:rgb(20, 20, 20)
+    }</string>
+                </property>
+                <property name="text">
+                 <string>Display All</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="1">
+               <widget class="QSpinBox" name="radon_sino_start_spinbox">
+                <property name="maximum">
+                 <number>179</number>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="4">
+               <spacer name="horizontalSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>28</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="7" column="0" colspan="2">
+               <widget class="QLabel" name="label_50">
+                <property name="text">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Filter Type&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="6">
+               <widget class="QDoubleSpinBox" name="radon_sino_step_spinbox">
+                <property name="toolTip">
+                 <string/>
+                </property>
+                <property name="statusTip">
+                 <string/>
+                </property>
+                <property name="prefix">
+                 <string/>
+                </property>
+                <property name="maximum">
+                 <double>179.900000000000006</double>
+                </property>
+                <property name="value">
+                 <double>1.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item row="9" column="0" colspan="3">
+               <widget class="QLabel" name="label_48">
+                <property name="text">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Sinogram Output&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+              <item row="14" column="0" colspan="7">
+               <spacer name="verticalSpacer_10">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::MinimumExpanding</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>279</width>
+                  <height>198</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="11" column="0" colspan="3">
+               <widget class="QCheckBox" name="checkBox">
+                <property name="text">
+                 <string>Use My Implementation</string>
+                </property>
+               </widget>
+              </item>
+              <item row="6" column="0" colspan="3">
+               <widget class="QComboBox" name="radon_output_combobox">
+                <property name="currentIndex">
+                 <number>0</number>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>Image1</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Image2</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Plot1</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Plot2</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>None</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item row="8" column="0" colspan="3">
+               <widget class="QComboBox" name="radon_laminofilter_combobox">
+                <item>
+                 <property name="text">
+                  <string>None</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Ram-Lak</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Hamming</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item row="10" column="0" colspan="3">
+               <widget class="QComboBox" name="radon_sino_combobox">
+                <property name="currentIndex">
+                 <number>0</number>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>Plot1</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Plot2</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>None</string>
+                 </property>
+                </item>
                </widget>
               </item>
              </layout>
@@ -3974,6 +3935,7 @@ QPushButton:pressed {
     <addaction name="menuTools"/>
     <addaction name="separator"/>
     <addaction name="menuViewBoxes"/>
+    <addaction name="actionToggle_Scale"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -4129,6 +4091,11 @@ QPushButton:pressed {
   <action name="actiontest">
    <property name="text">
     <string>test</string>
+   </property>
+  </action>
+  <action name="actionToggle_Scale">
+   <property name="text">
+    <string>Toggle Scale</string>
    </property>
   </action>
  </widget>

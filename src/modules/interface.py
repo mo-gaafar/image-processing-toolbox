@@ -138,6 +138,13 @@ noise_type_dict = {
     'Uniform': "uniform"
 }
 
+# global dict for backprojection filter types
+lamino_filt_dict = {
+    'None': None,
+    'Ram-Lak': 'ramp',
+    'Hamming': 'hamming'
+}
+
 
 def get_user_input(self):
     '''
@@ -232,8 +239,8 @@ def get_user_input(self):
 
     # Radon (backrprojection)
 
-    user_input['laminogram filter'] = self.radon_laminofilter_combobox.itemText(
-        self.radon_laminofilter_combobox.currentIndex())
+    user_input['laminogram filter'] = lamino_filt_dict[self.radon_laminofilter_combobox.itemText(
+        self.radon_laminofilter_combobox.currentIndex())]
 
     user_input['sinogram angle start'] = self.radon_sino_start_spinbox.value()
     user_input['sinogram angle end'] = self.radon_sino_end_spinbox.value()
@@ -276,7 +283,7 @@ plt.rc('ytick', color='white')
 plt.rcParams["figure.autolayout"] = True
 
 
-def display_pixmap(self, image, window_index=None, force_normalize=True):
+def display_pixmap(self, image, window_index=None, force_normalize=True, aspect='equal'):
     '''Displays the image data in the image display area.
 
     Args:
@@ -341,11 +348,21 @@ def display_pixmap(self, image, window_index=None, force_normalize=True):
         self.image1_pixmap = QPixmap.fromImage(qim)
         self.image1_widget.setPixmap(self.image1_pixmap)
         self.image1_widget.adjustSize()
+        # enable scaling of label
+        if aspect == 'auto':
+            self.image1_widget.setScaledContents(True)
+        else:
+            self.image1_widget.setScaledContents(False)
         self.image1_widget.show()
     elif window_index == 1:
         self.image2_pixmap = QPixmap.fromImage(qim)
         self.image2_widget.setPixmap(self.image2_pixmap)
         self.image2_widget.adjustSize()
+        # enable scaling of label
+        if aspect == 'auto':
+            self.image2_widget.setScaledContents(True)
+        else:
+            self.image2_widget.setScaledContents(False)
         self.image2_widget.show()
     elif window_index == 2:
 
@@ -355,7 +372,7 @@ def display_pixmap(self, image, window_index=None, force_normalize=True):
                                 self.output_click_statusbar)
         self.gridLayout_11.addWidget(self.canvas, 0, 0, 1, 1)
         plt.axis('on')
-        plt.imshow(image_data, cmap='gray', interpolation=None)
+        plt.imshow(image_data, cmap='gray', interpolation=None, aspect=aspect)
         self.canvas.draw()
     elif window_index == 3:
         self.figure = plt.figure(figsize=(15, 5), facecolor='black')
@@ -364,7 +381,7 @@ def display_pixmap(self, image, window_index=None, force_normalize=True):
                                 self.output_click_statusbar)
         self.gridLayout_15.addWidget(self.canvas, 0, 0, 1, 1)
         plt.axis('on')
-        plt.imshow(image_data, cmap='gray', interpolation=None)
+        plt.imshow(image_data, cmap='gray', interpolation=None, aspect=aspect)
         self.canvas.draw()
     else:
         raise ValueError("Invalid window index")
@@ -662,7 +679,7 @@ def init_connectors(self):
     """Radon backrpojection tab"""
     self.laminogram_apply.clicked.connect(
         lambda: tabs.display_laminogram(self))
-    self.sinogram_apply.clicked.connect(lambda: tabs.display_sinogram(self))
+    # self.sinogram_apply.clicked.connect(lambda: tabs.display_sinogram(self))
     self.reset_operations_5.clicked.connect(
         lambda: modules.image.restore_original(self))
     self.gen_test_image_3.clicked.connect(

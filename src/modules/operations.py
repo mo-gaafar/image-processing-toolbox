@@ -112,31 +112,31 @@ class CreateTestImage(ImageOperation):
 
         return deepcopy(self.image)
 
-class Laminogram(ImageOperation):
+# class Laminogram(ImageOperation):
 
-    def configure(self, **kwargs):
-        self.filter = kwargs['filter']
-        self.angles = kwargs['angles']
+#     def configure(self, **kwargs):
+#         self.filter = kwargs['filter']
+#         self.angles = kwargs['angles']
     
-    def ram_lak_filter(self):
-        """Filter image with Ram-Lak filter."""
-        pass
+#     def ram_lak_filter(self):
+#         """Filter image with Ram-Lak filter."""
+#         pass
 
-    def hamming_filter(self):
-        """Filter image with Hamming filter."""
-        pass
+#     def hamming_filter(self):
+#         """Filter image with Hamming filter."""
+#         pass
 
-    def execute(self):
-        """Create a laminogram from the image."""
+#     def execute(self):
+#         """Create a laminogram from the image."""
 
-        if self.filter == "ram_lak":
-            self.ram_lak_filter()
-        elif self.filter == "hamming":
-            self.hamming_filter()
+#         if self.filter == "ram_lak":
+#             self.ram_lak_filter()
+#         elif self.filter == "hamming":
+#             self.hamming_filter()
         
         
 
-        return self.image
+#         return self.image
 
 
 

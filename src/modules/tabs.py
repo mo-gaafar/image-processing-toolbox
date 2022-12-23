@@ -535,23 +535,57 @@ def analyze_roi(self):
 
 
 def display_sinogram(self):
-    # get range array from user input
+    try:
+        # get range array from user input
+        start = interface.get_user_input(self)['sinogram angle start']
+        stop = interface.get_user_input(self)['sinogram angle end']
+        step = interface.get_user_input(self)['sinogram angle step']
+        angles = np.arange(start=start, stop=stop, step=step)
 
-    # get display window
+        # get display window
+        sinogram_window = interface.get_user_input(self)['sinogram output']
 
-    # process sinogram here
+        # process sinogram here
+        # use scikit-image radon transform
 
-    # display sinogram
-    pass
+        import skimage.transform as skt
+        radon = skt.radon(self.image1.data, theta=angles)
+
+        # display sinogram
+        interface.display_pixmap(self, radon, sinogram_window, aspect='auto')
+
+        return radon
+    except:
+        QMessageBox.critical(self, 'Error', 'Error Running Operation')
 
 
 def display_laminogram(self):
-    # get filter type
+    try:
+        import skimage.transform as skt
+        # get range array from user input
+        start = interface.get_user_input(self)['sinogram angle start']
+        stop = interface.get_user_input(self)['sinogram angle end']
+        step = interface.get_user_input(self)['sinogram angle step']
+        angles = np.arange(start=start, stop=stop, step=step)
 
-    # get display window
+        # get filter type
+        filt_type = interface.get_user_input(self)['laminogram filter']
+        laminogram_window = interface.get_user_input(self)['radon output']
 
-    # process laminogram
+        # get display window
+        sinogram_output_window = interface.get_user_input(self)[
+            'sinogram output']
+        if sinogram_output_window != None:
+            radon = display_sinogram(self)
+        else:
+            radon = skt.radon(self.image1.data, theta=angles)
 
-    # display laminogram
+        # process laminogram
+        laminogram = skt.iradon(radon, theta=angles, filter_name=filt_type)
 
-    pass
+        # display laminogram
+        interface.display_pixmap(self, laminogram, laminogram_window)
+
+        pass
+    except:
+        QMessageBox.critical(self, 'Error', 'Error Running Operation')
