@@ -32,8 +32,10 @@ def nasser_sinogram(image_arr, angles=None):
 def radon_projection(image_arr, angle, center=None, bilinear=True):
     # rotate image by angle and get projection line
 
+    # fix angle bug
+    angle = angle+90
     # convert angle to radians
-    angle = np.deg2rad(angle + 90)
+    angle = np.deg2rad(angle)
 
     # get image dimensions
     height, width = image_arr.shape
