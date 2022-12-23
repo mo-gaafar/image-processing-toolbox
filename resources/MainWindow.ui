@@ -3625,6 +3625,9 @@ QPushButton:pressed {
                 <property name="maximum">
                  <number>180</number>
                 </property>
+                <property name="value">
+                 <number>180</number>
+                </property>
                </widget>
               </item>
               <item row="15" column="0" colspan="7">
@@ -3787,7 +3790,7 @@ QPushButton:pressed {
                </spacer>
               </item>
               <item row="11" column="0" colspan="3">
-               <widget class="QCheckBox" name="checkBox">
+               <widget class="QCheckBox" name="nasser_radon_checkbox">
                 <property name="text">
                  <string>Use My Implementation</string>
                 </property>

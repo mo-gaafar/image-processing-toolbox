@@ -246,8 +246,10 @@ def get_user_input(self):
     user_input['sinogram angle end'] = self.radon_sino_end_spinbox.value()
     user_input['sinogram angle step'] = self.radon_sino_step_spinbox.value()
 
-    user_input['radon output'] = output_window_dict[self.radon_output_combobox.currentText()]
+    user_input['lamingoram output'] = output_window_dict[self.radon_output_combobox.currentText()]
     user_input['sinogram output'] = output_window_dict[self.radon_sino_combobox.currentText()]
+
+    user_input['nasser radon'] = self.nasser_radon_checkbox.isChecked()
 
     return user_input
 

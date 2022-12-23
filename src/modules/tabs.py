@@ -24,6 +24,7 @@ from PyQt5.QtWidgets import QMessageBox
 from modules import interface
 from modules.operations import *
 from modules.image import UpdateFFT
+from modules.backprojection import nasser_sinogram
 
 # TODO: make the functions more generic and reduce code repetiton
 
@@ -542,14 +543,20 @@ def display_sinogram(self):
         step = interface.get_user_input(self)['sinogram angle step']
         angles = np.arange(start=start, stop=stop, step=step)
 
+        diy_radon = interface.get_user_input(self)['nasser radon']
+
         # get display window
         sinogram_window = interface.get_user_input(self)['sinogram output']
 
         # process sinogram here
-        # use scikit-image radon transform
+        if diy_radon:
+            # use the DIY radon transform
+            radon = nasser_sinogram(self.image1.data, angles=angles)
+        else:
+            # use scikit-image radon transform
 
-        import skimage.transform as skt
-        radon = skt.radon(self.image1.data, theta=angles)
+            import skimage.transform as skt
+            radon = skt.radon(self.image1.data, theta=angles)
 
         # display sinogram
         interface.display_pixmap(self, radon, sinogram_window, aspect='auto')
@@ -570,7 +577,7 @@ def display_laminogram(self):
 
         # get filter type
         filt_type = interface.get_user_input(self)['laminogram filter']
-        laminogram_window = interface.get_user_input(self)['radon output']
+        laminogram_window = interface.get_user_input(self)['lamingoram output']
 
         # get display window
         sinogram_output_window = interface.get_user_input(self)[
