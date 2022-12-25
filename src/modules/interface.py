@@ -251,6 +251,12 @@ def get_user_input(self):
 
     user_input['nasser radon'] = self.nasser_radon_checkbox.isChecked()
 
+    # Morphological Processing
+    user_input['morpho output'] = output_window_dict[self.morph_output_combobox.currentText()]
+    user_input['morpho size'] = int(self.morph_size_spinbox.value())
+    user_input['morpho shape'] = self.morph_shape_combobox.currentText()
+    user_input['morpho operation type'] = self.morph_type_combobox.currentText()
+
     return user_input
 
 
@@ -687,6 +693,11 @@ def init_connectors(self):
     self.gen_test_image_3.clicked.connect(
         lambda: tabs.generate_test_image(self, name='shepp_logan'))
 
+    """Morphological Processing Tab"""
+    self.morph_apply.clicked.connect(lambda: tabs.apply_morph(self))
+    self.reset_operations_6.clicked.connect(
+        lambda: modules.image.restore_original(self))
+        
 
 def about_us(self):
     QMessageBox.about(

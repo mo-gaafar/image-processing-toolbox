@@ -52,7 +52,7 @@ def read_importer(path) -> ImageImporter:
         'jpeg': JPGImporter(),
         'jpg': JPGImporter(),
         'dcm': DICOMImporter(),
-        'png': BMPImporter()
+        'png': BMPImporter(),
     }
     if extension in importers:
         return importers[extension]
