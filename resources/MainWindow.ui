@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1170</width>
-    <height>716</height>
+    <height>718</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -85,7 +85,7 @@ QGroupBox::title  {
                <x>0</x>
                <y>0</y>
                <width>380</width>
-               <height>281</height>
+               <height>282</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -179,7 +179,7 @@ QGroupBox::title  {
                <x>0</x>
                <y>0</y>
                <width>380</width>
-               <height>281</height>
+               <height>282</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -264,7 +264,7 @@ QGroupBox::title  {
                <x>0</x>
                <y>0</y>
                <width>380</width>
-               <height>281</height>
+               <height>282</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -324,7 +324,7 @@ QGroupBox::title  {
                <x>0</x>
                <y>0</y>
                <width>380</width>
-               <height>281</height>
+               <height>282</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -3977,6 +3977,11 @@ QPushButton:pressed {
                 <item>
                  <property name="text">
                   <string>Closing</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Fingerprint Cleanup</string>
                  </property>
                 </item>
                </widget>

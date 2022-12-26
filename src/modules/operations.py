@@ -333,17 +333,24 @@ class MorphoFilter(ImageOperation):
         return strel
 
     def loop_image(self, apply_operation,  strel):
+        # sync size
+        self.size = strel.shape[0]
         # apply operation to the whole image
-        temp_image = self.image.data.copy()
-        for x in range(self.size//2, temp_image.shape[0]-self.size//2):
-            for y in range(self.size//2, temp_image.shape[1]-self.size//2):
+        original_img = self.image.data.copy()
+        padded_img = util.uniform_padding(original_img, self.size//2, 0)
+        new_img = padded_img.copy()
+        for x in range(self.size//2, padded_img.shape[0]-self.size//2):
+            for y in range(self.size//2, padded_img.shape[1]-self.size//2):
                 # get section of the image
-                img_section = self.image.data[x-self.size//2:x+self.size//2 +
-                                              1, y-self.size//2:y+self.size//2+1]
+                img_section = padded_img[x-self.size//2:x+self.size//2 +
+                                         1, y-self.size//2:y+self.size//2+1]
                 # apply operation to structure element
-                temp_image[x, y] = apply_operation(strel, img_section)
+                new_img[x, y] = apply_operation(strel, img_section)
+        # remove padding
+        new_img = new_img[self.size//2:new_img.shape[0]-self.size//2,
+                          self.size//2:new_img.shape[1]-self.size//2]
 
-        self.image.data = temp_image
+        self.image.data = new_img
 
     def execute(self):
         # apply a morphological filter to the image
@@ -369,6 +376,17 @@ class MorphoFilter(ImageOperation):
             self.loop_image(self.apply_dilation, strel)
             # apply erosion
             self.loop_image(self.apply_erosion, strel)
+        elif self.operation == 'Fingerprint Cleanup':
+            # ignore user input and set kernel to a fingerprint kernel with size 3
+            strel = self.create_strel('Square', 3)
+            # apply closing
+            self.loop_image(self.apply_dilation, strel)
+            # apply erosion
+            self.loop_image(self.apply_erosion, strel)
+            # apply opening
+            self.loop_image(self.apply_erosion, strel)
+            # apply dilation
+            self.loop_image(self.apply_dilation, strel)
         else:
             raise ValueError('Unknown operation: ' + self.operation)
 
