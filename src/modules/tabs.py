@@ -24,6 +24,7 @@ from PyQt5.QtWidgets import QMessageBox
 from modules import interface
 from modules.operations import *
 from modules.image import UpdateFFT
+from modules.backprojection import nasser_sinogram
 
 # TODO: make the functions more generic and reduce code repetiton
 
@@ -297,7 +298,7 @@ def apply_median(self):
         QMessageBox.critical(self, 'Error', 'Error Running Operation')
 
 
-def display_fft(self): 
+def display_fft(self):
     """ Displays the fft of the image """
     try:
         # get user input parameters data
@@ -457,7 +458,7 @@ def apply_noise(self):
         # get user input parameters data
         output_noisy = interface.get_user_input(self)['noise output']
         noise_type = interface.get_user_input(self)['noise type']
-        
+
         operation = NoiseGenerator()
         # clear previous operations
         self.image1.clear_operations(clear_backup=True, undo_old=False)
@@ -502,7 +503,7 @@ def roi_select(self):
         interface.show_roi_window(self, roi_window)
     except:
         QMessageBox.critical(self, 'Error', 'No Image Loaded or RGB Image')
-    
+
 
 def analyze_roi(self):
     try:
@@ -516,7 +517,8 @@ def analyze_roi(self):
         # get and display histogram of roi
         histogram = get_histogram(roi)
         histo_range = None
-        interface.display_histogram(self, histogram, histo_range, analysis_window)
+        interface.display_histogram(
+            self, histogram, histo_range, analysis_window)
 
         # get and display mean of roi
         mean = histo_mean(histogram=histogram)
@@ -529,5 +531,89 @@ def analyze_roi(self):
         outstr = ""
         outstr += "Standard Deviation: " + str(round(std, 2))
         interface.display_text(self, outstr, 'noise std dev')
+    except:
+        QMessageBox.critical(self, 'Error', 'Error Running Operation')
+
+
+def display_sinogram(self):
+    try:
+        # get range array from user input
+        start = interface.get_user_input(self)['sinogram angle start']
+        stop = interface.get_user_input(self)['sinogram angle end']
+        step = interface.get_user_input(self)['sinogram angle step']
+        angles = np.arange(start=start, stop=stop, step=step)
+
+        diy_radon = interface.get_user_input(self)['nasser radon']
+
+        # get display window
+        sinogram_window = interface.get_user_input(self)['sinogram output']
+
+        # process sinogram here
+        if diy_radon:
+            # use the DIY radon transform
+            radon = nasser_sinogram(self.image1.data, angles=angles)
+        else:
+            # use scikit-image radon transform
+
+            import skimage.transform as skt
+            radon = skt.radon(self.image1.data, theta=angles)
+
+        # display sinogram
+        interface.display_pixmap(self, radon, sinogram_window, aspect='auto')
+
+        return radon
+    except:
+        QMessageBox.critical(self, 'Error', 'Error Running Operation')
+
+
+def display_laminogram(self):
+    try:
+        import skimage.transform as skt
+        # get range array from user input
+        start = interface.get_user_input(self)['sinogram angle start']
+        stop = interface.get_user_input(self)['sinogram angle end']
+        step = interface.get_user_input(self)['sinogram angle step']
+        angles = np.arange(start=start, stop=stop, step=step)
+
+        # get filter type
+        filt_type = interface.get_user_input(self)['laminogram filter']
+        laminogram_window = interface.get_user_input(self)['lamingoram output']
+
+        # get display window
+        sinogram_output_window = interface.get_user_input(self)[
+            'sinogram output']
+        if sinogram_output_window != None:
+            radon = display_sinogram(self)
+        else:
+            radon = skt.radon(self.image1.data, theta=angles)
+
+        # process laminogram
+        laminogram = skt.iradon(radon, theta=angles, filter_name=filt_type)
+
+        # display laminogram
+        interface.display_pixmap(self, laminogram, laminogram_window)
+
+        pass
+    except:
+        QMessageBox.critical(self, 'Error', 'Error Running Operation')
+
+
+def apply_morph(self):
+    try:
+        # get user input
+        output_window = interface.get_user_input(self)['morpho output']
+        morpho_type = interface.get_user_input(self)['morpho operation type']
+        morpho_size = interface.get_user_input(self)['morpho size']
+        morpho_shape = interface.get_user_input(self)['morpho shape']
+
+        # create operation
+        operation = MorphoFilter()
+        operation.configure(operation = morpho_type, size = morpho_size, strel_type = morpho_shape)
+
+        # clear previous saved operations
+        self.image1.clear_operations(clear_backup=True, undo_old=False)
+
+        # apply operation
+        apply_image_operation(self, operation, output_window)
     except:
         QMessageBox.critical(self, 'Error', 'Error Running Operation')

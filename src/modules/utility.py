@@ -18,6 +18,7 @@ Globals:
 import logging
 import numpy as np
 
+
 # utility globals
 DEBUG_MODE = False
 LOGGING_MODE = True
@@ -272,12 +273,27 @@ def clip(arr, min_val, max_val):
     return arr
 
 
-# def rescale_intensity(arr, depth = 1, shift_min = False):
-#     """ Intensity scaling.
-#     Params:
-#         depth: channel depth
-#         shift_min: whether to shift by minimum value or truncate negatives
-#     """
 
-#     if shift_min:
-#         pass
+ 
+
+def rescale_intensity(arr, depth=1, shift_min=False):
+    """ Intensity scaling.
+    Params:
+        depth: channel depth
+        shift_min: whether to shift by minimum value or truncate negatives
+    """
+
+    if shift_min:
+        # shift by minimum value
+        arr = arr - np.min(arr)
+    else:
+        # truncate negatives
+        arr[arr < 0] = 0
+
+    # scale to 0-1
+    arr = arr / np.max(arr)
+
+    # scale to 0-2^depth-1
+    arr = arr * (2**depth - 1)
+
+    return arr

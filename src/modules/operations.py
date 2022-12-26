@@ -112,6 +112,31 @@ class CreateTestImage(ImageOperation):
 
         return deepcopy(self.image)
 
+# class Laminogram(ImageOperation):
+
+#     def configure(self, **kwargs):
+#         self.filter = kwargs['filter']
+#         self.angles = kwargs['angles']
+
+#     def ram_lak_filter(self):
+#         """Filter image with Ram-Lak filter."""
+#         pass
+
+#     def hamming_filter(self):
+#         """Filter image with Hamming filter."""
+#         pass
+
+#     def execute(self):
+#         """Create a laminogram from the image."""
+
+#         if self.filter == "ram_lak":
+#             self.ram_lak_filter()
+#         elif self.filter == "hamming":
+#             self.hamming_filter()
+
+
+#         return self.image
+
 
 class NoiseGenerator(ImageOperation):
 
@@ -234,6 +259,138 @@ class ApplyLinearFilter(ImageOperation):
             data * ((2**self.image.get_channel_depth())-1)/(2**np.log2(np.amax(data))-1))
 
         return deepcopy(self.image)
+
+
+class MorphoFilter(ImageOperation):
+
+    def configure(self, **kwargs):
+        """Configure the morphological filter
+        Args:
+            size (int): size of the structuring element
+            strel_type (str): type of the structuring element
+                options: 'box', 'cross', 'custom'
+            operation (str): type of the operation
+                options: 'dilation', 'erosion', 'opening', 'closing'
+        """
+        self.size = kwargs['size']
+        self.strel_type = kwargs['strel_type']
+        self.operation = kwargs['operation']
+
+    def apply_dilation(self, strel, img_section):
+        # apply dilation to the image section
+        # kernel: the kernel to be applied
+        # img_section: the image section to be filtered
+        max = 0
+        for x in range(strel.shape[0]):
+            for y in range(strel.shape[1]):
+                if strel[x, y] == 1 and img_section[x, y] > max:
+                    max = img_section[x, y]
+        return max
+
+    def apply_erosion(self, strel, img_section):
+        # apply erosion to the image section
+        # kernel: the kernel to be applied
+        # img_section: the image section to be filtered
+
+        min = 255
+        for x in range(strel.shape[0]):
+            for y in range(strel.shape[1]):
+                if strel[x, y] == 1 and img_section[x, y] < min:
+                    min = img_section[x, y]
+        return min
+
+    def create_strel(self, strel_type, size):
+        # create a kernel of size x size
+        # strel_type: the type of the kernel
+        # size: the size of the kernel
+        if strel_type == 'Square':
+            strel = np.ones((size, size), dtype=np.float32)
+        elif strel_type == 'Cross':
+            strel = np.zeros((size, size), dtype=np.float32)
+            strel[size//2, :] = 1
+            strel[:, size//2] = 1
+        elif strel_type == 'Circle':
+            strel = np.zeros((size, size), dtype=np.float32)
+            for x in range(size):
+                for y in range(size):
+                    if (x-size//2)**2 + (y-size//2)**2 <= (size//2)**2:
+                        strel[x, y] = 1
+        elif strel_type == 'Custom':
+            # square with zero corners
+            strel = np.zeros((size, size), dtype=np.float32)
+            strel[0, :] = 1
+            strel[size-1, :] = 1
+            strel[:, 0] = 1
+            strel[:, size-1] = 1
+
+            strel[0, 0] = 0
+            strel[0, size-1] = 0
+            strel[size-1, 0] = 0
+            strel[size-1, size-1] = 0
+        else:
+            raise ValueError('Unknown kernel type: ' + strel_type)
+
+        return strel
+
+    def loop_image(self, apply_operation,  strel):
+        # sync size
+        self.size = strel.shape[0]
+        # apply operation to the whole image
+        original_img = self.image.data.copy()
+        padded_img = util.uniform_padding(original_img, self.size//2, 0)
+        new_img = padded_img.copy()
+        for x in range(self.size//2, padded_img.shape[0]-self.size//2):
+            for y in range(self.size//2, padded_img.shape[1]-self.size//2):
+                # get section of the image
+                img_section = padded_img[x-self.size//2:x+self.size//2 +
+                                         1, y-self.size//2:y+self.size//2+1]
+                # apply operation to structure element
+                new_img[x, y] = apply_operation(strel, img_section)
+        # remove padding
+        new_img = new_img[self.size//2:new_img.shape[0]-self.size//2,
+                          self.size//2:new_img.shape[1]-self.size//2]
+
+        self.image.data = new_img
+
+    def execute(self):
+        # apply a morphological filter to the image
+        # size: size of the filter
+        # kernel_type: the type of the kernel
+        # operation: the operation to be applied
+
+        # get kernel
+        strel = self.create_strel(self.strel_type, self.size)
+
+        # apply operation
+        if self.operation == 'Dilation':
+            self.loop_image(self.apply_dilation, strel)
+        elif self.operation == 'Erosion':
+            self.loop_image(self.apply_erosion, strel)
+        elif self.operation == 'Opening':
+            # apply erosion
+            self.loop_image(self.apply_erosion, strel)
+            # apply dilation
+            self.loop_image(self.apply_dilation, strel)
+        elif self.operation == 'Closing':
+            # apply dilation
+            self.loop_image(self.apply_dilation, strel)
+            # apply erosion
+            self.loop_image(self.apply_erosion, strel)
+        elif self.operation == 'Fingerprint Cleanup':
+            # ignore user input and set kernel to a fingerprint kernel with size 3
+            strel = self.create_strel('Square', 3)
+            # apply closing
+            self.loop_image(self.apply_dilation, strel)
+            # apply erosion
+            self.loop_image(self.apply_erosion, strel)
+            # apply opening
+            self.loop_image(self.apply_erosion, strel)
+            # apply dilation
+            self.loop_image(self.apply_dilation, strel)
+        else:
+            raise ValueError('Unknown operation: ' + self.operation)
+
+        return self.image
 
 
 class BandStopFilter(ImageOperation):
