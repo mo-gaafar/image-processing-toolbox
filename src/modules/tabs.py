@@ -596,3 +596,24 @@ def display_laminogram(self):
         pass
     except:
         QMessageBox.critical(self, 'Error', 'Error Running Operation')
+
+
+def apply_morph(self):
+    try:
+        # get user input
+        output_window = interface.get_user_input(self)['morpho output']
+        morpho_type = interface.get_user_input(self)['morpho operation type']
+        morpho_size = interface.get_user_input(self)['morpho size']
+        morpho_shape = interface.get_user_input(self)['morpho shape']
+
+        # create operation
+        operation = MorphoFilter()
+        operation.configure(operation = morpho_type, size = morpho_size, strel_type = morpho_shape)
+
+        # clear previous saved operations
+        self.image1.clear_operations(clear_backup=True, undo_old=False)
+
+        # apply operation
+        apply_image_operation(self, operation, output_window)
+    except:
+        QMessageBox.critical(self, 'Error', 'Error Running Operation')
