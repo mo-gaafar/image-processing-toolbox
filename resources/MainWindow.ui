@@ -379,7 +379,7 @@ QGroupBox::title  {
              <enum>QTabWidget::Triangular</enum>
             </property>
             <property name="currentIndex">
-             <number>8</number>
+             <number>6</number>
             </property>
             <property name="elideMode">
              <enum>Qt::ElideNone</enum>
@@ -867,7 +867,7 @@ QPushButton:pressed {
                    <x>0</x>
                    <y>0</y>
                    <width>282</width>
-                   <height>291</height>
+                   <height>293</height>
                   </rect>
                  </property>
                  <attribute name="label">
@@ -1730,7 +1730,7 @@ QPushButton:pressed {
                    <x>0</x>
                    <y>0</y>
                    <width>282</width>
-                   <height>308</height>
+                   <height>310</height>
                   </rect>
                  </property>
                  <attribute name="label">
@@ -2620,7 +2620,7 @@ QPushButton:pressed {
                    <x>0</x>
                    <y>0</y>
                    <width>282</width>
-                   <height>390</height>
+                   <height>392</height>
                   </rect>
                  </property>
                  <attribute name="label">
@@ -2886,7 +2886,7 @@ QPushButton:pressed {
                    <x>0</x>
                    <y>0</y>
                    <width>282</width>
-                   <height>410</height>
+                   <height>412</height>
                   </rect>
                  </property>
                  <attribute name="label">
@@ -3154,7 +3154,7 @@ QPushButton:pressed {
                        <x>0</x>
                        <y>0</y>
                        <width>264</width>
-                       <height>211</height>
+                       <height>213</height>
                       </rect>
                      </property>
                      <attribute name="label">
@@ -4235,24 +4235,41 @@ QPushButton:pressed {
     </property>
     <widget class="QMenu" name="menuTools">
      <property name="title">
-      <string>Tools</string>
+      <string>Toolbox Tabs</string>
      </property>
      <addaction name="actionMetadata"/>
      <addaction name="actionTransform"/>
      <addaction name="actionHistogramEQ"/>
      <addaction name="actionSpatial_Filter"/>
      <addaction name="actionFFT_Display"/>
+     <addaction name="actionFrequency_Filter"/>
+     <addaction name="actionNoise"/>
+     <addaction name="actionBackprojection"/>
+     <addaction name="actionMorphological"/>
     </widget>
     <widget class="QMenu" name="menuViewBoxes">
      <property name="title">
-      <string>Viewers</string>
+      <string>Displays</string>
      </property>
      <addaction name="actionImage1"/>
      <addaction name="actionImage2"/>
      <addaction name="actionPlot1"/>
      <addaction name="actionPlot2"/>
     </widget>
+    <widget class="QMenu" name="menuLayouts">
+     <property name="title">
+      <string>Layouts</string>
+     </property>
+     <addaction name="actionFull"/>
+     <addaction name="actionImage_Viewer"/>
+     <addaction name="actionSpatial_Processing"/>
+     <addaction name="actionFrequency_Processing"/>
+     <addaction name="actionImage_Analysis"/>
+     <addaction name="actionImage_Enhancement"/>
+     <addaction name="actionX_Ray"/>
+    </widget>
     <addaction name="separator"/>
+    <addaction name="menuLayouts"/>
     <addaction name="menuTools"/>
     <addaction name="separator"/>
     <addaction name="menuViewBoxes"/>
@@ -4417,6 +4434,67 @@ QPushButton:pressed {
   <action name="actionToggle_Scale">
    <property name="text">
     <string>Toggle Scale</string>
+   </property>
+  </action>
+  <action name="actionFull">
+   <property name="text">
+    <string>Full</string>
+   </property>
+  </action>
+  <action name="actionImage_Viewer">
+   <property name="text">
+    <string>Image Viewer</string>
+   </property>
+  </action>
+  <action name="actionSpatial_Processing">
+   <property name="text">
+    <string>Spatial Processing</string>
+   </property>
+  </action>
+  <action name="actionFrequency_Processing">
+   <property name="text">
+    <string>Frequency Processing</string>
+   </property>
+  </action>
+  <action name="actionX_Ray">
+   <property name="text">
+    <string>X-Ray</string>
+   </property>
+  </action>
+  <action name="actionImage_Enhancement">
+   <property name="text">
+    <string>Image Enhancement</string>
+   </property>
+  </action>
+  <action name="actionFrequency_Filter">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Frequency Filter</string>
+   </property>
+  </action>
+  <action name="actionNoise">
+   <property name="text">
+    <string>Noise</string>
+   </property>
+  </action>
+  <action name="actionBackprojection">
+   <property name="text">
+    <string>Backprojection</string>
+   </property>
+  </action>
+  <action name="actionMorphological">
+   <property name="text">
+    <string>Morphological</string>
+   </property>
+  </action>
+  <action name="actionImage_Analysis">
+   <property name="text">
+    <string>Image Analysis</string>
    </property>
   </action>
  </widget>

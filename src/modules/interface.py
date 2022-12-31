@@ -463,45 +463,64 @@ toolbox_tab_dict = {
     'Histogram': 'tab_histogram',
     'Spatial Filter': 'tab_spfilt',
     'FFT Display': 'tab_fftdisp',
-    'Frequency Filter': 'tab_freqfilt',
-
-
+    'Frequency Filter': 'tab_ftfilt',
+    'Noise': 'tab_noise',
+    'Backprojection': 'tab_backprojection',
+    'Morphological': 'tab_morpho',
 }
 
 
 def save_tab_references(self):
-    self.tab_meta = self.tabWidget.findChild(QWidget, 'tab_meta')
-    self.tab_transform = self.tabWidget.findChild(QWidget, 'tab_transform')
-    self.tab_histogram = self.tabWidget.findChild(QWidget, 'tab_histogram')
-    self.tab_spfilt = self.tabWidget.findChild(QWidget, 'tab_spfilt')
-    self.tab_fftdisp = self.tabWidget.findChild(QWidget, 'tab_fftdisp')
-    self.tab_freqfilt = self.tabWidget.findChild(QWidget, 'tab_freqfilt')
-
-    self.toolbox_tab_ref = {
-        'Metadata': self.tab_meta,
-        'Transform': self.tab_transform,
-        'Histogram': self.tab_histogram,
-        'Spatial Filter': self.tab_spfilt,
-        'FFT Display': self.tab_fftdisp,
-        'Frequency Filter': self.tab_freqfilt,
-    }
+    # store to dict
+    self.toolbox_tab_ref = {}
+    for tab_name in toolbox_tab_dict:
+        self.toolbox_tab_ref[tab_name] = self.tabWidget.findChild(
+            QWidget, toolbox_tab_dict[tab_name])
 
 
-def toggle_toolbox_tabs(self, tab_name):
+def toggle_toolbox_tabs(self, tab_name, force=None):
     tab = self.findChild(QWidget, toolbox_tab_dict[tab_name])
 
     if tab.isEnabled() == False:
         # tab is hidden
         # get last tab index
+        if force == 'hide':
+            # do nothing if force is set to hide
+            return
         last_tab_index = int(self.tabWidget.count() - 1)
         self.tabWidget.insertTab(
             last_tab_index, self.toolbox_tab_ref[tab_name], tab_name)
         tab.setEnabled(True)
-    else:
+    elif tab.isEnabled() == True:
         # tab is visible
         # disable tab
+        if force == 'show':
+            # do nothing if force is set to show
+            return
         tab.setEnabled(False)
         self.tabWidget.removeTab(self.tabWidget.indexOf(tab))
+
+
+def init_preset_tab_layouts(self):
+    self.preset_tab_layouts_dict = {
+        'Full': toolbox_tab_dict.keys(),
+        'Image Viewer': ['Metadata', 'Transform', 'Histogram'],
+        'Spatial Processing': ['Transform', 'Histogram', 'Spatial Filter', 'Morphological'],
+        'Frequency Processing': ['Transform', 'Histogram', 'FFT Display', 'Frequency Filter'],
+        'Image Enhancement': ['Histogram', 'Noise', 'Spatial Filter', 'FFT Display', 'Frequency Filter', 'Morphological'],
+        'Image Analysis': ['Metadata', 'Histogram', 'FFT Display', 'Frequency Filter'],
+        'X-Ray': ['Metadata', 'Histogram', 'Backprojection'],
+    }
+
+
+def set_preset_tab_layout(self, preset_name):
+    '''Sets the tab layout to the preset layout'''
+    # hide all tabs
+    for tab_name in toolbox_tab_dict.keys():
+        toggle_toolbox_tabs(self,tab_name, force='hide')
+    # show tabs in preset
+    for tab_name in self.preset_tab_layouts_dict[preset_name]:
+        toggle_toolbox_tabs(self,tab_name, force='show')
 
 
 def display_metatable(self, f_metadata=None):
@@ -582,6 +601,8 @@ def init_connectors(self):
     self.actionPlot2.triggered.connect(lambda: toggle_image_window(self, 3))
 
     save_tab_references(self)
+    init_preset_tab_layouts(self)
+
     self.actionMetadata.triggered.connect(
         lambda: toggle_toolbox_tabs(self, 'Metadata'))
     self.actionTransform.triggered.connect(
@@ -592,6 +613,30 @@ def init_connectors(self):
         lambda: toggle_toolbox_tabs(self, 'Spatial Filter'))
     self.actionFFT_Display.triggered.connect(
         lambda: toggle_toolbox_tabs(self, 'FFT Display'))
+    self.actionFrequency_Filter.triggered.connect(
+        lambda: toggle_toolbox_tabs(self, 'Frequency Filter'))
+    self.actionNoise.triggered.connect(
+        lambda: toggle_toolbox_tabs(self, 'Noise'))
+    self.actionBackprojection.triggered.connect(
+        lambda: toggle_toolbox_tabs(self, 'Backprojection'))
+    self.actionMorphological.triggered.connect(
+        lambda: toggle_toolbox_tabs(self, 'Morphological'))
+
+    # preset layouts
+    self.actionFull.triggered.connect(
+        lambda: set_preset_tab_layout(self, 'Full'))
+    self.actionImage_Viewer.triggered.connect(
+        lambda: set_preset_tab_layout(self, 'Image Viewer'))
+    self.actionSpatial_Processing.triggered.connect(
+        lambda: set_preset_tab_layout(self, 'Spatial Processing'))
+    self.actionFrequency_Processing.triggered.connect(
+        lambda: set_preset_tab_layout(self, 'Frequency Processing'))
+    self.actionImage_Analysis.triggered.connect(
+        lambda: set_preset_tab_layout(self, 'Image Analysis'))
+    self.actionImage_Enhancement.triggered.connect(
+        lambda: set_preset_tab_layout(self, 'Image Enhancement'))
+    self.actionX_Ray.triggered.connect(
+        lambda: set_preset_tab_layout(self, 'X-Ray'))
     # self.actionFrequency_Filter.triggered.connect(lambda: toggle_toolbox_tabs(self, 'Frequency Filter'))
 
     # Help Menu
@@ -697,7 +742,7 @@ def init_connectors(self):
     self.morph_apply.clicked.connect(lambda: tabs.apply_morph(self))
     self.reset_operations_6.clicked.connect(
         lambda: modules.image.restore_original(self))
-        
+
 
 def about_us(self):
     QMessageBox.about(
